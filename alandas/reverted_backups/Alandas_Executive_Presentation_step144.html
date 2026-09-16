@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alandas Tea Berlin — Commercial & Technical Growth Blueprint</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090D16;
+      --bg-surface: #111827;
+      --bg-card: rgba(17, 24, 39, 0.75);
+      --bg-glass: rgba(255, 255, 255, 0.04);
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(197, 139, 43, 0.35);
+      --gold: #C58B2B;
+      --gold-light: #E9D4A5;
+      --gold-glow: rgba(197, 139, 43, 0.2);
+      --forest: #065F46;
+      --forest-light: #34D399;
+      --crimson: #991B1B;
+      --crimson-light: #F87171;
+      --text-white: #F8FAFC;
+      --text-muted: #94A3B8;
+      --text-dim: #64748B;
+      --font-serif: 'Libre Caslon Text', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-sans);
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient background lighting */
+    .ambient-glow-1 {
+      position: fixed;
+      top: -20%;
+      left: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(197, 139, 43, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+    .ambient-glow-2 {
+      position: fixed;
+      bottom: -20%;
+      right: -10%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, rgba(6, 95, 70, 0.08) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Deck Container */
+    #presentation {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1;
+    }
+
+    .slide {
+      position: absolute;
+      width: 90vw;
+      max-width: 1320px;
+      height: 84vh;
+      max-height: 840px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 20px;
+      padding: 48px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      opacity: 0;
+      transform: translateY(16px) scale(0.985);
+      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      pointer-events: none;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    /* Header component on slides */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 16px;
+    }
+
+    .slide-kicker {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .slide-kicker::before {
+      content: '';
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--gold);
+    }
+
+    .slide-title {
+      font-family: var(--font-serif);
+      font-size: 2.1rem;
+      font-weight: 400;
+      color: var(--text-white);
+      line-height: 1.2;
+    }
+
+    .slide-subtitle {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .brand-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 6px 14px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-accent);
+      border-radius: 100px;
+      color: var(--gold-light);
+      white-space: nowrap;
+    }
+
+    /* Content Body Area */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+      gap: 20px;
+    }
+
+    /* Slide Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-subtle);
+      padding-top: 14px;
+      margin-top: 16px;
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* Grid utilities */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      height: 100%;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+
+    /* Cards */
+    .card {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card.accent-gold {
+      border-color: var(--border-accent);
+      background: linear-gradient(180deg, rgba(197, 139, 43, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+    }
+
+    .card.accent-forest {
+      border-color: rgba(6, 95, 70, 0.4);
+      background: linear-gradient(180deg, rgba(6, 95, 70, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    }
+
+    .card.accent-crimson {
+      border-color: rgba(153, 27, 27, 0.4);
+      background: linear-gradient(180deg, rgba(153, 27, 27, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+    }
+
+    .card-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .card-stat {
+      font-family: var(--font-serif);
+      font-size: 2.4rem;
+      color: var(--gold-light);
+      font-weight: 700;
+      line-height: 1;
+      margin: 8px 0;
+    }
+
+    /* List items */
+    ul.bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    ul.bullet-list li {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      position: relative;
+      padding-left: 18px;
+    }
+
+    ul.bullet-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--gold);
+      font-weight: 700;
+    }
+
+    ul.bullet-list li strong {
+      color: var(--text-white);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-gold { background: rgba(197, 139, 43, 0.15); color: var(--gold-light); border: 1px solid var(--border-accent); }
+    .badge-green { background: rgba(6, 95, 70, 0.25); color: var(--forest-light); border: 1px solid rgba(52, 211, 153, 0.3); }
+    .badge-red { background: rgba(153, 27, 27, 0.25); color: var(--crimson-light); border: 1px solid rgba(248, 113, 113, 0.3); }
+
+    /* Tables */
+    .table-modern {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    .table-modern th {
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--gold-light);
+      font-weight: 700;
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .table-modern td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      color: var(--text-muted);
+    }
+
+    .table-modern tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    /* Cover Slide Specifics */
+    .slide-cover {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px;
+      background: radial-gradient(circle at center, rgba(197, 139, 43, 0.07) 0%, rgba(17, 24, 39, 0.95) 75%);
+    }
+
+    .cover-kicker {
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .cover-title {
+      font-family: var(--font-serif);
+      font-size: 3.5rem;
+      font-weight: 400;
+      color: var(--text-white);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .cover-title span {
+      color: var(--gold);
+      font-style: italic;
+    }
+
+    .cover-desc {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      max-width: 780px;
+      margin: 0 auto 36px auto;
+      line-height: 1.6;
+    }
+
+    .cover-meta-strip {
+      display: flex;
+      justify-content: center;
+      gap: 36px;
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 16px 0;
+      margin-bottom: 24px;
+    }
+
+    .meta-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-label {
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-dim);
+    }
+
+    .meta-value {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+
+    /* Navigation UI */
+    .nav-controls {
+      position: fixed;
+      bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1px solid var(--border-subtle);
+      backdrop-filter: blur(16px);
+      padding: 8px 18px;
+      border-radius: 100px;
+      z-index: 100;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-white);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg-dark);
+    }
+
+    .slide-counter {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold-light);
+      min-width: 60px;
+      text-align: center;
+      letter-spacing: 0.05em;
+    }
+
+    .fullscreen-btn {
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 100px;
+      background: var(--bg-glass);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .fullscreen-btn:hover {
+      color: var(--text-white);
+      border-color: var(--gold);
+    }
+
+    /* Highlight box */
+    .highlight-strip {
+      background: linear-gradient(90deg, rgba(197, 139, 43, 0.12) 0%, rgba(197, 139, 43, 0.02) 100%);
+      border-left: 3px solid var(--gold);
+      padding: 12px 16px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.82rem;
+      color: var(--text-white);
+    }
+
+    /* Print styles */
+    @media print {
+      body {
+        overflow: visible;
+        background: #fff;
+        color: #000;
+      }
+      .slide {
+        position: relative;
+        opacity: 1;
+        transform: none;
+        page-break-after: always;
+        height: auto;
+        max-height: none;
+        width: 100%;
+        box-shadow: none;
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+      }
+      .nav-controls, .ambient-glow-1, .ambient-glow-2 {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow-1"></div>
+  <div class="ambient-glow-2"></div>
+
+  <div id="presentation">
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 1: COVER SLIDE                                              -->
+    <!-- ================================================================= -->
+    <div class="slide slide-cover active" id="slide-1">
+      <div class="cover-kicker">COMMERCIAL &amp; TECHNICAL STRATEGY // ALANDAS TEA BERLIN</div>
+      <h1 class="cover-title">Scaling <span>Alandas</span></h1>
+      <p class="cover-desc">
+        A strategic roadmap to bridge proven B2B hospitality traction with automated digital commerce, 
+        eliminating revenue leaks and accelerating cash flow across Germany.
+      </p>
+
+      <div class="cover-meta-strip">
+        <div class="meta-item">
+          <span class="meta-label">Client / Founder</span>
+          <span class="meta-value">Sidy Sow (Berlin, Germany)</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Lead Strategist</span>
+          <span class="meta-value">Cyril Uzochukwu</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Core Target</span>
+          <span class="meta-value">13 Active Venues → 100+ Recurring Accounts</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">Date &amp; Context</span>
+          <span class="meta-value">September 2026 // Strategic Pitch</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <span class="badge badge-gold">B2B Wholesale Portal</span>
+        <span class="badge badge-green">96% Cafe Gross Margin</span>
+        <span class="badge badge-gold">Automated Klaviyo Engine</span>
+        <span class="badge badge-green">OpenReply Instagram Funnel</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 2: THE FOUNDATION (WHAT SIDY BUILT RIGHT)                    -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">01 // VALIDATING THE FOUNDATION</div>
+          <h2 class="slide-title">You Have Already Achieved What Most Brands Fail At</h2>
+          <div class="slide-subtitle">Proven Product-Market Fit across 13 prominent German hospitality accounts</div>
+        </div>
+        <span class="brand-tag">PRODUCT-MARKET FIT</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card accent-gold">
+            <div class="card-label">PROVEN HOSPITALITY ADOPTION</div>
+            <div class="card-stat">13 Venues</div>
+            <div class="card-title">Real Client Footprint</div>
+            <div class="card-body">
+              Alandas is already served at top venues: <strong>Vesuvio Ristorante</strong> (Friedrichshain), <strong>Melt Creperie</strong>, <strong>Café Friedrichs</strong>, <strong>Hürrem Sultan</strong>, plus venues in <strong>Würzburg, Bochum &amp; Münster</strong>.
+            </div>
+          </div>
+
+          <div class="card accent-forest">
+            <div class="card-label">IRRESISTIBLE UNIT ECONOMICS</div>
+            <div class="card-stat">96% Margin</div>
+            <div class="card-title">The Cafe Operator Math</div>
+            <div class="card-body">
+              At €10.74 netto per 220g bag, a pot costs the cafe just <strong>€0.195</strong>. Selling at €5.00 menu price yields <strong>€4.80 in pure gross profit per pot</strong>. 20 pots/day = €2,400+ extra monthly net profit.
+            </div>
+          </div>
+
+          <div class="card accent-gold">
+            <div class="card-label">EVOCATIVE BRAND IDENTITY</div>
+            <div class="card-stat">13 Blends</div>
+            <div class="card-title">Destination Narrative</div>
+            <div class="card-body">
+              Cultural blends (<em>Istanbul, Bombay, Marrakech, Paris, Berlin, Manila</em>) replace boring €0.10 commodity tea bags with a 90-second sensory visual ritual in clear borosilicate glass.
+            </div>
+          </div>
+        </div>
+
+        <div class="highlight-strip">
+          <strong>The Strategic Takeaway:</strong> You do not have a product problem or an offer problem. The concept is proven and operators love it. The bottleneck is the <strong>commercial operating system</strong> connecting it all.
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 2 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 3: THE TWO SILOS (THE ROOT BOTTLENECK)                       -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">02 // THE DIAGNOSIS</div>
+          <h2 class="slide-title">The Operational Ceiling: Two Disconnected Silos</h2>
+          <div class="slide-subtitle">Your offline B2B success is trapped, while your online store leaks potential buyers</div>
+        </div>
+        <span class="brand-tag">SYSTEM BOTTLENECK</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <!-- Silo 1 -->
+          <div class="card accent-forest">
+            <div class="card-label">SILO A: THE OFFLINE B2B REALITY</div>
+            <div class="card-title" style="color: var(--forest-light);">High Traction, High Manual Drag</div>
+            <ul class="bullet-list">
+              <li><strong>24-Page Wholesale Catalog:</strong> Great presentation with exact wholesale pricing (€10.74 tea, €10.86 pot, €4.20 tray).</li>
+              <li><strong>13 Proven Client Venues:</strong> Spanning restaurants, creperies, cafes &amp; shisha lounges.</li>
+              <li><strong>Verified Google Profile:</strong> 5.0 ★ rating (2 reviews) under <em>alanda's tea</em>.</li>
+              <li><strong>The Operational Friction:</strong> Everything relies on manual WhatsApp photos, manual PDFs, and manual invoicing. You are personally the bottleneck for every order.</li>
+            </ul>
+          </div>
+
+          <!-- Silo 2 -->
+          <div class="card accent-crimson">
+            <div class="card-label">SILO B: THE ONLINE STOREFRONT (ALANDAS.DE)</div>
+            <div class="card-title" style="color: var(--crimson-light);">Hiding Proof &amp; Leaking Conversions</div>
+            <ul class="bullet-list">
+              <li><strong>Hiding 80% of Social Proof:</strong> Website only mentions 3 partners; 10 venues and Google reviews are invisible.</li>
+              <li><strong>Zero Reviews on Product Pages:</strong> Unverified homepage text cards cannot trigger Google Search 5-star rich snippets.</li>
+              <li><strong>Pricing &amp; Shipping Contradictions:</strong> €40 vs €59 shipping; €19 vs €9.90 sample box causes immediate cart drop-off.</li>
+              <li><strong>Analytics Blind Spot:</strong> Zero GA4, zero Meta Pixel, zero automated Klaviyo email retention.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-strip">
+          <strong>The Solution:</strong> Converge these two worlds into an <strong>Automated Commercial Operating System</strong> where B2B wholesale is self-serve and retail runs on high-converting autopilot.
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 3 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 4: THE IMMEDIATE QUICK WINS (DAYS 1 - 7)                     -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">03 // IMMEDIATE TRIAGE</div>
+          <h2 class="slide-title">4 Rapid Conversion Wins in Week 1</h2>
+          <div class="slide-subtitle">Low-hanging fruit to instantly stop checkout friction and capture local Berlin demand</div>
+        </div>
+        <span class="brand-tag">WEEK 1 WINS</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-label">FIX 1 // FREE SHIPPING HARMONIZATION</div>
+            <div class="card-title">Unify Threshold at €49.00</div>
+            <div class="card-body">
+              <strong>The Problem:</strong> PDPs say <em>"Free over €59"</em>, while the policy page says <em>"Free over €40"</em>. Buyers hit with unexpected shipping abandon checkout.<br/>
+              <strong>The Fix:</strong> Standardize at <strong>€49.00</strong> across all pages and add an interactive progress bar: <em>"Add €14.31 to get Free Shipping!"</em>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">FIX 2 // GASTRO SAMPLE BOX PRICING</div>
+            <div class="card-title">Standardize €9.90 Netto Offer</div>
+            <div class="card-body">
+              <strong>The Problem:</strong> Gastro page lists €19.00, Contact page says €9.90 netto. Inconsistency destroys B2B trust.<br/>
+              <strong>The Fix:</strong> Position the box as a <strong>Phase 1 Micro-Commitment</strong>: <em>"€9.90 netto trial box — 100% credited against your first wholesale order."</em>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">FIX 3 // GOOGLE PROFILE &amp; PHONE SYNC</div>
+            <div class="card-title">Capture Berlin Local Search</div>
+            <div class="card-body">
+              <strong>The Problem:</strong> Google pin is in central Germany (SAB with hidden address); phone (+49 1515...) mismatches website.<br/>
+              <strong>The Fix:</strong> Set Berlin &amp; Potsdam as primary service areas, add <em>Tee-Großhändler</em> category, and route incoming calls directly into your WhatsApp Business.
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">FIX 4 // PRODUCT PAGE SOCIAL PROOF</div>
+            <div class="card-title">Deploy Verified Reviews on PDPs</div>
+            <div class="card-body">
+              <strong>The Problem:</strong> Zero review apps on product pages; unverified text quotes on homepage lack credibility.<br/>
+              <strong>The Fix:</strong> Install Judge.me. Import Jasmin, Marah, Allen and Google reviews directly onto <em>Schwarzwald</em>, <em>Istanbul</em> and the <em>Teapot</em>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 4 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 5: THE B2B WHOLESALE ENGINE                                  -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-5">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">04 // B2B WHOLESALE ENGINE</div>
+          <h2 class="slide-title">Transforming the 24-Page PDF into an Automated Portal</h2>
+          <div class="slide-subtitle">How we scale from 13 accounts to 100+ venues without increasing your manual workload</div>
+        </div>
+        <span class="brand-tag">SCALED B2B</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-3">
+          <div class="card accent-gold">
+            <div class="card-label">PILLAR 1</div>
+            <div class="card-title">Self-Serve B2B Portal</div>
+            <ul class="bullet-list">
+              <li><strong>Automated VAT Validation:</strong> Instant verification for German/Austrian commercial accounts.</li>
+              <li><strong>Tiered Wholesale Pricing:</strong> Display €10.74 tea pouches, €10.86 pots, and €4.20 bamboo trays automatically.</li>
+              <li><strong>Bulk Catering Refills:</strong> Introduce 1kg and 5kg refill bags for high-volume hospitality.</li>
+            </ul>
+          </div>
+
+          <div class="card accent-forest">
+            <div class="card-label">PILLAR 2</div>
+            <div class="card-title">Turnkey Cafe Starter Crate</div>
+            <ul class="bullet-list">
+              <li><strong>All-In-One Launch Pack (€249):</strong> Wooden Teebar rack + 6 jars + 6 borosilicate pots + 6 bamboo trays + 3kg starter tea.</li>
+              <li><strong>Zero Operational Barrier:</strong> Eliminates cafe prep hesitation with pre-measured dosing spoons.</li>
+              <li><strong>50%+ Hardware Margin:</strong> You profit on hardware on Day 1 while locking in recurring tea refills.</li>
+            </ul>
+          </div>
+
+          <div class="card accent-gold">
+            <div class="card-label">PILLAR 3</div>
+            <div class="card-title">Structured WhatsApp CRM</div>
+            <ul class="bullet-list">
+              <li><strong>Re-Order Automation:</strong> Automated WhatsApp check-in every 21–30 days based on cafe seating volume.</li>
+              <li><strong>1-Click Re-Order Links:</strong> Baristas tap a link to approve standard refill crates.</li>
+              <li><strong>Instant Net-Invoicing:</strong> Automatic PDF invoice generation replacing manual bookkeeping.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-strip">
+          <strong>Social Proof Amplifier:</strong> Build an interactive <em>"Where to Drink Alandas in Berlin"</em> map showcasing Vesuvio, Melt, and Friedrichs. Every new cafe owner sees proof that top venues trust you.
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 5 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 6: D2C E-COMMERCE & RETENTION                               -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-6">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">05 // D2C RETENTION ENGINE</div>
+          <h2 class="slide-title">Unlocking Frictionless Retail &amp; 30% Email Revenue</h2>
+          <div class="slide-subtitle">Lowering the first-purchase barrier and capturing automated repeat buyers</div>
+        </div>
+        <span class="brand-tag">D2C FLYWHEEL</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <!-- Discovery Sampler -->
+          <div class="card accent-gold">
+            <div class="card-label">MERCHANDISING INNOVATION</div>
+            <div class="card-title">The "Cultural World Tour" Sampler Pack</div>
+            <div class="card-body">
+              <strong>The Problem:</strong> All flavored teas only come in 220g pouches (€14.69). Forcing a first-time visitor to spend €44+ to sample 3 teas creates massive drop-off.<br/><br/>
+              <strong>The Solution:</strong> Launch a curated <strong>5x 30g Tasting Flight</strong> (<em>Istanbul, Marrakech, Bombay, Paris, Berlin</em>) + heart infuser for <strong>€19.90</strong>.
+              <ul class="bullet-list">
+                <li>Lowers initial customer acquisition cost (CAC) by 60%.</li>
+                <li>Acts as the primary gateway into the Klaviyo replenishment funnel.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Klaviyo Sequences -->
+          <div class="card accent-forest">
+            <div class="card-label">AUTOMATED RETENTION ENGINE</div>
+            <div class="card-title">4 Core Klaviyo Automated Flows</div>
+            <ul class="bullet-list">
+              <li><strong>Welcome Ritual (4 Emails):</strong> Brand heritage + 10% discount code + water temperature masterclass.</li>
+              <li><strong>Sensory Abandoned Cart (3 Emails):</strong> Visual leaf photography + flavor notes + direct WhatsApp line for advice.</li>
+              <li><strong>Post-Purchase Onboarding:</strong> Brewing instructions on Day of Delivery + review request on Day 10.</li>
+              <li><strong>Dynamic Replenishment Flow:</strong> Automated reminder on Day 45: <em>"Down to the bottom of your Bombay Chai? Refill before you run out."</em></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 6 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 7: MODERN ORGANIC GROWTH STACK                              -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-7">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">06 // SOCIAL AUTOMATION</div>
+          <h2 class="slide-title">Monetizing Instagram: The OpenReply &amp; Video Engine</h2>
+          <div class="slide-subtitle">Turning @alandastea views into direct checkouts without expensive monthly SaaS fees</div>
+        </div>
+        <span class="brand-tag">ORGANIC FUNNEL</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <!-- OpenReply -->
+          <div class="card accent-gold">
+            <div class="card-label">TOOL 1 // OPENREPLY (COMMENT-TO-DM AUTOMATION)</div>
+            <div class="card-title">Instant Direct Message Conversions</div>
+            <div class="card-body">
+              An open-source, self-hosted alternative to ManyChat running on official Meta APIs.
+              <ul class="bullet-list">
+                <li><strong>B2C Reel Hook:</strong> Sidy posts a reel of Bombay Chai brewing: <em>"Comment <strong>'CHAI'</strong> for our secret autumn recipe + 10% off your first tin."</em> → Instantly DMs the Shopify checkout link.</li>
+                <li><strong>B2B Cafe Hook:</strong> Reel of the 90-second cafe serving ritual: <em>"Berlin cafe owners: Comment <strong>'GASTRO'</strong> for our wholesale rate card &amp; sample box."</em> → Instantly captures the lead.</li>
+                <li><strong>Zero Recurring Cost:</strong> No $150/month ManyChat bills; runs on lightweight infrastructure.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- OpenChatCut -->
+          <div class="card accent-forest">
+            <div class="card-label">TOOL 2 // OPENCHATCUT (AI AGENT VIDEO EDITOR)</div>
+            <div class="card-title">Rapid Batch Video Production via MCP</div>
+            <div class="card-body">
+              An open-source, local-first video editor with Model Context Protocol (MCP) integration.
+              <ul class="bullet-list">
+                <li><strong>Agentic Editing:</strong> AI agents can programmatically cut raw phone footage of tea pouring, trim silences, and sync transitions on a real multitrack timeline.</li>
+                <li><strong>Automated Subtitles:</strong> Auto-generates stylish German/English captions optimized for 9:16 vertical Reels/TikToks.</li>
+                <li><strong>13 Destination Spotlights:</strong> Rapidly produces a batch of 13 cultural micro-reels highlighting Istanbul, Paris, Marrakech, and Himalaya.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 7 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 8: 30-DAY EXECUTION ROADMAP                                 -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-8">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">07 // EXECUTION TIMELINE</div>
+          <h2 class="slide-title">The 30-Day Phased Implementation Plan</h2>
+          <div class="slide-subtitle">Clear deliverables, structured rollout, and measurable commercial milestones</div>
+        </div>
+        <span class="brand-tag">ROADMAP</span>
+      </div>
+
+      <div class="slide-body">
+        <table class="table-modern">
+          <thead>
+            <tr>
+              <th style="width: 22%;">Phase &amp; Timeline</th>
+              <th style="width: 48%;">Core Deliverables</th>
+              <th style="width: 30%;">Measurable Business Impact</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong style="color: var(--gold-light);">Phase 1: Triage &amp; Sync</strong><br/><span style="font-size: 0.72rem; color: var(--text-dim);">Days 1 – 7</span></td>
+              <td>
+                • Standardize shipping at unified €49 threshold.<br/>
+                • Harmonize sample box at €9.90 netto credited.<br/>
+                • Sync Google Business Profile to Berlin + phone forward.<br/>
+                • Install Judge.me; seed 5.0★ badges from Jasmin, Marah &amp; Google.
+              </td>
+              <td><span class="badge badge-green">Stops Cart Drops</span><br/>Immediate 15–25% storefront conversion lift.</td>
+            </tr>
+            <tr>
+              <td><strong style="color: var(--gold-light);">Phase 2: Analytics &amp; Retention</strong><br/><span style="font-size: 0.72rem; color: var(--text-dim);">Weeks 2 – 3</span></td>
+              <td>
+                • Deploy GA4, GTM e-commerce tracking &amp; Meta CAPI.<br/>
+                • Connect Klaviyo &amp; launch the 4 automated lifecycle flows.<br/>
+                • Launch the B2C "World Tour" Sampler Pack (€19.90).
+              </td>
+              <td><span class="badge badge-gold">20–30% Back-End Revenue</span><br/>Full traffic attribution &amp; repeat sales.</td>
+            </tr>
+            <tr>
+              <td><strong style="color: var(--gold-light);">Phase 3: Social &amp; AI Funnel</strong><br/><span style="font-size: 0.72rem; color: var(--text-dim);">Weeks 4 – 5</span></td>
+              <td>
+                • Deploy OpenReply Instagram Comment-to-DM automation.<br/>
+                • Batch-produce 13 vertical Reels using OpenChatCut.<br/>
+                • Launch Instagram DM keyword campaign (<em>CHAI</em> / <em>GASTRO</em>).
+              </td>
+              <td><span class="badge badge-green">Zero-Cost Inbound</span><br/>Directly monetizes Sidy's IG audience.</td>
+            </tr>
+            <tr>
+              <td><strong style="color: var(--gold-light);">Phase 4: Scaled B2B Portal</strong><br/><span style="font-size: 0.72rem; color: var(--text-dim);">Weeks 6 – 8</span></td>
+              <td>
+                • Build self-serve Shopify B2B Wholesale Portal with VAT check.<br/>
+                • Display €10.74 tea rates, €10.86 pots, and bulk 1kg catering tiers.<br/>
+                • Berlin Outbound Blitz (50 targeted cafes/lounges per district).
+              </td>
+              <td><span class="badge badge-gold">Scalable B2B Accounts</span><br/>Scales from 13 to 100+ venues across DACH.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 8 of 9</span>
+      </div>
+    </div>
+
+    <!-- ================================================================= -->
+    <!-- SLIDE 9: NEXT STEPS & PARTNERSHIP                                 -->
+    <!-- ================================================================= -->
+    <div class="slide" id="slide-9">
+      <div class="slide-header">
+        <div>
+          <div class="slide-kicker">08 // ENGAGEMENT &amp; NEXT STEPS</div>
+          <h2 class="slide-title">How We Partner to Build Your Operating System</h2>
+          <div class="slide-subtitle">A strategic partnership delivering technical architecture, automation &amp; revenue growth</div>
+        </div>
+        <span class="brand-tag">PARTNERSHIP</span>
+      </div>
+
+      <div class="slide-body">
+        <div class="grid-2">
+          <div class="card accent-gold">
+            <div class="card-label">THE ARCHITECTURAL ADVANTAGE</div>
+            <div class="card-title">Why This Is Different</div>
+            <div class="card-body">
+              Most web designers only change button colors or install expensive monthly plugins that slow down your store.<br/><br/>
+              <strong>What I Bring to Alandas:</strong>
+              <ul class="bullet-list">
+                <li><strong>Custom API &amp; Automation Engineering:</strong> Self-hosted tools (OpenReply), automated VAT verification, and clean data integrations.</li>
+                <li><strong>Revenue Operations (RevOps):</strong> Server-side tracking (Meta CAPI, GA4) ensuring every euro is accountable.</li>
+                <li><strong>Commercial Strategy:</strong> Translating your 13-venue hospitality traction into an automated B2B wholesale engine.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card accent-forest">
+            <div class="card-label">IMMEDIATE NEXT STEPS</div>
+            <div class="card-title">Kickoff Action Items</div>
+            <ul class="bullet-list">
+              <li><strong>Step 1:</strong> Grant Shopify collaborator access to begin Phase 1 conversion fixes (shipping &amp; sample box standardization).</li>
+              <li><strong>Step 2:</strong> Forward Google Business phone number to WhatsApp Business line and add Berlin service area.</li>
+              <li><strong>Step 3:</strong> Install Judge.me and seed PDPs with Jasmin, Marah, Allen and Google reviews.</li>
+              <li><strong>Step 4:</strong> Deploy OpenReply on our server to launch the first Instagram Comment-to-DM Reel test.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="highlight-strip" style="text-align: center;">
+          <strong>Let's open the floor for questions and align on kicking off Phase 1 this week.</strong>
+        </div>
+      </div>
+
+      <div class="slide-footer">
+        <span>Alandas Strategic Presentation</span>
+        <span>Slide 9 of 9</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ================================================================= -->
+  <!-- NAVIGATION CONTROLS                                               -->
+  <!-- ================================================================= -->
+  <div class="nav-controls">
+    <button class="nav-btn" id="prev-btn" title="Previous Slide (Left Arrow)">‹</button>
+    <div class="slide-counter" id="slide-indicator">1 / 9</div>
+    <button class="nav-btn" id="next-btn" title="Next Slide (Right Arrow / Space)">›</button>
+    <button class="fullscreen-btn" id="fs-btn" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const indicator = document.getElementById('slide-indicator');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const fsBtn = document.getElementById('fs-btn');
+
+    let currentSlide = 0;
+    const totalSlides = slides.length;
+
+    function showSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+
+      slides.forEach((s, i) => {
+        s.classList.toggle('active', i === index);
+      });
+
+      currentSlide = index;
+      indicator.textContent = `${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Keyboard navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullScreen();
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(totalSlides - 1);
+      }
+    });
+
+    // Fullscreen toggle
+    function toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        }
+      }
+    }
+
+    fsBtn.addEventListener('click', toggleFullScreen);
+
+    // Initial render
+    showSlide(0);
+  </script>
+</body>
+</html>

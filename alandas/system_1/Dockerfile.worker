@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY system_1/requirements-worker.txt /app/system_1/requirements-worker.txt
+RUN pip install --no-cache-dir -r /app/system_1/requirements-worker.txt
+
+COPY system_1 /app/system_1
+COPY scripts/system1_validate_leads.py /app/scripts/system1_validate_leads.py
+COPY data/system1_leads_template.csv /app/data/system1_leads_template.csv
+
+CMD ["python", "-m", "system_1.worker"]

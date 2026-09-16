@@ -1,0 +1,321 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 2340" width="1000" height="2340">
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap');
+      text { font-family: 'Caveat', cursive, sans-serif; }
+    </style>
+    <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#FFFFFF" />
+
+  <text x="480.0" y="53" fill="#181916" font-size="23" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="480.0" dy="0">Tier 1: Essential Revenue Automation — Human-Directed Architecture</tspan>
+  </text>
+  <text x="480.0" y="79" fill="#5C5950" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Cyril Uzochukwu | AI Automation Engineer | Alandas Tea Berlin</tspan>
+  </text>
+  <ellipse cx="480.0" cy="137.5" rx="120.0" ry="27.5" fill="#FEE2E2" stroke="#F87171" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="140" fill="#991B1B" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Raw Lead Trigger</tspan>
+    <tspan x="480.0" dy="18">(Google Maps / Instagram)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="165" x2="480" y2="205" stroke="#181916" stroke-width="2" />
+    <polygon points="480,205 473.5,193.7416697508023 486.5,193.7416697508023" fill="#181916" />
+  </g>
+  <rect x="345" y="205" width="270" height="55" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="234" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Extract &amp; Normalize Venue Data</tspan>
+    <tspan x="480.0" dy="17">(Website, IG handle, Address)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="260" x2="480" y2="295" stroke="#181916" stroke-width="2" />
+    <polygon points="480,295 473.5,283.7416697508023 486.5,283.7416697508023" fill="#181916" />
+  </g>
+  <rect x="345" y="295" width="270" height="55" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="324" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Idempotency &amp; Dolibarr Check</tspan>
+    <tspan x="480.0" dy="17">(Existing Customer / Active Lead?)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="350" x2="480" y2="385" stroke="#181916" stroke-width="2" />
+    <polygon points="480,385 473.5,373.7416697508023 486.5,373.7416697508023" fill="#181916" />
+  </g>
+  <rect x="330" y="385" width="300" height="55" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="414" fill="#C2410C" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Budget &amp; Rate Limit Check</tspan>
+    <tspan x="480.0" dy="17">(Max €15/day scraping spend)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="630" y1="412" x2="725" y2="412" stroke="#EF4444" stroke-width="2" />
+    <polygon points="725,412 713.7416697508023,418.5 713.7416697508023,405.5" fill="#EF4444" />
+  </g>
+  <text x="677.5" y="406.0" fill="#DC2626" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="677.5" dy="0">TRIP</tspan>
+  </text>
+  <rect x="725" y="387" width="160" height="50" rx="12" fill="#FEE2E2" stroke="#F87171" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="805.0" y="414" fill="#991B1B" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="805.0" dy="0">Alert Cyril Stop</tspan>
+    <tspan x="805.0" dy="17">(Circuit Open)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="440" x2="480" y2="480" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,480 473.5,468.7416697508023 486.5,468.7416697508023" fill="#15803D" />
+  </g>
+  <text x="523.0" y="462.0" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">OK</tspan>
+  </text>
+  <rect x="320" y="480" width="320" height="60" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="506" fill="#166534" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Stage 0: Free § 5 TMG Scraper</tspan>
+    <tspan x="480.0" dy="18">(Scrape /impressum, /kontakt, /legal)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="540" x2="480" y2="575" stroke="#181916" stroke-width="2" />
+    <polygon points="480,575 473.5,563.7416697508023 486.5,563.7416697508023" fill="#181916" />
+  </g>
+  <polygon points="480.0,575 560,630.0 480.0,685 400,630.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="624" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Owner Email</tspan>
+    <tspan x="480.0" dy="17">Found in</tspan>
+    <tspan x="480.0" dy="17">Impressum?</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="560" y1="630" x2="655" y2="630" stroke="#15803D" stroke-width="2" />
+    <polygon points="655,630 643.7416697508023,636.5 643.7416697508023,623.5" fill="#15803D" />
+  </g>
+  <text x="607.5" y="624.0" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="607.5" dy="0">YES (48%)</tspan>
+  </text>
+  <rect x="655" y="600" width="175" height="60" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="742.5" y="623" fill="#166534" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="742.5" dy="0">FREE (§ 5 TMG Success)</tspan>
+    <tspan x="742.5" dy="15">Skip Bulk Paid APIs!</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="685" x2="480" y2="730" stroke="#181916" stroke-width="2" />
+    <polygon points="480,730 473.5,718.7416697508023 486.5,718.7416697508023" fill="#181916" />
+  </g>
+  <text x="523.0" y="709.5" fill="#5C5950" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">NO (52%)</tspan>
+  </text>
+  <rect x="345" y="730" width="270" height="55" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="757" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Stage 1: GitLeads / Apollo Bulk DB</tspan>
+    <tspan x="480.0" dy="17">(Low-Cost Query: €0.005 / check)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="785" x2="480" y2="820" stroke="#181916" stroke-width="2" />
+    <polygon points="480,820 473.5,808.7416697508023 486.5,808.7416697508023" fill="#181916" />
+  </g>
+  <polygon points="480.0,820 560,875.0 480.0,930 400,875.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="869" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Email</tspan>
+    <tspan x="480.0" dy="17">Resolved in</tspan>
+    <tspan x="480.0" dy="17">Bulk DB?</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="560" y1="875" x2="655" y2="875" stroke="#15803D" stroke-width="2" />
+    <polygon points="655,875 643.7416697508023,881.5 643.7416697508023,868.5" fill="#15803D" />
+  </g>
+  <text x="607.5" y="869.0" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="607.5" dy="0">YES (+24%)</tspan>
+  </text>
+  <rect x="655" y="850" width="160" height="50" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="735.0" y="874" fill="#0369A1" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="735.0" dy="0">Pass to Validation Gate</tspan>
+    <tspan x="735.0" dy="15">(€0.005 Cost)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="930" x2="480" y2="975" stroke="#181916" stroke-width="2" />
+    <polygon points="480,975 473.5,963.7416697508023 486.5,963.7416697508023" fill="#181916" />
+  </g>
+  <text x="523.0" y="954.5" fill="#5C5950" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">NO (28%)</tspan>
+  </text>
+  <rect x="345" y="975" width="270" height="55" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="1002" fill="#C2410C" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Stage 2: Origami / Prospeo Scraper</tspan>
+    <tspan x="480.0" dy="17">(Name Permutation + MX: €0.02)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1030" x2="480" y2="1065" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1065 473.5,1053.7416697508022 486.5,1053.7416697508022" fill="#181916" />
+  </g>
+  <polygon points="480.0,1065 570,1125.0 480.0,1185 390,1125.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="1115" fill="#854D0E" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">MillionVerifier</tspan>
+    <tspan x="480.0" dy="18">Deliverability</tspan>
+    <tspan x="480.0" dy="18">Result?</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="570" y1="1125" x2="665" y2="1125" stroke="#EF4444" stroke-width="2" />
+    <polygon points="665,1125 653.7416697508023,1131.5 653.7416697508023,1118.5" fill="#EF4444" />
+  </g>
+  <text x="617.5" y="1119.0" fill="#DC2626" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="617.5" dy="0">INVALID</tspan>
+  </text>
+  <rect x="665" y="1095" width="175" height="60" rx="12" fill="#FEE2E2" stroke="#F87171" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="752.5" y="1119" fill="#991B1B" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="752.5" dy="0">Discard Email</tspan>
+    <tspan x="752.5" dy="15">(Protect Bounce Rate &lt;1.5%)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="390" y1="1125" x2="295" y2="1125" stroke="#F59E0B" stroke-width="2" />
+    <polygon points="295,1125 306.2583302491977,1118.5 306.2583302491977,1131.5" fill="#F59E0B" />
+  </g>
+  <text x="342.5" y="1119.0" fill="#D97706" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="342.5" dy="0">RISKY</tspan>
+  </text>
+  <rect x="120" y="1095" width="175" height="60" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="207.5" y="1119" fill="#C2410C" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="207.5" dy="0">Route to WhatsApp / Alt</tspan>
+    <tspan x="207.5" dy="15">(Do not send cold email)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1185" x2="480" y2="1230" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,1230 473.5,1218.7416697508022 486.5,1218.7416697508022" fill="#15803D" />
+  </g>
+  <text x="523.0" y="1209.5" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">VALID</tspan>
+  </text>
+  <rect x="345" y="1230" width="270" height="55" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="1257" fill="#C2410C" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Stage 3: LeadMagic Mobile Discovery</tspan>
+    <tspan x="480.0" dy="17">(Find Direct WhatsApp Phone)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1285" x2="480" y2="1325" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1325 473.5,1313.7416697508022 486.5,1313.7416697508022" fill="#181916" />
+  </g>
+  <rect x="260" y="1325" width="440" height="125" rx="12" fill="#F3E8FF" stroke="#C084FC" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="275" y="1350" fill="#7E22CE" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="275" dy="0">Agent 1 — ICP Qualification Agent (Gemini Flash)</tspan>
+  </text>
+  <rect x="285" y="1370" width="180" height="55" rx="12" fill="#FFFFFF" stroke="#A855F7" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="375.0" y="1396" fill="#6B21A8" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="375.0" dy="0">Analyze Menu &amp;</tspan>
+    <tspan x="375.0" dy="15">Seating (&gt;30 seats)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="465" y1="1397" x2="495" y2="1397" stroke="#A855F7" stroke-width="2" />
+    <polygon points="495,1397 483.7416697508023,1403.5 483.7416697508023,1390.5" fill="#A855F7" />
+  </g>
+  <rect x="495" y="1370" width="180" height="55" rx="12" fill="#FFFFFF" stroke="#A855F7" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="585.0" y="1396" fill="#6B21A8" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="585.0" dy="0">Calculate ICP Score</tspan>
+    <tspan x="585.0" dy="15">&amp; Concept Fit</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1450" x2="480" y2="1485" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1485 473.5,1473.7416697508022 486.5,1473.7416697508022" fill="#181916" />
+  </g>
+  <polygon points="480.0,1485 560,1540.0 480.0,1595 400,1540.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="1534" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">ICP Score</tspan>
+    <tspan x="480.0" dy="17">&gt;= 70?</tspan>
+    <tspan x="480.0" dy="17">(High Fit)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="400" y1="1540" x2="305" y2="1540" stroke="#F59E0B" stroke-width="2" />
+    <polygon points="305,1540 316.2583302491977,1533.5 316.2583302491977,1546.5" fill="#F59E0B" />
+  </g>
+  <text x="352.5" y="1534.0" fill="#D97706" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="352.5" dy="0">NO</tspan>
+  </text>
+  <rect x="130" y="1515" width="175" height="50" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="217.5" y="1539" fill="#C2410C" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="217.5" dy="0">Archive to Low-Priority</tspan>
+    <tspan x="217.5" dy="15">(Nurture List)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1595" x2="480" y2="1640" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,1640 473.5,1628.7416697508022 486.5,1628.7416697508022" fill="#15803D" />
+  </g>
+  <text x="523.0" y="1619.5" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">YES</tspan>
+  </text>
+  <rect x="210" y="1640" width="540" height="125" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="225" y="1665" fill="#166534" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="225" dy="0">Agent 2 — Pitch Personalization Engine (Claude 3.5 Sonnet)</tspan>
+  </text>
+  <rect x="240" y="1685" width="150" height="55" rx="12" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="315.0" y="1710.5" fill="#15803D" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="315.0" dy="0">Extract Cafe Aesthetic</tspan>
+    <tspan x="315.0" dy="15">&amp; Signature Blends</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="390" y1="1712" x2="415" y2="1712" stroke="#22C55E" stroke-width="2" />
+    <polygon points="415,1712 403.7416697508023,1718.5 403.7416697508023,1705.5" fill="#22C55E" />
+  </g>
+  <rect x="415" y="1685" width="150" height="55" rx="12" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="490.0" y="1710.5" fill="#15803D" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="490.0" dy="0">Draft €19 Discovery Box</tspan>
+    <tspan x="490.0" dy="15">Personalized Pitch</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="565" y1="1712" x2="590" y2="1712" stroke="#22C55E" stroke-width="2" />
+    <polygon points="590,1712 578.7416697508023,1718.5 578.7416697508023,1705.5" fill="#22C55E" />
+  </g>
+  <rect x="590" y="1685" width="150" height="55" rx="12" fill="#FFFFFF" stroke="#22C55E" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="665.0" y="1710.5" fill="#15803D" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="665.0" dy="0">Queue Draft in Sidy's</tspan>
+    <tspan x="665.0" dy="15">WhatsApp Inbox</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1765" x2="480" y2="1800" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1800 473.5,1788.7416697508022 486.5,1788.7416697508022" fill="#181916" />
+  </g>
+  <polygon points="480.0,1800 570,1855.0 480.0,1910 390,1855.0" fill="#FEF08A" stroke="#EAB308" stroke-width="3" filter="url(#handDrawn)" />
+  <text x="480.0" y="1849.5" fill="#854D0E" font-size="13.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Sidy Approves</tspan>
+    <tspan x="480.0" dy="17">on WhatsApp?</tspan>
+    <tspan x="480.0" dy="17">(Human Gate)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="570" y1="1855" x2="665" y2="1855" stroke="#EF4444" stroke-width="2" />
+    <polygon points="665,1855 653.7416697508023,1861.5 653.7416697508023,1848.5" fill="#EF4444" />
+  </g>
+  <text x="617.5" y="1849.0" fill="#DC2626" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="617.5" dy="0">REJECT</tspan>
+  </text>
+  <rect x="665" y="1830" width="160" height="50" rx="12" fill="#FEE2E2" stroke="#F87171" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="745.0" y="1854" fill="#991B1B" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="745.0" dy="0">Discard / Edit Draft</tspan>
+    <tspan x="745.0" dy="15">(Zero Brand Risk)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1910" x2="480" y2="1955" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,1955 473.5,1943.7416697508022 486.5,1943.7416697508022" fill="#15803D" />
+  </g>
+  <text x="523.0" y="1934.5" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">1-TAP APPROVE</tspan>
+  </text>
+  <rect x="310" y="1955" width="340" height="65" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="1982" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Temporal Execution Activity</tspan>
+    <tspan x="480.0" dy="17">(Send WhatsApp Outreach + Create Dolibarr Lead)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="2020" x2="480" y2="2055" stroke="#181916" stroke-width="2" />
+    <polygon points="480,2055 473.5,2043.7416697508022 486.5,2043.7416697508022" fill="#181916" />
+  </g>
+  <rect x="310" y="2055" width="340" height="65" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="2082.5" fill="#166534" font-size="13.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Log Entity to Dolibarr CRM &amp;</tspan>
+    <tspan x="480.0" dy="17">PostgreSQL Audit Ledger</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="2120" x2="480" y2="2155" stroke="#181916" stroke-width="2" />
+    <polygon points="480,2155 473.5,2143.7416697508024 486.5,2143.7416697508024" fill="#181916" />
+  </g>
+  <rect x="320" y="2155" width="320" height="60" rx="12" fill="#DCFCE7" stroke="#22C55E" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="2180.5" fill="#15803D" font-size="13.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Durable Temporal Timer</tspan>
+    <tspan x="480.0" dy="17">(Day-4 Tasting Check-In &amp; Day-25 Refill)</tspan>
+  </text>
+</svg>

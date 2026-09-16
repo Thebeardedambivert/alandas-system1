@@ -1,0 +1,2428 @@
+{
+  "products": [
+    {
+      "id": 15815054918014,
+      "title": "TEEBAR | Holzregal mit Aufbewahrungsgläser, versch. Größen",
+      "handle": "teebar-holzregal-mit-aufbewahrungsglaeser",
+      "body_html": "<p>TEEBAR – Stilvolle Präsentation für außergewöhnlichen Tee.</p>\n<p><strong>Mit der Alanda's Teebar präsentieren Sie hochwertigen Tee in seiner natürlichsten und elegantesten Form. Die Kombination aus warmem Holz und klaren Glasbehältern schafft eine hochwertige Atmosphäre und macht jede Teeauswahl zu einem visuellen Erlebnis – ideal für Cafés, Restaurants, Hotels und andere stilvolle Einrichtungen.</strong></p>\n<p>✓ Hochwertiges Holzdesign<br>✓ Perfekt für Gastronomie und Hotels<br>✓ Stilvolle Präsentation von losem Tee</p>\n<p><strong>Material:</strong> Holzregal mit Glasbehältern und Bambusdeckel<br><strong>Aufbewahrungsgläser:</strong> 15 cm hoch × 10 cm breit<br><strong>Deckel:</strong> Bambusdeckel mit luftdichtem Verschluss<br><strong>Verwendung:</strong> Präsentation und Aufbewahrung loser Tees</p>\n<p><strong>Größe der Teebar:</strong><br>6er Teebar: 27 cm hoch × 35 cm breit × 28 cm tief<br>8er Teebar: 27 cm hoch × 46 cm breit × 28 cm tief</p>\n<p><strong>Lieferumfang:</strong> 1 Holzregal + passende Glasbehälter (für 6 oder 8 Teesorten)</p>\n<p>Perfekt für eine stilvolle Teepräsentation in der Gastronomie, auf Hotelbuffets oder in hochwertigen Café-Konzepten.</p>",
+      "published_at": "2026-04-01T12:53:28+02:00",
+      "created_at": "2026-03-09T22:24:05+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "b2b"
+      ],
+      "variants": [
+        {
+          "id": 57060718575998,
+          "title": "Braun",
+          "option1": "Braun",
+          "option2": null,
+          "option3": null,
+          "sku": null,
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": false,
+          "price": "79.00",
+          "grams": 0,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15815054918014,
+          "created_at": "2026-03-09T22:24:05+01:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        },
+        {
+          "id": 57060718608766,
+          "title": "Schwarz",
+          "option1": "Schwarz",
+          "option2": null,
+          "option3": null,
+          "sku": null,
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": false,
+          "price": "79.00",
+          "grams": 0,
+          "compare_at_price": null,
+          "position": 2,
+          "product_id": 15815054918014,
+          "created_at": "2026-03-09T22:24:05+01:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 82741698199934,
+          "created_at": "2026-03-15T00:34:00+01:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:32:41+02:00",
+          "product_id": 15815054918014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/TEEBAR_8er_Holzregal_mit_Teegl_sern_Alanda_s_Tea.png?v=1778844761",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82741773500798,
+          "created_at": "2026-03-15T00:41:05+01:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:33:22+02:00",
+          "product_id": 15815054918014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/TEEBAR_6er_Holzregal_mit_Teegl_sern_Alanda_s_Tea.png?v=1778844802",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82735193784702,
+          "created_at": "2026-03-14T16:03:57+01:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:34:01+02:00",
+          "product_id": 15815054918014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/TEEBAR_Holzregal_8er_auf_Marmor_Alanda_s_Tea_Pr_sentation.png?v=1778844841",
+          "width": 1000,
+          "height": 1000
+        }
+      ],
+      "options": [
+        {
+          "name": "Farbe",
+          "position": 1,
+          "values": [
+            "Braun",
+            "Schwarz"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15423258165630,
+      "title": "Tea Experience Box",
+      "handle": "gastro-testpaket",
+      "body_html": "<p>ALANDA'S TEA EXPERIENCE BOX – Das Tee-Konzept für Gastronomie zum Testen.</p>\n<p><strong>Mit der Alanda's Tea Experience Box können Cafés, Restaurants und Hotels unser Teekonzept unkompliziert kennenlernen. Für nur 19 € Schutzgebühr erhalten Sie eine Auswahl unserer Tees sowie das passende Zubehör, um das Alanda's Teeritual direkt im Betrieb zu testen.</strong></p>\n<p>✓ Nur 19 € inkl. Versand<br>✓ Perfekt für Cafés, Restaurants und Hotels<br>✓ Tee-Konzept einfach im Betrieb testen</p>\n<p><strong>Inhalt der Box:</strong><br>5–6 ausgewählte Teesorten von Alanda's <br>Glas Teekanne (350 ml)<br>Bambus Tablett<br>Edelstahl Dosierlöffel<br>Anleitung mit QR-Codes zu Video- und Bildanleitungen<br><br></p>\n<p><strong>Verwendung:</strong> Ideal, um das Alanda's Teeangebot im eigenen Café, Restaurant oder Hotel zu testen.<br><strong>Besonderheit:</strong> Über QR-Codes erhalten Sie Zugriff auf Videos und Bilder, die zeigen, wie das Teeritual optimal serviert wird.</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p>Perfekt für Gastronomiebetriebe, die ihr Getränkeangebot erweitern und Gästen ein hochwertiges Teeerlebnis anbieten möchten.</p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\nmargin-top:20px;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:14px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\nfont-size:15px;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.info-section p{\nmargin-top:10px;\nline-height:1.6;\n}\n\n</style>\n<div class=\"info-section\">\n<details open=\"\">\n<summary>Versand <span>▾</span></summary>\n<p>Die Tea Experience Box wird ausschließlich zur Vorstellung unseres Tee-Konzeptes für Gastronomiebetriebe angeboten.<br><strong>Kosten:</strong> Schutzgebühr 19 € , bei Erstbestellung anrechenbar.<br><strong>Lieferzeit:</strong> 1–3 Werktage</p>\n</details>\n<details open=\"\">\n<summary>Für wen ist die Box gedacht? <span>▾</span></summary>\n<p>Die Box richtet sich an <strong>Cafés, Restaurants, Hotels und andere gastronomische Betriebe</strong>, die hochwertige Tees in ihr Angebot aufnehmen möchten.</p>\n<p>Sie erhalten einen Einblick in unser Konzept und können die Produkte direkt im Betrieb testen.</p>\n</details>\n<br>\n</div>",
+      "published_at": "2026-03-30T13:22:57+02:00",
+      "created_at": "2025-06-10T23:22:43+02:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alandas",
+      "product_type": "Physical",
+      "tags": [],
+      "variants": [
+        {
+          "id": 55718942605694,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "19.00",
+          "grams": 2500,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15423258165630,
+          "created_at": "2025-06-10T23:22:43+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 76673727594878,
+          "created_at": "2025-06-12T22:02:14+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:42:48+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Tea_Experience_Box_Teeset_mit_BOMBAY_Chai_Latte_Alanda_s_Tea.jpg?v=1778845368",
+          "width": 1130,
+          "height": 1130
+        },
+        {
+          "id": 82769736073598,
+          "created_at": "2026-03-16T12:44:31+01:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:43:28+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Tea_Experience_Box_Teearten_Auswahl_Alanda_s_Tea.png?v=1778845408",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 73490205245822,
+          "created_at": "2025-02-27T21:41:49+01:00",
+          "position": 3,
+          "updated_at": "2026-03-30T18:57:23+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teekanne_glas.jpg?v=1774889843",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 74086840729982,
+          "created_at": "2025-03-31T20:45:40+02:00",
+          "position": 4,
+          "updated_at": "2026-05-15T13:47:34+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Bambus_Tablett_Freisteller_wei_er_Hintergrund_Alanda_s_Tea.png?v=1778845654",
+          "width": 673,
+          "height": 652
+        },
+        {
+          "id": 83019217371518,
+          "created_at": "2026-03-30T18:57:06+02:00",
+          "position": 5,
+          "updated_at": "2026-05-15T13:44:41+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Tea_Experience_Box_Edelstahl_Massl_ffel_Alanda_s_Tea.jpg?v=1778845481",
+          "width": 1500,
+          "height": 1500
+        },
+        {
+          "id": 82769651532158,
+          "created_at": "2026-03-16T12:29:26+01:00",
+          "position": 6,
+          "updated_at": "2026-05-15T13:45:19+02:00",
+          "product_id": 15423258165630,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Tea_Experience_Box_Premium_Teeset_Gastronomie_Alanda_s_Tea.png?v=1778845519",
+          "width": 1000,
+          "height": 1000
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15815054229886,
+      "title": "Teesieb | Herzform für losen Tee",
+      "handle": "teesieb-in-herzform",
+      "body_html": "<p>HERZ TEESIEB – Stilvoller Teegenuss für losen Tee.</p>\n<p><strong>Das herzförmige Teesieb aus Edelstahl verbindet praktisches Design mit eleganter Form. Dank feiner Perforationen können sich die Aromen des losen Tees optimal entfalten, während die Blätter sicher im Filter bleiben – für eine klare und aromatische Tasse Tee.</strong></p>\n<p>✓ Hochwertiger Edelstahl<br>✓ Feine Perforation für klaren Tee<br>✓ Einfach zu reinigen und wiederverwendbar</p>\n<p><strong>Material:</strong> Edelstahl<br><strong>Design:</strong> Löffel mit herzförmigem Teefilter<br><strong>Farbe:</strong> Silber<br><strong>Verwendung:</strong> Für losen Tee, Kräuter und Gewürze</p>\n<p><strong>Anwendung:</strong><br>Einfach den Filter öffnen, losen Tee einfüllen und das Teesieb in heißes Wasser geben. Nach wenigen Minuten entfaltet sich das volle Aroma des Tees.</p>\n<p><strong>Größe:</strong> 14,3 cm × 4,3 cm × 1,7 cm</p>\n<p>Perfekt für eine einzelne Tasse Tee zu Hause, im Büro oder unterwegs – auch eine schöne Geschenkidee für Teeliebhaber.</p>",
+      "published_at": "2026-03-20T20:50:18+01:00",
+      "created_at": "2026-03-09T22:14:57+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [],
+      "variants": [
+        {
+          "id": 57206920348030,
+          "title": "Privat",
+          "option1": "Privat",
+          "option2": null,
+          "option3": null,
+          "sku": null,
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "5.95",
+          "grams": 50,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15815054229886,
+          "created_at": "2026-04-03T16:35:00+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 82741588361598,
+          "created_at": "2026-03-15T00:21:14+01:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:35:20+02:00",
+          "product_id": 15815054229886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teesieb_Herzform_Edelstahl_f_r_losen_Tee_Alanda_s_Tea.png?v=1778844920",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82741140685182,
+          "created_at": "2026-03-14T23:31:45+01:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:35:59+02:00",
+          "product_id": 15815054229886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teesieb_Herzform_Tee_aufgiessen_in_Glastasse.png?v=1778844959",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82741140652414,
+          "created_at": "2026-03-14T23:31:44+01:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:36:41+02:00",
+          "product_id": 15815054229886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teesieb_Herzform_im_Tee_Alanda_s_Tea_Lifestyle.png?v=1778845001",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82651896512894,
+          "created_at": "2026-03-09T22:14:47+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T13:37:11+02:00",
+          "product_id": 15815054229886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teesieb_Herzform_Edelstahl_Freisteller_Alanda_s_Tea.webp?v=1778845031",
+          "width": 720,
+          "height": 720
+        }
+      ],
+      "options": [
+        {
+          "name": "Kundentyp",
+          "position": 1,
+          "values": [
+            "Privat"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15463353745790,
+      "title": "PARIS | Früchte & Blüten",
+      "handle": "paris-fruechtetee-erdbeere-hibiskus",
+      "body_html": "<p>PARIS - Ein fruchtiger Genuss mit echten Erdbeeren und Sahnenote</p>\n<p><strong>Entdecke die Leichtigkeit und Eleganz von Paris in jeder Tasse. Unsere PARIS Teemischung vereint fruchtige Erdbeeren, süße Äpfel und kräftigen Hibiskus zu einem verführerischen Geschmackserlebnis.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Beerig-fruchtig mit zarter Sahnenote<br><strong>Wirkung:</strong> Wohltuend und erfrischend<br><strong>Zutaten:</strong> Erdbeeren, Apfel, Hibiskus, Hagebutten, Kornblumenblüten und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1-2 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5-7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Genussvolle Momente am Nachmittag, als erfrischender Eistee im Sommer oder als besonderes Highlight in der Gastronomie.</p>\n<p> </p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:12px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.nutrition-table{\nwidth:100%;\nborder-collapse:collapse;\nmargin-top:10px;\nfont-size:14px;\n}\n\n.nutrition-table tr{\nborder-bottom:1px solid #e6e1d6;\n}\n\n.nutrition-table td{\npadding:6px 0;\n}\n\n.nutrition-table td:last-child{\ntext-align:right;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,32 kj (0,3 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu PARIS<span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht PARIS Tee besonders?</strong></p>\n<p>PARIS ist ein eleganter Früchtetee, der süße Erdbeeren, fruchtigen Apfel und kräftigen Hibiskus mit einer feinen Sahnenote vereint. Die Mischung erinnert an französische Patisserie und bringt Leichtigkeit und Genuss in jede Tasse.</p>\n<p><strong>Ist Früchtetee tatsächlich gesund?</strong></p>\n<p>Früchtetee kann eine gesunde Wahl sein, besonders wenn er – wie PARIS – ohne Zuckerzusätze und künstliche Zusatzstoffe auskommt. Zutaten wie Hagebutte und Hibiskus enthalten Antioxidantien und bringen natürliche Fruchtigkeit in deine Tasse.</p>\n<p><strong>Wann passt PARIS am besten?</strong></p>\n<p>PARIS passt perfekt zu entspannten Momenten, als süße Auszeit am Nachmittag oder als leichter Dessert-Tee am Abend. Auch gekühlt als Eistee ein Genuss.</p>\n</details>\n</div>\n",
+      "published_at": "2025-06-26T12:26:07+02:00",
+      "created_at": "2025-06-26T12:21:27+02:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879197720958,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "10113",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15463353745790,
+          "created_at": "2025-06-26T12:21:27+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110797074814,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:38:36+02:00",
+          "product_id": 15463353745790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/PARIS_Fr_chtetee_Alanda_s_Tea_Doypack_rot_220g.webp?v=1778845116",
+          "width": 799,
+          "height": 799
+        },
+        {
+          "id": 77110793404798,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:39:05+02:00",
+          "product_id": 15463353745790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/PARIS_Fr_chtetee_Nahaufnahme_loser_Tee_Alanda_s_Tea.webp?v=1778845145",
+          "width": 419,
+          "height": 419
+        },
+        {
+          "id": 77110796910974,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:39:32+02:00",
+          "product_id": 15463353745790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/PARIS_Fr_chtetee_Doypack_R_ckseite_Zutaten_Zubereitung.webp?v=1778845172",
+          "width": 753,
+          "height": 753
+        },
+        {
+          "id": 82735193588094,
+          "created_at": "2026-03-14T16:03:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-20T13:25:36+02:00",
+          "product_id": 15463353745790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/paris_lifestyle_tea_on_balcony.png?v=1779276336",
+          "width": 1216,
+          "height": 1216
+        },
+        {
+          "id": 82928389226878,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 5,
+          "updated_at": "2026-05-20T13:21:37+02:00",
+          "product_id": 15463353745790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/PARIS_Fr_chtetee_mit_Erdbeeren_Alanda_s_Tea_Premium_Produktfoto.jpg?v=1779276097",
+          "width": 1173,
+          "height": 1173
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15053227590014,
+      "title": "Bambus Tablett | Ideal zum Tee servieren",
+      "handle": "bambus-tablett",
+      "body_html": "<p>BAMBUS TABLETT – Natürliches Serviertablett aus nachhaltigem Bambus.</p>\n<p><strong>Dieses Serviertablett aus hochwertigem Bambusholz verbindet natürliche Schönheit mit funktionalem Design. Die warme Holzstruktur und die feine Maserung machen jedes Tablett zu einem kleinen Unikat – perfekt, um Tee stilvoll zu servieren oder als elegante Unterlage für Teekanne und Glas.</strong></p>\n<p>✓ Nachhaltiges Bambusholz<br>✓ Robust und langlebig<br>✓ Ideal für Teekanne und Teeglas</p>\n<p><strong>Material:</strong> Ökologisches Bambusholz<br><strong>Oberfläche:</strong> Glatt geschliffen mit natürlicher Holzmaserung<br><strong>Verwendung:</strong> Servieren von Tee, Getränken oder kleinen Speisen<br><strong>Eigenschaft:</strong> Stabil, belastbar und langlebig</p>\n<p><strong>Maße:</strong><br>22,5 cm × 14 cm × 2,5 cm</p>\n<p>Perfekt für die stilvolle Präsentation von Teekanne und Glas – ideal für gemütliche Teemomente zu Hause oder für eine elegante Teepräsentation in der Gastronomie.</p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\nmargin-top:20px;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:14px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\nfont-size:15px;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.info-section p{\nmargin-top:10px;\nline-height:1.6;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Versand <span>▾</span></summary>\n<p><strong>Lieferzeit:</strong> 1–3 Werktage innerhalb Deutschlands<br><strong>Versand:</strong> DHL (klimaneutral)<br><strong>Versandkosten:</strong> 5,90 €<br><strong>Kostenloser Versand</strong> ab 59 € Bestellwert</p>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p>Unsere Produkte stehen für <strong>hochwertige Materialien</strong> und zeitloses Design. Das Bambus-Tablett verbindet natürliche Ästhetik mit langlebiger Qualität – für stilvolle Teemomente.</p>\n<p><em>Natürlich. Elegant. Zeitlos.</em></p>\n</details>\n</div>",
+      "published_at": "2025-03-31T20:47:54+02:00",
+      "created_at": "2025-03-31T20:47:54+02:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "",
+      "tags": [
+        "Zubehör"
+      ],
+      "variants": [
+        {
+          "id": 55879397638526,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "10050",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "9.89",
+          "grams": 140,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15053227590014,
+          "created_at": "2025-06-26T13:08:00+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77121415086462,
+          "created_at": "2025-07-10T19:52:40+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:46:35+02:00",
+          "product_id": 15053227590014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Bambus_Tablett_Alanda_s_Tea_Teepr_sentation_roter_Hintergrund.webp?v=1778845595",
+          "width": 1009,
+          "height": 1009
+        },
+        {
+          "id": 74086840762750,
+          "created_at": "2025-03-31T20:45:40+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:47:08+02:00",
+          "product_id": 15053227590014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Bambus_Tablett_mit_Glaskanne_und_Teeglas_Alanda_s_Tea_Lifestyle.jpg?v=1778845628",
+          "width": 1130,
+          "height": 1382
+        },
+        {
+          "id": 74086840729982,
+          "created_at": "2025-03-31T20:45:40+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:47:34+02:00",
+          "product_id": 15053227590014,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Bambus_Tablett_Freisteller_wei_er_Hintergrund_Alanda_s_Tea.png?v=1778845654",
+          "width": 673,
+          "height": 652
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 15031901159806,
+      "title": "Aufbewahrungsglas | 800ml luftdicht mit Bambusdeckel",
+      "handle": "aufbewahrungsglas",
+      "body_html": "<p>AUFBEWAHRUNGSGLAS – Stilvolle und aromadichte Aufbewahrung für losen Tee.</p>\n<p><strong>Dieses hochwertige Aufbewahrungsglas aus Borosilikatglas mit Bambusdeckel hält Tee und andere Lebensmittel frisch und schützt zuverlässig vor Feuchtigkeit. Das klare, minimalistische Design fügt sich perfekt in jedes Teeregal ein und lässt die natürlichen Farben und Strukturen des Tees sichtbar werden.</strong></p>\n<p>✓ Aromadichter Bambusdeckel mit Dichtung<br>✓ Modernes, minimalistisches Design<br>✓ Nachhaltige Alternative zu Plastik</p>\n<p><strong>Material:</strong> Borosilikatglas und Bambus<br><strong>Deckel:</strong> Bambusdeckel mit luftdichter Dichtung<br><strong>Eigenschaft:</strong> Aromadicht und lebensmittelecht<br><strong>Verwendung:</strong> Ideal zur Aufbewahrung von Tee, Kräutern oder Gewürzen</p>\n<p><strong>Maße:</strong> 15 cm × 10 cm (Höhe × Ø)<br><strong>Füllmenge:</strong> 800 ml<br><strong>Farbe:</strong> Transparent / Naturholz</p>\n<p>Perfekt für die stilvolle Aufbewahrung von losem Tee – ideal für Teeregale, Küchen oder die Präsentation in Cafés und Restaurants.</p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\nmargin-top:20px;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:14px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\nfont-size:15px;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.info-section p{\nmargin-top:10px;\nline-height:1.6;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Versand <span>▾</span></summary>\n<p><strong>Lieferzeit:</strong> 1–3 Werktage innerhalb Deutschlands<br><strong>Versand:</strong> DHL (klimaneutral)<br><strong>Versandkosten:</strong> 5,90 €<br><strong>Kostenloser Versand</strong> ab 59 € Bestellwert</p>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p>Unsere Produkte stehen für <strong>hochwertige Materialien</strong> und zeitloses Design. Das Aufbewahrungsglas schützt Tee zuverlässig vor Feuchtigkeit und bewahrt das natürliche Aroma.</p>\n<p><em>Frische bewahren. Stilvoll aufbewahren.</em></p>\n</details>\n</div>",
+      "published_at": "2025-03-29T17:02:02+01:00",
+      "created_at": "2025-03-29T17:02:02+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "My Store",
+      "product_type": "",
+      "tags": [
+        "Zubehör"
+      ],
+      "variants": [
+        {
+          "id": 55879392493950,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "10040",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "8.90",
+          "grams": 140,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 15031901159806,
+          "created_at": "2025-06-26T13:06:17+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77121415184766,
+          "created_at": "2025-07-10T19:52:40+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:49:05+02:00",
+          "product_id": 15031901159806,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Aufbewahrungsglas_800ml_Bambusdeckel_Alanda_s_Tea_gelber_Hintergrund.webp?v=1778845745",
+          "width": 1416,
+          "height": 1416
+        },
+        {
+          "id": 82628541415806,
+          "created_at": "2026-03-08T21:00:39+01:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:49:51+02:00",
+          "product_id": 15031901159806,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Aufbewahrungsglas_800ml_mit_BOMBAY_Schwarztee_Alanda_s_Tea.png?v=1778845791",
+          "width": 756,
+          "height": 945
+        },
+        {
+          "id": 74053756911998,
+          "created_at": "2025-03-29T16:59:48+01:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:50:20+02:00",
+          "product_id": 15031901159806,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Aufbewahrungsglas_800ml_Bambusdeckel_von_oben_Alanda_s_Tea.png?v=1778845820",
+          "width": 673,
+          "height": 652
+        },
+        {
+          "id": 73490669601150,
+          "created_at": "2025-02-27T21:47:55+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T13:50:58+02:00",
+          "product_id": 15031901159806,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Aufbewahrungsglas_BOMBAY_Tee_mit_Teeglas_Lifestyle_Alanda_s_Tea.png?v=1778845858",
+          "width": 673,
+          "height": 652
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973476471166,
+      "title": "ISTANBUL |  Zimt, Apfel & Rosen",
+      "handle": "istanbul-chai-zimt-apfel-rosen",
+      "body_html": "<p>ISTANBUL - Authentischer Chai mit Zimt, Apfel und Rosen</p>\n<p><strong>Erlebe den Orient in deiner Tasse. Unsere ISTANBUL Teemischung vereint würzigen Schwarztee mit süßem Apfel, aromatischem Zimt und zarten Rosenblüten – eine Hommage an die traditionelle türkische Teekultur.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Würzig-blumig mit süßer Apfelnote<br><strong>Wirkung:</strong> Anregend und wärmend<br><strong>Zutaten:</strong> Schwarzer Tee, Zimt, Apfel, Rosenblüten und natürliches Aroma<br><strong>Inhalt:</strong> 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 3-5 Minuten ziehen lassen</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" alt=\"\"></p>\n<p>Perfekt für: Gemütliche Nachmittage, als wärmendes Getränk im Winter oder als authentischer Chai in der Gastronomie.</p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:12px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.nutrition-table{\nwidth:100%;\nborder-collapse:collapse;\nmargin-top:10px;\nfont-size:14px;\n}\n\n.nutrition-table tr{\nborder-bottom:1px solid #e6e1d6;\n}\n\n.nutrition-table td{\npadding:6px 0;\n}\n\n.nutrition-table td:last-child{\ntext-align:right;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,4 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu ISTANBUL <span>▾</span></summary>\n<p><strong>Was macht ISTANBUL Tee besonders?</strong></p>\n<p>ISTANBUL ist ein authentischer Chai Tee, inspiriert von der türkischen Teekultur. Kräftiger Schwarztee trifft auf süßen Apfel, würzigen Zimt und feine Rosenblüten – eine aromatische Mischung, die Wärme, Tiefe und orientalischen Charakter vereint.</p>\n<p><strong>Für was sind Rosenblüten im Tee gut?</strong></p>\n<p>Rosenblüten werden traditionell wegen ihrer beruhigenden Wirkung geschätzt. Sie können helfen, Stress zu reduzieren und sorgen gleichzeitig für ein feines Aroma und ein besonderes Genusserlebnis beim Trinken.</p>\n<p><strong>Welchen Tee trinken die Türken?</strong></p>\n<p>In der Türkei wird vor allem schwarzer Tee, sogenannter Çay, getrunken. Er ist ein zentraler Bestandteil der Kultur und steht für Gastfreundschaft und gemeinsame Momente. ISTANBUL greift diese Tradition auf und interpretiert sie modern mit Gewürzen und Blüten.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:34+01:00",
+      "created_at": "2025-02-27T21:12:34+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879174914430,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50115",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973476471166,
+          "created_at": "2025-06-26T12:18:33+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796321150,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:52:20+02:00",
+          "product_id": 14973476471166,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/ISTANBUL_Zimt_Apfel_Rosen_loser_Tee_Doypack_Alanda_s_Tea.webp?v=1778845940",
+          "width": 725,
+          "height": 725
+        },
+        {
+          "id": 77114207273342,
+          "created_at": "2025-07-10T16:16:24+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:52:46+02:00",
+          "product_id": 14973476471166,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/ISTANBUL_loser_Tee_Nahaufnahme_Rosen_Zimt_Apfel_Alanda_s_Tea.webp?v=1778845966",
+          "width": 447,
+          "height": 447
+        },
+        {
+          "id": 77110797009278,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:53:21+02:00",
+          "product_id": 14973476471166,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/ISTANBUL_Zimt_Apfel_Rosen_Tee_Doypack_R_ckseite_Alanda_s_Tea.webp?v=1778846001",
+          "width": 744,
+          "height": 744
+        },
+        {
+          "id": 82928389783934,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T13:53:51+02:00",
+          "product_id": 14973476471166,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/ISTANBUL_Zimt_Apfel_Rosen_Tee_Doypack_Produktfoto_Alanda_s_Tea.jpg?v=1778846031",
+          "width": 1208,
+          "height": 1500
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973476241790,
+      "title": "MARRAKECH | Minze & Zitrone",
+      "handle": "marrakech-minztee-marokkanisch",
+      "body_html": "<p>MARRAKECH – Minzfrischer Grüntee mit Zitrone</p>\n<p><strong>Entdecke die Wärme und Lebendigkeit Marokkos in jeder Tasse. Unsere MARRAKECH Teemischung vereint frischen Grüntee, würzige Pfefferminze und spritzige Zitrone zu einem belebenden Genuss voller nordafrikanischer Teekultur.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Minzig-fruchtig<br><strong>Wirkung:</strong> Belebend<br><strong>Zutaten:</strong> Grüner Tee, Pfefferminze, Zitronenschale, natürliches Zitronenaroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 80°C heißem Wasser aufgießen, 2–3 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Heiße Sommer, als erfrischender Minztee oder als klassischer marokkanischer Teegenuss.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>0,13 kj (0,03 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu MARRAKECH <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht MARRAKECH besonders?</strong></p>\n<p style=\"margin-top: 8px;\">MARRAKECH vereint die Frische von Pfefferminze mit der Wärme von Grüntee und einem spritzigen Hauch Zitrone – inspiriert von den belebenden Tees der marokkanischen Souks.</p>\n<p style=\"margin-top: 8px;\"><strong>Kann ich MARRAKECH kalt zubereiten?</strong></p>\n<p style=\"margin-top: 8px;\">Ja! MARRAKECH eignet sich hervorragend als Eistee. Einfach aufbrühen, abkühlen lassen und mit Eiswürfeln servieren.</p>\n<p style=\"margin-top: 8px;\"><strong>Ist MARRAKECH koffeinfrei?</strong></p>\n<p style=\"margin-top: 8px;\">Nein, Grüntee enthält moderate Mengen Koffein. Er eignet sich ideal für den Morgen oder als belebender Nachmittagstee.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:33+01:00",
+      "created_at": "2025-02-27T21:12:33+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee"
+      ],
+      "variants": [
+        {
+          "id": 55879324533118,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "40111",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973476241790,
+          "created_at": "2025-06-26T12:43:48+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110797238654,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:55:06+02:00",
+          "product_id": 14973476241790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MARRAKECH_loser_Tee_Nahaufnahme_Minze_Zitrone_Alanda_s_Tea.webp?v=1778846106",
+          "width": 766,
+          "height": 766
+        },
+        {
+          "id": 77110623797630,
+          "created_at": "2025-07-10T12:38:48+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:55:46+02:00",
+          "product_id": 14973476241790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MARRAKECH_loser_Gr_ntee_Nahaufnahme_gelbe_Bl_ten_Alanda_s_Tea.png?v=1778846146",
+          "width": 567,
+          "height": 567
+        },
+        {
+          "id": 77110797107582,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2025-07-10T16:17:59+02:00",
+          "product_id": 14973476241790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/marrakech_2.webp?v=1752157079",
+          "width": 779,
+          "height": 779
+        },
+        {
+          "id": 74086964756862,
+          "created_at": "2025-03-31T20:53:10+02:00",
+          "position": 4,
+          "updated_at": "2025-07-10T16:17:59+02:00",
+          "product_id": 14973476241790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/04_4f87b0ef-72ce-4271-b985-2affdc94babb.jpg?v=1752157079",
+          "width": 6240,
+          "height": 4160
+        },
+        {
+          "id": 82928389292414,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 5,
+          "updated_at": "2026-05-15T13:58:06+02:00",
+          "product_id": 14973476241790,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MARRAKECH_Minze_Zitrone_Gr_ntee_Produktfoto_Minze_Rosa_Teller_Alanda_s_Tea.jpg?v=1778846286",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973476110718,
+      "title": "BERLIN | Rooibos, Hanf, Karotte & Mate",
+      "handle": "berlin-rooibos-hanf-mate",
+      "body_html": "<p>BERLIN – Würziger Rooibos &amp; Mate Tee mit Hanf und Karotte</p>\n<p><strong>Rooibos, Mate, Hanf und ein Hauch exotischer Früchte – würzige, leicht säuerlich und voller Energie. Ein moderner Tee, der die kreative Vielfalt und den freien Geist Berlins in sich trägt.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Würzige-säuerlich<br><strong>Wirkung:</strong> Anregend<br><strong>Zutaten:</strong> Rooibos, Hanf, Karotten, grüner Mate, Papaya und Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" alt=\"\"></p>\n<p> </p>\n<p>Perfekt für: Kreative Köpfe, Spätabende und alle, die einen Tee mit Charakter suchen.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,52 kj (0,36 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu BERLIN <span>▾</span></summary>\n<p><strong>Was macht BERLIN besonders?</strong></p>\n<p>BERLIN kombiniert Rooibos mit grünem Mate und Hanf – eine ungewöhnliche Mischung, die Energie gibt und gleichzeitig entspannt, genau wie die Stadt selbst.</p>\n<p><strong>Enthält BERLIN Koffein?</strong></p>\n<p>Ja, durch den grünen Mate enthält BERLIN natürliches Koffein. Der Rooibos selbst ist koffeinfrei, aber Mate sorgt für den belebenden Kick.</p>\n<p><strong>Wie lange sollte BERLIN ziehen?</strong></p>\n<p>5–7 Minuten bei 100°C sind ideal. Rooibos wird durch längeres Ziehen nicht bitter, daher kannst du ihn auch länger stehen lassen.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:33+01:00",
+      "created_at": "2025-02-27T21:12:33+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879332954494,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50110",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973476110718,
+          "created_at": "2025-06-26T12:46:30+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796026238,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T13:59:05+02:00",
+          "product_id": 14973476110718,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BERLIN_loser_Tee_Nahaufnahme_Rooibos_Hanf_Karotte_Alanda_s_Tea.webp?v=1778846345",
+          "width": 777,
+          "height": 777
+        },
+        {
+          "id": 77110793765246,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2025-07-10T16:18:52+02:00",
+          "product_id": 14973476110718,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Berlin-rooibos-hanf-karotte.webp?v=1752157132",
+          "width": 407,
+          "height": 407
+        },
+        {
+          "id": 77110796222846,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T13:59:38+02:00",
+          "product_id": 14973476110718,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BERLIN_Rooibos_Tee_Doypack_R_ckseite_mit_Zutaten_Alanda_s_Tea.webp?v=1778846378",
+          "width": 733,
+          "height": 733
+        },
+        {
+          "id": 82928389390718,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:00:34+02:00",
+          "product_id": 14973476110718,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BERLIN_Rooibos_Hanf_Karotte_Mate_Tee_Produktfoto_Hanfpflanze_Alanda_s_Tea.jpg?v=1778846434",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475914110,
+      "title": "GRANADA | Früchte & Hibiskus",
+      "handle": "granada-fruechtetee-hibiskus",
+      "body_html": "<p>GRANADA - Frischer Grüntee mit Hibiskus und Orangenblüten</p>\n<p><strong>Grüner Tee mit Minze, Orangenblüten und Hibiskus – frisch, lebendig und sonnendurchflutet. Inspiriert von den Gärten Andalusiens, vereint dieser Tee maurische Eleganz mit mediterraner Lebensfreude.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Minzig-kräftig<br><strong>Wirkung:</strong> Vitalisierend<br><strong>Zutaten:</strong> Grüner Tee, Minze, Orangenschale, Orangenblüte, Hibiskus und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 80°C heißem Wasser aufgießen, 2–3 Minuten ziehen lassen</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" alt=\"\"></p>\n<p> </p>\n<p>Perfekt für: Sonnige Nachmittage, als erfrischender Eistee oder als Genuss für alle Fans mediterraner Aromen.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,04 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>&lt;0,01 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu Grüntee &amp; Hibiskus<span>▾</span></summary>\n<p><strong>Was macht GRANADA besonders?</strong></p>\n<p>GRANADA verbindet hochwertigen Grüntee mit floraler Eleganz - Hibiskus, Minze und Orangenblüten schaffen ein einzigartiges Aroma, das an die Gärten der Alhambra erinnert.</p>\n<p><strong>Warum kein kochendes Wasser für Grüntee?</strong></p>\n<p>Grüntee wird bei zu hoher Temperatur bitter. Mit Wasser bei 80°C bleibt das Aroma frisch, mild und fruchtig.</p>\n<p><strong>Ist GRANADA koffeinfrei?</strong></p>\n<p>Nein, Grüntee enthält moderate Mengen Koffein. GRANADA eignet sich ideal für den Morgen oder Nachmittag.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:32+01:00",
+      "created_at": "2025-02-27T21:12:32+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee"
+      ],
+      "variants": [
+        {
+          "id": 55879429751166,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50116",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475914110,
+          "created_at": "2025-06-26T13:12:02+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110797173118,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:01:44+02:00",
+          "product_id": 14973475914110,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/GRANADA_loser_Tee_Nahaufnahme_Fr_chte_Hibiskus_Alanda_s_Tea.webp?v=1778846504",
+          "width": 723,
+          "height": 723
+        },
+        {
+          "id": 77110793175422,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:02:29+02:00",
+          "product_id": 14973475914110,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/GRANADA_loser_Fr_chte_Hibiskus_Gr_ntee_Nahaufnahme_Alanda_s_Tea.webp?v=1778846549",
+          "width": 410,
+          "height": 410
+        },
+        {
+          "id": 77110796517758,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2025-07-10T16:19:34+02:00",
+          "product_id": 14973475914110,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/granada_2.webp?v=1752157174",
+          "width": 736,
+          "height": 736
+        },
+        {
+          "id": 82928389620094,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-03-25T13:16:02+01:00",
+          "product_id": 14973475914110,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/1Granada1.jpg?v=1774440962",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475750270,
+      "title": "BUDAPEST | Stevia & Lemongras",
+      "handle": "budapest-stevia-lemongras-tee",
+      "body_html": "<p>BUDAPEST - Belebender Kräutertee mit Lemongras, Stevia &amp; Ingwer</p>\n<p><strong>Eine kraftvolle Kräuterteemischung mit Lemongras, Ingwer und süßen Steviabälttern – inspiriert von der ungarischen Heilkräutertradition. Wohltuend, belebend und tief verwurzelt in der Naturverbundenheit des Landes.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Säuerlich-süß<br><strong>Wirkung:</strong> Belebend<br><strong>Zutaten:</strong> Lemongras, Apfelstücke, Ingwer, Steviabältter, Sonnenblumenblüten<br>Inhalt: 150 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" alt=\"\"></p>\n<p> </p>\n<p>Perfekt für: Entspannte Abende, natürliche Süße ohne Zucker und alle, die einen belebenden Kräutertee lieben.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,04 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu BUDAPEST <span>▾</span></summary>\n<p><strong>Was macht BUDAPEST besonders?</strong></p>\n<p>BUDAPEST kombiniert die Frische von Lemongras mit der Wärme von Ingwer und der natürlichen Süße von Stevia – ein einzigartiger Tee ohne Zuckerzusatz.</p>\n<p><strong>Ist BUDAPEST koffeinfrei?</strong></p>\n<p>Ja! BUDAPEST ist ein reiner Kräutertee ohne Koffein – ideal für den Abend oder als sanfter Nachmittagsgenuss.</p>\n<p><strong>Warum enthält BUDAPEST Stevia?</strong></p>\n<p>Stevia verleiht dem Tee eine natürliche Süße ganz ohne Kalorien. Eine gute Wahl für alle, die weniger Zucker konsumieren möchten.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:31+01:00",
+      "created_at": "2025-02-27T21:12:31+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879456653694,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "233038",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "10.20",
+          "grams": 165,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475750270,
+          "created_at": "2025-06-26T13:17:02+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796714366,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:04:24+02:00",
+          "product_id": 14973475750270,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BUDAPEST_Stevia_Lemongras_Tee_Nahaufnahme_Alanda_s_Tea.webp?v=1778846664",
+          "width": 752,
+          "height": 752
+        },
+        {
+          "id": 82591229084030,
+          "created_at": "2026-03-07T00:18:32+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T00:19:56+01:00",
+          "product_id": 14973475750270,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Budapest-kraeuter-stevia-lemongras.png?v=1772839196",
+          "width": 1856,
+          "height": 1856
+        },
+        {
+          "id": 77110796779902,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:05:05+02:00",
+          "product_id": 14973475750270,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BUDAPEST_Stevia_Lemongras_Doypack_R_ckseite_Zutaten_Alanda_s_Tea.webp?v=1778846705",
+          "width": 749,
+          "height": 749
+        },
+        {
+          "id": 82928389816702,
+          "created_at": "2026-03-25T13:15:58+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:05:31+02:00",
+          "product_id": 14973475750270,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BUDAPEST_Stevia_Lemongras_Tee_Produktfoto_Sonnenblumen_Ingwer_Alanda_s_Tea.jpg?v=1778846731",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475586430,
+      "title": "BOMBAY | Original Chai Latte",
+      "handle": "bombay-chai-latte-original",
+      "body_html": "<p>BOMBAY - Original Chai Latte mit Kardamom, Nelken &amp; Zimt</p>\n<p><strong>Der original Chai Latte mit würzige-aromatischem Kardamom, Nelken und Zimt. Inspiriert von den Chai-Wällen der indischen Basare – am besten mit aufgeschäumter Milch genießen.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Würzige-orientalisch<br><strong>Wirkung:</strong> Anregend und wärmend<br><strong>Zutaten:</strong> Schwarzer Tee, Kardamom, Nelken, Zimt und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5 Minuten ziehen lassen – herrlich mit warmer Milch</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Gemütliche Winterabende, als Chai Latte mit Milch oder für alle Fans des orientalischen Teegenusses.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,04 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu BOMBAY Chai <span>▾</span></summary>\n<p><strong>Was macht BOMBAY besonders?</strong></p>\n<p>BOMBAY ist eine authentische Chai-Mischung mit Schwarztee, Kardamom, Nelken und Zimt – wie direkt von den Teemärkten Mumbais.</p>\n<p><strong>Kann ich BOMBAY mit Milch zubereiten?</strong></p>\n<p>Absolut! BOMBAY ist perfekt für einen cremigen Chai Latte. Einfach aufbrühen und mit heißer, aufgeschäumter Milch verfeinern.</p>\n<p><strong>Ist BOMBAY koffeinfrei?</strong></p>\n<p>Nein, BOMBAY basiert auf Schwarztee und enthält natürliches Koffein. Ideal für den Morgen oder als Nachmittagspick-me-up.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:30+01:00",
+      "created_at": "2025-02-27T21:12:30+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879535395198,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "60117",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475586430,
+          "created_at": "2025-06-26T13:35:50+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796681598,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:06:38+02:00",
+          "product_id": 14973475586430,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BOMBAY_Chai_Latte_loser_Tee_Nahaufnahme_Kardamom_Nelken_Alanda_s_Tea.webp?v=1778846798",
+          "width": 734,
+          "height": 734
+        },
+        {
+          "id": 77110793535870,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:06:51+02:00",
+          "product_id": 14973475586430,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BOMBAY_Chai_Latte_in_Glastasse_mit_Milch_Lifestyle_Alanda_s_Tea.webp?v=1778846811",
+          "width": 451,
+          "height": 451
+        },
+        {
+          "id": 77110797402494,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:07:20+02:00",
+          "product_id": 14973475586430,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BOMBAY_Chai_Latte_Doypack_R_ckseite_rot_Alanda_s_Tea.webp?v=1778846840",
+          "width": 748,
+          "height": 748
+        },
+        {
+          "id": 74086935462270,
+          "created_at": "2025-03-31T20:52:21+02:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:08:03+02:00",
+          "product_id": 14973475586430,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/BOMBAY_Chai_Latte_wird_eingeschenkt_Gew_rze_Lifestyle_Alanda_s_Tea.jpg?v=1778846883",
+          "width": 6102,
+          "height": 4160
+        },
+        {
+          "id": 82928389489022,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 5,
+          "updated_at": "2026-03-25T13:16:01+01:00",
+          "product_id": 14973475586430,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/1Bombay.jpg?v=1774440961",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475422590,
+      "title": "SCHWARZWALD | Beeren & Hibiskus",
+      "handle": "schwarzwald-beerentee-hibiskus",
+      "body_html": "<p>SCHWARZWALD - Beeriger Früchtetee mit Preiselbeeren &amp; Hibiskus</p>\n<p><strong>Leckere Mischung aus verschiedenen Beerensorten mit saftigen Preiselbeeren und ganzen Brombeeren – auf einer Basis aus Rosinen und Hibiskus. Ein tiefer, waldiger Genuss, der die Kraft der deutschen Natur in sich trägt.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Beerig-fruchtig<br><strong>Wirkung:</strong> Wohltuend<br><strong>Zutaten:</strong> Preiselbeeren, Brombeeren, Rosinen, Hibiskus und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Gemütliche Herbstabende, als fruchtiger Nachmittagstee oder für alle, die den Geschmack des Schwarzwaldes lieben.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>6,89 kj (1,62 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,19 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,13 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu SCHWARZWALD <span>▾</span></summary>\n<p><strong>Was macht SCHWARZWALD besonders?</strong></p>\n<p>SCHWARZWALD vereint die kraftvollen Aromen des deutschen Schwarzwaldes – saftige Beeren, Hibiskus und Rosinen für einen tief fruchtigen, wohltuenden Tee.</p>\n<p><strong>Ist SCHWARZWALD koffeinfrei?</strong></p>\n<p>Ja! SCHWARZWALD ist ein reiner Früchtetee ohne Koffein – ideal für den Abend oder als erfrischender Eistee.</p>\n<p><strong>Kann ich SCHWARZWALD kalt genießen?</strong></p>\n<p>Absolut! Als Eistee entfaltet SCHWARZWALD seine fruchtigen Aromen besonders schön. Einfach aufbrühen, abkühlen und mit Eiswürfeln servieren.</p>\n<p><strong>Welche Wirkung hat Beerentee?</strong></p>\n<p>Beerentee wie SCHWARZWALD wirkt auf mehrere Weisen: Hibiskus ist reich an Vitamin C und Antioxidantien, die das Immunsystem stärken. Beeren liefern wertvolle Pflanzenstoffe. Der Tee ist koffeinfrei, beruhigt und ist ideal zum Entspannen am Abend.</p>\n<p><strong>Ist Beerentee gut für das Immunsystem?</strong></p>\n<p>Ja – Beerentee enthält viel Vitamin C und Antioxidantien aus Hibiskus und Beeren. SCHWARZWALD ist koffeinfrei und kann täglich getrunken werden.</p>\n<p><strong>Hat Beerentee viel Zucker?</strong></p>\n<p>Nein – SCHWARZWALD ist ein reiner loser Beerentee ohne Zuckerzusatz. Süßlich schmeckt er natürlich durch die Beeren und den Hibiskus.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:30+01:00",
+      "created_at": "2025-02-27T21:12:30+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879541784958,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "30125",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 225,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475422590,
+          "created_at": "2025-06-26T13:40:22+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796878206,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:09:04+02:00",
+          "product_id": 14973475422590,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/SCHWARZWALD_Beeren_Hibiskus_Tee_Nahaufnahme_lila_rot_Alanda_s_Tea.webp?v=1778846944",
+          "width": 710,
+          "height": 710
+        },
+        {
+          "id": 77110793208190,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:09:48+02:00",
+          "product_id": 14973475422590,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/SCHWARZWALD_Beeren_Hibiskus_loser_Tee_Nahaufnahme_Alanda_s_Tea.webp?v=1778846988",
+          "width": 395,
+          "height": 395
+        },
+        {
+          "id": 77110796943742,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:10:22+02:00",
+          "product_id": 14973475422590,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/SCHWARZWALD_Beeren_Tee_Doypack_R_ckseite_Zutaten_gelb_Alanda_s_Tea.webp?v=1778847022",
+          "width": 727,
+          "height": 727
+        },
+        {
+          "id": 82928389456254,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-20T13:20:20+02:00",
+          "product_id": 14973475422590,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/SCHWARZWALD_Beeren_Hibiskus_Tee_Produktfoto_Brombeeren_Preiselbeeren_Alanda_s_Tea.jpg?v=1779276020",
+          "width": 1200,
+          "height": 1200
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475291518,
+      "title": "MANILA | Früchte & Blüten",
+      "handle": "manila-gruener-tee-tropisch",
+      "body_html": "<p>MANILA - Exotischer Grüntee mit tropischen Früchten &amp; Rosen</p>\n<p><strong>Grüne Teeblätter harmonisch vermischt mit tropischen Früchten und einem Hauch von Rosen mit Passionsfrucht. Ein leichter, erfrischender Tee – inspiriert von der blumenreichen Vielfalt der Philippinen.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Fruchtig-erfrischend<br><strong>Wirkung:</strong> Vitalisierend<br><strong>Zutaten:</strong> Grüner Tee, Ananas, Papaya, Apfel, Orange, Ringelblume und Rose<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 80°C heißem Wasser aufgießen, 2–3 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Sonnige Tage, als erfrischenden Eistee oder für alle, die exotische Frucht-Blüten-Kombinationen lieben.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>4,03 kj (0,95 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,22 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0,19 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>&lt;0,1 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu MANILA <span>▾</span></summary>\n<p><strong>Was macht MANILA besonders?</strong></p>\n<p>MANILA verbindet leichten Grüntee mit tropischen Früchten und Rosenblüten – ein fruchtig-florales Geschmackserlebnis, das an die Philippinen erinnert.</p>\n<p><strong>Kann ich MANILA kalt zubereiten?</strong></p>\n<p>Ja! MANILA eignet sich hervorragend als Eistee. Die tropischen Aromen kommen kalt besonders gut zur Geltung.</p>\n<p><strong>Ist MANILA koffeinfrei?</strong></p>\n<p>Nein, MANILA enthält Grüntee mit moderatem Koffeingehalt. Ideal für den Morgen oder Nachmittag.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:29+01:00",
+      "created_at": "2025-02-27T21:12:29+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee"
+      ],
+      "variants": [
+        {
+          "id": 55879544373630,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "40144",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475291518,
+          "created_at": "2025-06-26T13:42:36+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796648830,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:12:04+02:00",
+          "product_id": 14973475291518,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MANILA_Gr_ntee_Fr_chte_Bl_ten_Nahaufnahme_Alanda_s_Tea.webp?v=1778847124",
+          "width": 722,
+          "height": 722
+        },
+        {
+          "id": 77110793077118,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:12:31+02:00",
+          "product_id": 14973475291518,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MANILA_loser_Gr_ntee_Fr_chte_Bl_ten_Nahaufnahme_Alanda_s_Tea.webp?v=1778847151",
+          "width": 416,
+          "height": 416
+        },
+        {
+          "id": 77110797369726,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:13:00+02:00",
+          "product_id": 14973475291518,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MANILA_Gr_ntee_Fr_chte_Doypack_R_ckseite_gelb_Alanda_s_Tea.webp?v=1778847180",
+          "width": 732,
+          "height": 732
+        },
+        {
+          "id": 82928389554558,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:13:32+02:00",
+          "product_id": 14973475291518,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/MANILA_Gr_ntee_Fr_chte_Bl_ten_Produktfoto_Rosen_Ringelblumen_Alanda_s_Tea.jpg?v=1778847212",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973475094910,
+      "title": "HIMALAYA | Ingwer & Gewürze",
+      "handle": "himalaya-yogitee-ingwer-gewuerze",
+      "body_html": "<p>HIMALAYA - Traditioneller Yogitee mit Ingwer &amp; indischen Gewürzen</p>\n<p><strong>Traditioneller Yogitee mit Ingwer, Nelken, Zimt und weiteren indischen Gewürzen und einem Hauch von Citrus. Wärmend, vitalisierend und tief verwurzelt in der jahrtausendealten ayurvedischen Tradition.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Würzige-kräftig<br><strong>Wirkung:</strong> Vitalisierend und wärmend<br><strong>Zutaten:</strong> Schwarzer Tee, Ingwer, Kardamom, Zimt, Nelken, Pfeffer und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Kalte Wintertage, beim Yoga oder für alle, die ayurvedische Teekultur lieben.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,04 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu HIMALAYA Chai <span>▾</span></summary>\n<p><strong>Was macht HIMALAYA besonders?</strong></p>\n<p>HIMALAYA ist ein kraftvoller Yogi-Tee nach ayurvedischer Tradition – mit Ingwer, Kardamom und exotischen Gewürzen, die von innen wärmen und beleben.</p>\n<p><strong>Ist HIMALAYA koffeinfrei?</strong></p>\n<p>Nein, HIMALAYA basiert auf Schwarztee und enthält natürliches Koffein – ideal für den Morgen oder einen belebenden Nachmittag.</p>\n<p><strong>Kann ich HIMALAYA mit Milch trinken?</strong></p>\n<p>Ja! HIMALAYA schmeckt hervorragend als Chai mit aufgeschäumter Milch oder Pflanzenmilch.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:28+01:00",
+      "created_at": "2025-02-27T21:12:28+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879547322750,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "60113",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973475094910,
+          "created_at": "2025-06-26T13:44:11+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110797140350,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:14:16+02:00",
+          "product_id": 14973475094910,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/HIMALAYA_Ingwer_Gew_rze_Tee_Nahaufnahme_lila_Alanda_s_Tea.webp?v=1778847256",
+          "width": 786,
+          "height": 786
+        },
+        {
+          "id": 77110793240958,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:14:42+02:00",
+          "product_id": 14973475094910,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/HIMALAYA_Ingwer_Gew_rze_Schwarztee_Nahaufnahme_Alanda_s_Tea.webp?v=1778847282",
+          "width": 445,
+          "height": 445
+        },
+        {
+          "id": 77110797336958,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:15:08+02:00",
+          "product_id": 14973475094910,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/HIMALAYA_Ingwer_Gew_rze_Doypack_R_ckseite_rot_Alanda_s_Tea.webp?v=1778847308",
+          "width": 759,
+          "height": 759
+        },
+        {
+          "id": 82928389718398,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:15:37+02:00",
+          "product_id": 14973475094910,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/HIMALAYA_Ingwer_Gew_rze_Tee_Produktfoto_Ingwerwurzel_Zimtstangen_Alanda_s_Tea.jpg?v=1778847337",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474963838,
+      "title": "LONDON | Karamell, Vanille & Jasmin",
+      "handle": "london-schwarztee-karamell-vanille",
+      "body_html": "<p>LONDON - Schwarztee mit Karamell, Vanille &amp; Jasmin</p>\n<p><strong>Ein perfektes Gleichgewicht zwischen den Aromen von schwarzem Tee und Rooibos, englischem Karamell und Vanille, und der Zartheit der Jasminblüte. Inspiriert vom großstädtischen Charme Londons.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Würzige-blumig mit Karamellnote<br><strong>Wirkung:</strong> Anregend<br><strong>Zutaten:</strong> Schwarzer Tee, Rooibos, Karamellstücke, Vanille, Jasminblumen, Malvenblüten und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Nachmittagstee nach englischer Art, gemütliche Stunden oder als süßes Dessert-Begleitung.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>0,82 kj (0,16 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu LONDON <span>▾</span></summary>\n<p><strong>Was macht LONDON besonders?</strong></p>\n<p>LONDON vereint die Eleganz von Schwarztee und Rooibos mit süßlichem Karamell, zartem Vanilleduft und der Feinheit von Jasmin – wie ein Afternoon Tea in einem Londoner Teesalon.</p>\n<p><strong>Ist LONDON koffeinfrei?</strong></p>\n<p>LONDON enthält Schwarztee und daher natürliches Koffein. Der Rooibos-Anteil sorgt für etwas Ausgewogenheit.</p>\n<p><strong>Kann ich LONDON süßlich trinken?</strong></p>\n<p>Ja! LONDON hat bereits natürliche Karamell- und Vanillenöten. Mit etwas Milch oder Honig wird er noch cremiger und süßer.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:27+01:00",
+      "created_at": "2025-02-27T21:12:27+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879551320446,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50117",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474963838,
+          "created_at": "2025-06-26T13:46:22+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796353918,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T14:16:32+02:00",
+          "product_id": 14973474963838,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/LONDON_Karamell_Vanille_Tee_Nahaufnahme_Schwarzteebl_tter_Alanda_s_Tea.webp?v=1778847392",
+          "width": 782,
+          "height": 782
+        },
+        {
+          "id": 77110793437566,
+          "created_at": "2025-07-10T12:59:01+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T14:16:45+02:00",
+          "product_id": 14973474963838,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/LONDON_Karamell_Vanille_Jasmin_Tee_Produktfoto_Alanda_s_Tea.webp?v=1778847405",
+          "width": 443,
+          "height": 443
+        },
+        {
+          "id": 77110796976510,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-05-15T14:17:14+02:00",
+          "product_id": 14973474963838,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/LONDON_Karamell_Vanille_Jasmin_Doypack_R_ckseite_orange_Alanda_s_Tea.webp?v=1778847434",
+          "width": 735,
+          "height": 735
+        },
+        {
+          "id": 74086934151550,
+          "created_at": "2025-03-31T20:52:18+02:00",
+          "position": 4,
+          "updated_at": "2026-05-15T14:17:57+02:00",
+          "product_id": 14973474963838,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/LONDON_Schwarztee_Glaskanne_Teelichter_Lifestyle_Alanda_s_Tea.jpg?v=1778847477",
+          "width": 6240,
+          "height": 4160
+        },
+        {
+          "id": 82928389685630,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 5,
+          "updated_at": "2026-05-15T14:19:07+02:00",
+          "product_id": 14973474963838,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/LONDON_Schwarztee_Karamell_Vanille_Jasmin_Verpackung_Alandas.jpg?v=1778847547",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474701694,
+      "title": "EARL GREY BLUE | Rukeri Tee & Bergamotte",
+      "handle": "earl-grey-blue-rukeri-bergamotte",
+      "body_html": "<p>EARL GREY BLUE - Klassischer Schwarztee mit Bergamotte &amp; Kornblumen</p>\n<p><strong>Traditionelle Teemischung mit kräftig herben Rukeri Aroma trifft auf den frischen Geschmack von Bergamotte. Veredelt mit zarten blauen Kornblumenblättern – eine zeitlose Klassik neu interpretiert.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Herb &amp; frisch<br><strong>Wirkung:</strong> Beruhigend<br><strong>Zutaten:</strong> Schwarzer Rukeri Tee, Kornblumenblätter, Bergamottenaroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 3–5 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Den klassischen Nachmittagstee, als Basis für Milchtee oder für alle Earl-Grey-Liebhaber.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>4 kj (1 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,2 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,18 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu EARL GREY BLUE <span>▾</span></summary>\n<p><strong>Was macht EARL GREY BLUE besonders?</strong></p>\n<p>EARL GREY BLUE verwendet authentischen Rukeri-Schwarztee aus Ruanda und kombiniert ihn mit Bergamotte und dekorativen blauen Kornblumenblättern für ein klassisches Earl-Grey-Erlebnis.</p>\n<p><strong>Ist EARL GREY BLUE koffeinfrei?</strong></p>\n<p>Nein, EARL GREY BLUE enthält natürliches Koffein aus dem Schwarztee. Ideal für den Morgen oder als belebender Nachmittagstee.</p>\n<p><strong>Was ist Rukeri-Tee?</strong></p>\n<p>Rukeri ist ein hochwertige Schwarztee aus Ruanda, bekannt für sein kräftiges, volles Aroma mit leichter Herb-Note – ideal als Basis für Earl Grey.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:26+01:00",
+      "created_at": "2025-02-27T21:12:26+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879556039038,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "20118",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474701694,
+          "created_at": "2025-06-26T13:48:01+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796845438,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:24:20+02:00",
+          "product_id": 14973474701694,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/earlgreyblue_1.webp?v=1752157460",
+          "width": 742,
+          "height": 742
+        },
+        {
+          "id": 82591693537662,
+          "created_at": "2026-03-07T00:49:52+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T00:51:45+01:00",
+          "product_id": 14973474701694,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Earl_Grey_Blue.png?v=1772841105",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110796550526,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 3,
+          "updated_at": "2026-03-07T00:51:45+01:00",
+          "product_id": 14973474701694,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/earlgreyblue_2.webp?v=1772841105",
+          "width": 754,
+          "height": 754
+        },
+        {
+          "id": 82928389325182,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:06:18+02:00",
+          "product_id": 14973474701694,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/EARL_GREY_BLUE_Schwarztee_Bergamotte_Kornblumen_Verpackung_Alandas.jpg?v=1778850378",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474505086,
+      "title": "CALIFORNIA | Rooibos & Orange",
+      "handle": "california-rooibos-orange",
+      "body_html": "<p>CALIFORNIA - Sonniger Rooibos &amp; Orange Tee</p>\n<p><strong>Rooibos, Orangenschale und Orangenblüten vereint in einer fantastischen Mischung, die nach Sonne pur schmeckt. Ein harmonischer Tee voller Leichtigkeit und Lebensfreude, inspiriert vom goldenen Westen.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Harmonisch &amp; blumig<br><strong>Wirkung:</strong> Facettenreich<br><strong>Zutaten:</strong> Rooibos, Orangenschale, Orangenblüten und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Sonnige Nachmittage, als Eistee oder für alle, die einen süßlich-fruchtigen Rooibostee lieben.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (0,04 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>&lt;0,01 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu CALIFORNIA <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht CALIFORNIA besonders?</strong></p>\n<p style=\"margin-top: 8px;\">CALIFORNIA verbindet süßlichen Rooibos mit frischer Orange und zartem Blumenduft – ein Tee so lebendig und sonnig wie der gleichnamige Bundesstaat.</p>\n<p style=\"margin-top: 8px;\"><strong>Ist CALIFORNIA koffeinfrei?</strong></p>\n<p style=\"margin-top: 8px;\">Ja! Rooibos ist von Natur aus koffeinfrei. CALIFORNIA eignet sich perfekt für jeden Tagesabschnitt, auch am Abend.</p>\n<p style=\"margin-top: 8px;\"><strong>Kann ich CALIFORNIA kalt trinken?</strong></p>\n<p style=\"margin-top: 8px;\">Absolut! Als Eistee entfaltet CALIFORNIA seine fruchtigen Orangenaromen besonders schön. Einfach aufbrühen, abkühlen lassen und servieren.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:25+01:00",
+      "created_at": "2025-02-27T21:12:25+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879558431102,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50232",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474505086,
+          "created_at": "2025-06-26T13:50:05+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796419454,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:24:58+02:00",
+          "product_id": 14973474505086,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/california_1.webp?v=1752157498",
+          "width": 769,
+          "height": 769
+        },
+        {
+          "id": 77110793011582,
+          "created_at": "2025-07-10T12:59:00+02:00",
+          "position": 2,
+          "updated_at": "2025-07-10T16:24:58+02:00",
+          "product_id": 14973474505086,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/California-rooibos-orange.webp?v=1752157498",
+          "width": 436,
+          "height": 436
+        },
+        {
+          "id": 77110796255614,
+          "created_at": "2025-07-10T12:59:16+02:00",
+          "position": 3,
+          "updated_at": "2025-07-10T16:24:58+02:00",
+          "product_id": 14973474505086,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/california_2.webp?v=1752157498",
+          "width": 768,
+          "height": 768
+        },
+        {
+          "id": 82928389357950,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:08:06+02:00",
+          "product_id": 14973474505086,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/CALIFORNIA_Rooibos_Orange_Tee_Verpackung_Alandas_Lifestyle.jpg?v=1778850486",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474406782,
+      "title": "DAMASKUS |  Sencha & Blüten",
+      "handle": "damaskus-sencha-gruener-tee-blueten",
+      "body_html": "<p>DAMASKUS - Eleganter Sencha-Grüntee mit Rosen &amp; Jasmin</p>\n<p><strong>Hochwertiger grüner Sencha trifft auf schwarzen Tee und zarte Blüten von Rose, Jasmin und Sonnenblume. Ein Tee voller orientalischer Eleganz, der mit blumigem Aroma und ausgewogenem Geschmack verzaubert.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Harmonisch &amp; blumig<br><strong>Wirkung:</strong> Facettenreich<br><strong>Zutaten:</strong> Grüner Sencha-Tee, schwarzer Tee, Rosen, Sonnenblumenblüten, Jasminblüten und natürliches Aroma<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1–2 TL<br><strong>Zubereitung:</strong> Mit 80°C heißem Wasser aufgießen, 2–3 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Entspannte Momente, als blumiger Nachmittagstee oder für alle, die orientalische Eleganz in ihrer Tasse suchen.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>1,15 kj (00,4 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>&lt;0,01 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu DAMASKUS <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht DAMASKUS besonders?</strong></p>\n<p style=\"margin-top: 8px;\">DAMASKUS verbindet japanischen Sencha mit der Eleganz der Rose und dem Duft von Jasmin – eine orientalisch-japanische Fusion, die Geschichte und Moderne vereint.</p>\n<p style=\"margin-top: 8px;\"><strong>Warum 80°C für DAMASKUS?</strong></p>\n<p style=\"margin-top: 8px;\">Sencha-Grüntee sollte nicht mit kochendem Wasser aufgegossen werden, da er sonst bitter wird. Mit 80°C bleibt das Aroma frisch, sanft und blumig.</p>\n<p style=\"margin-top: 8px;\"><strong>Ist DAMASKUS koffeinfrei?</strong></p>\n<p style=\"margin-top: 8px;\">Nein, DAMASKUS enthält sowohl Grüntee als auch Schwarztee. Der Koffeingehalt ist moderat – ideal für den Morgen oder Nachmittag.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:24+01:00",
+      "created_at": "2025-02-27T21:12:24+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee",
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879560167806,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50120",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474406782,
+          "created_at": "2025-06-26T13:51:34+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796583294,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:25:46+02:00",
+          "product_id": 14973474406782,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/damaskus_1.webp?v=1752157546",
+          "width": 733,
+          "height": 733
+        },
+        {
+          "id": 77110793044350,
+          "created_at": "2025-07-10T12:59:00+02:00",
+          "position": 2,
+          "updated_at": "2025-07-10T16:25:46+02:00",
+          "product_id": 14973474406782,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Damaskus-sencha-scharztee-blueten.webp?v=1752157546",
+          "width": 411,
+          "height": 411
+        },
+        {
+          "id": 77110796386686,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2025-07-10T16:25:46+02:00",
+          "product_id": 14973474406782,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/damaskus_2.webp?v=1752157546",
+          "width": 740,
+          "height": 740
+        },
+        {
+          "id": 82928389521790,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:09:56+02:00",
+          "product_id": 14973474406782,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/DAMASKUS_Sencha_Bl_ten_Tee_Verpackung_Alandas_Lifestyle.jpg?v=1778850596",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474210174,
+      "title": "GRÜNTEE | Grüner Sencha",
+      "handle": "gruentee-sencha-japanischer-tee",
+      "body_html": "<p>GRÜNTEE - Reiner Japanischer Sencha in Premium-Qualität</p>\n<p><strong>Ein intensiver grüner Sencha-Tee mit seinem charakteristischen grasig-algigen Aroma. Sencha ist einer der beliebtesten Tees Japans und steht für Frische, Reinheit und jahrhundertealte Teekultur.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Grasig &amp; frisch<br><strong>Wirkung:</strong> Erfrischend<br><strong>Zutaten:</strong> Grüner Sencha<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 70–80°C heißem Wasser aufgießen, 1–2 Minuten ziehen lassen</p>\n<p><img src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" alt=\"\"></p>\n<p> </p>\n<p>Perfekt für: Morgens zum Start in den Tag, als Begleitung beim Meditieren oder für alle, die puren japanischen Teegenuss suchen.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>4 kj (1 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>1 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,8 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu GRÜNTEE <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht unser GRÜNTEE besonders?</strong></p>\n<p style=\"margin-top: 8px;\">Unser GRÜNTEE ist hochwertiger japanischer Sencha – schonend verarbeitet für ein volles, grasig-frisches Aroma ohne Bitterkeit bei richtiger Zubereitung.</p>\n<p style=\"margin-top: 8px;\"><strong>Warum keine 100°C für Sencha?</strong></p>\n<p style=\"margin-top: 8px;\">Sencha wird bei zu hoher Temperatur bitter. Ideal sind 70–80°C – dann bleibt das Aroma frisch, mild und angenehm.</p>\n<p style=\"margin-top: 8px;\"><strong>Ist GRÜNTEE koffeinfrei?</strong></p>\n<p style=\"margin-top: 8px;\">Nein, Grüntee enthält natürliches Koffein und L-Theanin, das für eine ruhige, fokussierte Energie sorgt – ideal für den Morgen.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:23+01:00",
+      "created_at": "2025-02-27T21:12:23+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee"
+      ],
+      "variants": [
+        {
+          "id": 55879565214078,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "14183",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474210174,
+          "created_at": "2025-06-26T13:52:53+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796747134,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:26:24+02:00",
+          "product_id": 14973474210174,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/gruentee_1.webp?v=1752157584",
+          "width": 735,
+          "height": 735
+        },
+        {
+          "id": 82596289773950,
+          "created_at": "2026-03-07T06:01:09+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T06:03:38+01:00",
+          "product_id": 14973474210174,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Gruentee_gruener_Sencha.png?v=1772859818",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110796288382,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-03-07T06:03:38+01:00",
+          "product_id": 14973474210174,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/gruentee_2.webp?v=1772859818",
+          "width": 741,
+          "height": 741
+        },
+        {
+          "id": 82928389423486,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:11:40+02:00",
+          "product_id": 14973474210174,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/GR_NTEE_Sencha_Organic_Verpackung_Alandas_Lifestyle.jpg?v=1778850700",
+          "width": 1208,
+          "height": 1500
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973474144638,
+      "title": "SCHWARZTEE | Ceylon & Darjeeling",
+      "handle": "schwarztee",
+      "body_html": "<p>SCHWARZTEE - Klassischer Ceylon &amp; Darjeeling Schwarztee</p>\n<p><strong>Eine klassische Teemischung aus feinstwürzigem Ceylon und mildem Darjeeling – auch bekannt als Englisch Breakfast Tea. Vollmundig, kräftig und zeitlos elegant.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Mild &amp; würzige<br><strong>Wirkung:</strong> Belebend<br><strong>Zutaten:</strong> Ceylon und Darjeeling<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 3–5 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Den morgendlichen Start in den Tag, als English Breakfast Tea oder mit Milch und Zucker nach britischer Art.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>0 kj (0 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu SCHWARZTEE <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht unseren SCHWARZTEE besonders?</strong></p>\n<p style=\"margin-top: 8px;\">Unser SCHWARZTEE kombiniert zwei der edelsten Schwarzteesorten der Welt: das kräftig-würzige Ceylon und das blumig-feine Darjeeling – eine harmonische Mischung für anspruchsvolle Teeliebhaber.</p>\n<p style=\"margin-top: 8px;\"><strong>Kann ich SCHWARZTEE mit Milch trinken?</strong></p>\n<p style=\"margin-top: 8px;\">Ja! SCHWARZTEE eignet sich hervorragend als Basis für Milchtee oder Chai. Die kräftige Teebasis verträgt sich sehr gut mit Milch.</p>\n<p style=\"margin-top: 8px;\"><strong>Ist SCHWARZTEE koffeinfrei?</strong></p>\n<p style=\"margin-top: 8px;\">Nein, Schwarztee enthält natürliches Koffein – ideal für den Morgen als natürliche Alternative zu Kaffee.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:23+01:00",
+      "created_at": "2025-02-27T21:12:23+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879569670526,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "13860",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973474144638,
+          "created_at": "2025-06-26T13:54:29+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796484990,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-13T14:02:16+02:00",
+          "product_id": 14973474144638,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/schwarztee_1.webp?v=1752408136",
+          "width": 784,
+          "height": 784
+        },
+        {
+          "id": 82596290298238,
+          "created_at": "2026-03-07T06:01:10+01:00",
+          "position": 2,
+          "updated_at": "2026-03-14T21:30:31+01:00",
+          "product_id": 14973474144638,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Schwarztee_Ceylon_Darjeeling.png?v=1773520231",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110797042046,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-03-14T21:30:31+01:00",
+          "product_id": 14973474144638,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/schwarztee_2.webp?v=1773520231",
+          "width": 763,
+          "height": 763
+        },
+        {
+          "id": 82928389652862,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:13:28+02:00",
+          "product_id": 14973474144638,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/SCHWARZTEE_Ceylon_Darjeeling_Verpackung_Alandas_Lifestyle.jpg?v=1778850808",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973473980798,
+      "title": "KAMILLE | Ganze Kamillenblüten",
+      "handle": "kamille",
+      "body_html": "<p>KAMILLE - Ganze Kamillenblüten in Premium-Qualität</p>\n<p><strong>Reine Kamillenblüten – mild, blumig und beruhigend. Ein Tee wie aus Großmutters Küche, tief verwurzelt in der Heilpflanzentradition vieler Kulturen.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Blumig &amp; mild<br><strong>Wirkung:</strong> Beruhigend<br><strong>Zutaten:</strong> Kamillenblüten<br>Inhalt: 80 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Entspannte Abende, als beruhigender Schlaftee oder bei Magenbeschwerden und Stress.</p>\n<p> </p>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>4 kj (1 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0,1 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>&lt;0,1 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,5 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>&lt;0,4 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu KAMILLE<span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Was macht unsere KAMILLE besonders?</strong></p>\n<p>Wir verwenden ganze, unzerkleinerte Kamillenblüten für das volle, blumige Aroma. Keine Teebeutel, keine Zusätze – nur pure Kamille in bester Qualität.</p>\n<p><strong>Hilft Kamillentee beim Schlafen?</strong></p>\n<p>Ja! Kamille enthält Apigenin, einen natürlichen Wirkstoff mit beruhigender Wirkung. Ein Tasse vor dem Schlafengehen kann die Entspannung fördern.</p>\n<p><strong>Ist KAMILLE koffeinfrei?</strong></p>\n<p>Ja! Kamille ist von Natur aus koffeinfrei – ideal für den Abend, für Kinder oder für Menschen, die koffeinempfindlich sind.</p>\n</details>\n</div>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>",
+      "published_at": "2025-02-27T21:12:22+01:00",
+      "created_at": "2025-02-27T21:12:22+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879576027518,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "26118",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "5.49",
+          "grams": 100,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973473980798,
+          "created_at": "2025-06-26T13:56:32+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796616062,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:27:27+02:00",
+          "product_id": 14973473980798,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/kamille_1.webp?v=1752157647",
+          "width": 766,
+          "height": 766
+        },
+        {
+          "id": 82596290331006,
+          "created_at": "2026-03-07T06:01:10+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T06:09:06+01:00",
+          "product_id": 14973473980798,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Ganze_Kamillenblueten.png?v=1772860146",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110796812670,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-03-07T06:09:06+01:00",
+          "product_id": 14973473980798,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/kamille_2.webp?v=1772860146",
+          "width": 768,
+          "height": 768
+        },
+        {
+          "id": 82928389194110,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:15:13+02:00",
+          "product_id": 14973473980798,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/KAMILLE_Organic_Chamomile_Kr_utertee_Verpackung_Alandas_Lifestyle.jpg?v=1778850913",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973473849726,
+      "title": "OOLONG | Blauer Tee Se Chung",
+      "handle": "oolong",
+      "body_html": "<p>OOLONG - Blauer Tee Se Chung aus der Provinz Fujian, China</p>\n<p><strong>Ein ausgewogener und geschmackvoller halbfermentierter Tee mit einem süßen und fruchtigen Geschmack. Oolong Se Chung aus der Provinz Fujian, China – eine Rarität für anspruchsvolle Teekenner.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Herb &amp; malzig<br><strong>Wirkung:</strong> Belebend<br><strong>Zutaten:</strong> Halbfermentierter Oolong Se Chung aus der Provinz Fujian, China<br>Inhalt: 220 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 85–90°C heißem Wasser aufgießen, 3–5 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Erfahrene Teeliebhaber, als nachmittägliche Meditation oder für alle, die zwischen Grün- und Schwarztee das Beste suchen.</p>\n<p> </p>\n<style>\n.info-section { border-top: 1px solid #d9d4c8; }\n.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }\n.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }\n.info-section summary::-webkit-details-marker { display: none; }\n.info-section summary span { position: absolute; right: 0; top: 0; }\n.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }\n.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }\n.nutrition-table td { padding: 6px 0; }\n.nutrition-table td:last-child { text-align: right; }\n</style>\n<style> .info-section{ border-top:1px solid #d9d4c8; } .info-section details{ border-bottom:1px solid #d9d4c8; padding:12px 0; } .info-section summary{ cursor:pointer; list-style:none; position:relative; padding-right:20px; font-weight:500; } .info-section summary::-webkit-details-marker{ display:none; } .info-section summary span{ position:absolute; right:0; top:0; } .nutrition-table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:14px; } .nutrition-table tr{ border-bottom:1px solid #e6e1d6; } .nutrition-table td{ padding:6px 0; } .nutrition-table td:last-child{ text-align:right; } </style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>&lt;1 kj (&lt;1 kcal)</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon gesättigte Fettsäuren</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td><em>davon Zucker</em></td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Unsere Tees stehen für <strong>handverarbeitete Qualität</strong> – von hoher bis höchster Blattstufe.<br>Wir mischen mit <strong>echten Früchten, Blüten und Gewürzen</strong> – ganz ohne Farbstoffe, ganz ohne Kompromisse.<br>Wir fördern <strong>kleine Erzeuger</strong>, setzen auf <strong>nachhaltigen Anbau</strong> und faire Partnerschaften.</p>\n<p><em>Ehrlicher Genuss – in jeder Tasse.</em></p>\n</details>\n<details>\n<summary>Versand <span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Lieferzeit:</strong> ca. <strong>1–3 Werktage</strong> innerhalb Deutschlands<br><strong>Versand</strong> mit DHL <em>(klimaneutral)</em><br><strong>Versandkosten:</strong> 5,90 €<br><em><strong>Versandkostenfrei</strong> ab 59 € Bestellwert</em></p>\n</details>\n<details>\n<summary>Häufige Fragen zu OOLONG <span>▾</span></summary>\n<p><strong>Was ist Oolong-Tee?</strong></p>\n<p>Oolong ist ein halbfermentierter Tee – zwischen Grün- und Schwarztee. Er vereint die Frische des Grüntees mit der Tiefe des Schwarztees und entwickelt beim Aufbrühen komplexe, fruchtig-malzige Aromen.</p>\n<p><strong>Kann man OOLONG mehrfach aufgießen?</strong></p>\n<p>Ja! Hochwertiger Oolong kann 2–3 Mal aufgegossen werden. Die späteren Aufgüsse entwickeln oft noch nuanciertere Aromen.</p>\n<p><strong>Ist OOLONG koffeinfrei?</strong></p>\n<p>Nein, Oolong enthält natürliches Koffein – weniger als Schwarztee, aber mehr als Grüntee. Ideal für den Nachmittag.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:21+01:00",
+      "created_at": "2025-02-27T21:12:21+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Grüntee",
+        "Schwarztee"
+      ],
+      "variants": [
+        {
+          "id": 55879582187902,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "50118",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "14.69",
+          "grams": 240,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973473849726,
+          "created_at": "2025-06-26T13:58:03+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110796452222,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:28:10+02:00",
+          "product_id": 14973473849726,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/oolong_1.webp?v=1752157690",
+          "width": 717,
+          "height": 717
+        },
+        {
+          "id": 82596289577342,
+          "created_at": "2026-03-07T06:01:08+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T06:13:09+01:00",
+          "product_id": 14973473849726,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Oolong_Se_Chung.png?v=1772860389",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110797205886,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-03-07T06:13:09+01:00",
+          "product_id": 14973473849726,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/oolong_2.webp?v=1772860389",
+          "width": 738,
+          "height": 738
+        },
+        {
+          "id": 82928389259646,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:17:00+02:00",
+          "product_id": 14973473849726,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/OOLONG_Se_Chung_Blauer_Tee_Verpackung_Alandas_Lifestyle.jpg?v=1778851020",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973473685886,
+      "title": "PFEFFERMINZE | Pfefferminze, geschnitten",
+      "handle": "pfefferminze",
+      "body_html": "<p>PFEFFERMINZE – Reine Pfefferminze, geschnitten</p>\n<p><strong>Reine Pfefferminze – intensiv, kühl und erfrischend. Ein klassischer Kräutertee mit klarer Wirkung und jahrhundertealter Tradition in Ost und West. Klarer Kopf, ruhiger Moment.</strong></p>\n<p><span>✓ Versand in 1–3 Werktagen</span><br><span>✓ Kostenlos ab 59 €</span><br><span>✓ Ohne künstliche Zusätze</span></p>\n<p> </p>\n<p><strong>Geschmack:</strong> Minzig &amp; frisch<br><strong>Wirkung:</strong> Belebend<br><strong>Zutaten:</strong> Pfefferminze, geschnitten<br>Inhalt: 120 g loser Tee<br><strong>Dosierung:</strong> 1 Kanne (350 ml) = 1 TL<br><strong>Zubereitung:</strong> Mit 100°C heißem Wasser aufgießen, 5–7 Minuten ziehen lassen</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\"></p>\n<p> </p>\n<p>Perfekt für: Entspannte Abende, als belebender Digestif nach dem Essen oder für alle, die pure minzige Frische lieben.</p>\n<p> </p>\n<style>.info-section { border-top: 1px solid #d9d4c8; }.info-section details { border-bottom: 1px solid #d9d4c8; padding: 12px 0; }.info-section summary { cursor: pointer; list-style: none; position: relative; padding-right: 20px; font-weight: 500; }.info-section summary::-webkit-details-marker { display: none; }.info-section summary span { position: absolute; right: 0; top: 0; }.nutrition-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 14px; }.nutrition-table tr { border-bottom: 1px solid #e6e1d6; }.nutrition-table td { padding: 6px 0; }.nutrition-table td:last-child { text-align: right; }</style>\n<div class=\"info-section\">\n<details>\n<summary>Nährwerte<span>▾</span></summary>\n<p style=\"margin-top: 8px;\">100 ml Tee enthalten durchschnittlich</p>\n<table class=\"nutrition-table\">\n<tbody>\n<tr>\n<td>Energie</td>\n<td>3 kJ / 1 kcal</td>\n</tr>\n<tr>\n<td>Fett</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>davon gesättigte Fettsäuren</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Kohlenhydrate</td>\n<td>0,2 g</td>\n</tr>\n<tr>\n<td>davon Zucker</td>\n<td>&lt;0,19 g</td>\n</tr>\n<tr>\n<td>Eiweiß</td>\n<td>0 g</td>\n</tr>\n<tr>\n<td>Salz</td>\n<td>0 g</td>\n</tr>\n</tbody>\n</table>\n</details>\n<details>\n<summary>Garantie<span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Alle Alanda's Tees werden sorgfältig auf Qualität geprüft. Falls du mit deinem Kauf nicht zufrieden bist, kontaktiere uns – wir finden eine Lösung.</p>\n</details>\n<details>\n<summary>Versand<span>▾</span></summary>\n<p style=\"margin-top: 8px;\">Versand innerhalb von 1–3 Werktagen aus Berlin. Kostenloser Versand ab 59 €. Express-Versand auf Anfrage möglich.</p>\n</details>\n<details>\n<summary>Häufige Fragen zu PFEFFERMINZE<span>▾</span></summary>\n<p style=\"margin-top: 8px;\"><strong>Ist Pfefferminztee koffeinfrei?</strong></p>\n<p>Ja! Pfefferminze enthält von Natur aus kein Koffein – ideal für den Abend oder vor dem Schlafen.</p>\n<p><strong>Wie stark ist der Minzgeschmack?</strong></p>\n<p>Für einen milderen Geschmack einfach weniger Tee verwenden oder kürzer ziehen lassen.</p>\n<p><strong>Kann Pfefferminztee bei Verdauungsproblemen helfen?</strong></p>\n<p>Pfefferminze wird traditionell zur Unterstützung der Verdauung verwendet. Als Kräutertee kann er nach dem Essen besonders wohltuend wirken.</p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:20+01:00",
+      "created_at": "2025-02-27T21:12:20+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Infusion"
+      ],
+      "variants": [
+        {
+          "id": 55879592116606,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "26113",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "8.49",
+          "grams": 140,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973473685886,
+          "created_at": "2025-06-26T14:00:18+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77110797271422,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 1,
+          "updated_at": "2025-07-10T16:28:47+02:00",
+          "product_id": 14973473685886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pfefferminze_1a.webp?v=1752157727",
+          "width": 738,
+          "height": 738
+        },
+        {
+          "id": 82596597563774,
+          "created_at": "2026-03-07T06:32:09+01:00",
+          "position": 2,
+          "updated_at": "2026-03-07T06:34:47+01:00",
+          "product_id": 14973473685886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Getrocknete_Pfefferminze.png?v=1772861687",
+          "width": 800,
+          "height": 800
+        },
+        {
+          "id": 77110797304190,
+          "created_at": "2025-07-10T12:59:17+02:00",
+          "position": 3,
+          "updated_at": "2026-03-07T06:34:47+01:00",
+          "product_id": 14973473685886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pfefferminze_1.webp?v=1772861687",
+          "width": 752,
+          "height": 752
+        },
+        {
+          "id": 82928389587326,
+          "created_at": "2026-03-25T13:15:57+01:00",
+          "position": 4,
+          "updated_at": "2026-05-15T15:19:02+02:00",
+          "product_id": 14973473685886,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/PFEFFERMINZE_Organic_Peppermint_Kr_utertee_Verpackung_Alandas_Lifestyle.jpg?v=1778851142",
+          "width": 1200,
+          "height": 1490
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973473554814,
+      "title": "Glaskanne mit Edelstahlsieb | 350 ml",
+      "handle": "glass-jug",
+      "body_html": "<p>GLASKANNE – Handgefertigte Teekanne aus Borosilikatglas (350 ml).</p>\n<p><strong>Diese exklusiv handgefertigte Glasteekanne wurde entwickelt, damit sich lose Teeblätter beim Aufguss frei entfalten können. Das integrierte Edelstahlsieb sorgt für einen klaren, aromatischen Tee ohne Rückstände. Gefertigt aus extra starkem Borosilikatglas verbindet sie langlebige Qualität mit elegantem Design – perfekt für den täglichen Teegenuss.</strong></p>\n<p>✓ Perfekt für eine Person<br>✓ Schnelle und einfache Teezubereitung<br>✓ Hitze- und kältebeständiges Borosilikatglas</p>\n<p> </p>\n<p><strong>Material:</strong> Extra starkes Borosilikatglas<br><strong>Filter:</strong> Edelstahlsieb im Deckel integriert<br><strong>Temperaturbeständig:</strong> +150 °C bis −40 °C<br><strong>Reinigung:</strong> Spülmaschinengeeignet<br><strong>Verwendung:</strong> Ideal für losen Tee</p>\n<p><img alt=\"\" src=\"https://cdn.shopify.com/s/files/1/0910/0679/6158/files/pictograma-alandas_gold.png?v=1749657526\" style=\"font-size: 0.875rem;\"></p>\n<p><strong>Abmessungen:</strong><br>Breite: 12,8 cm<br>Tiefe: 9 cm<br>Höhe: 12 c<span style=\"font-size: 0.875rem;\">m</span></p>\n<p>Volumen: 350 ml (ideal für eine Person)</p>\n<p><span>Perfekt für eine schnelle und stilvolle Zubereitung von losem Tee – ideal für ruhige Genussmomente zu Hause oder als elegantes Element in der Gastronomie.</span><br><br></p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\nmargin-top:20px;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:14px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\nfont-size:15px;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.info-section p{\nmargin-top:10px;\nline-height:1.6;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Versand <span>▾</span></summary>\n<p><strong>Lieferzeit:</strong> 1–3 Werktage innerhalb Deutschlands<br><strong>Versand:</strong> DHL (klimaneutral)<br><strong>Versandkosten:</strong> 5,90 €<br><strong>Kostenloser Versand</strong> ab 59 € Bestellwert</p>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p>Unsere Produkte stehen für <strong>hochwertige Materialien</strong>, sorgfältige Verarbeitung und zeitloses Design. Die Glasteekanne wurde entwickelt, um Tee stilvoll und aromatisch zuzubereiten – langlebig und funktional zugleich.</p>\n<p><em>Klare Form. Reiner Geschmack.</em></p>\n</details>\n</div>\n<p><br></p>",
+      "published_at": "2025-02-27T21:12:19+01:00",
+      "created_at": "2025-02-27T21:12:19+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Zubehör"
+      ],
+      "variants": [
+        {
+          "id": 55879609090430,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "10030",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "24.95",
+          "grams": 300,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973473554814,
+          "created_at": "2025-06-26T14:03:09+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 81956507025790,
+          "created_at": "2026-02-08T18:47:19+01:00",
+          "position": 1,
+          "updated_at": "2026-02-08T18:47:40+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/teapot_1_72508142-aaf5-4445-a9d1-378e9b0fdb4c.png?v=1770572860",
+          "width": 1394,
+          "height": 1394
+        },
+        {
+          "id": 82928684106110,
+          "created_at": "2026-03-25T13:38:08+01:00",
+          "position": 2,
+          "updated_at": "2026-05-15T15:20:27+02:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Glaskanne_Tee_eingiessen_Edelstahlsieb_Alandas.jpg?v=1778851227",
+          "width": 1500,
+          "height": 1000
+        },
+        {
+          "id": 82734985085310,
+          "created_at": "2026-03-14T15:32:47+01:00",
+          "position": 3,
+          "updated_at": "2026-03-25T13:42:13+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Alandas_teapot_with_roses.png?v=1774442533",
+          "width": 2304,
+          "height": 1856
+        },
+        {
+          "id": 82771108233598,
+          "created_at": "2026-03-16T14:30:56+01:00",
+          "position": 4,
+          "updated_at": "2026-03-25T13:42:13+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Offene_glaskanne_fuer_losen_tee.png?v=1774442533",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82771110494590,
+          "created_at": "2026-03-16T14:31:12+01:00",
+          "position": 5,
+          "updated_at": "2026-03-25T13:42:13+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Edelstahlsiebdeckel.png?v=1774442533",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82735191359870,
+          "created_at": "2026-03-14T16:03:37+01:00",
+          "position": 6,
+          "updated_at": "2026-03-25T13:42:13+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Transparent_glass_teapot.png?v=1774442533",
+          "width": 1000,
+          "height": 1000
+        },
+        {
+          "id": 82741748040062,
+          "created_at": "2026-03-15T00:38:40+01:00",
+          "position": 7,
+          "updated_at": "2026-03-25T13:42:13+01:00",
+          "product_id": 14973473554814,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Teekanneverpackung.png?v=1774442533",
+          "width": 1000,
+          "height": 1000
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 14973473292670,
+      "title": "Masslöffel  | dosieren von Tee und Infusionen",
+      "handle": "measuring-spoon",
+      "body_html": "<p>MASSLÖFFEL – Präzises Abmessen für perfekten Teegenuss.</p>\n<p><strong>Der praktische Masslöffel aus hochwertigem Edelstahl erleichtert das Abmessen von losem Tee und sorgt für eine gleichmäßige Dosierung. Robust, langlebig und elegant im Design – ideal für den täglichen Teegenuss zu Hause, im Büro oder unterwegs.</strong></p>\n<p>✓ Hochwertiger Edelstahl<br>✓ Perfekt zum Dosieren von Tee und Infusionen<br>✓ Spülmaschinengeeignet</p>\n<p><strong>Material:</strong> Edelstahl<br><strong>Verwendung:</strong> Zum Dosieren von losem Tee und Infusionen<br><strong>Reinigung:</strong> Spülmaschinengeeignet und leicht zu reinigen<br><strong>Maße:</strong> 14 × 3,5 cm</p>\n<p>Perfekt für eine saubere und einfache Dosierung – für die tägliche Teezubereitung zu Hause oder in der Gastronomie.</p>\n<style>\n\n.info-section{\nborder-top:1px solid #d9d4c8;\nmargin-top:20px;\n}\n\n.info-section details{\nborder-bottom:1px solid #d9d4c8;\npadding:14px 0;\n}\n\n.info-section summary{\ncursor:pointer;\nlist-style:none;\nposition:relative;\npadding-right:20px;\nfont-weight:500;\nfont-size:15px;\n}\n\n.info-section summary::-webkit-details-marker{\ndisplay:none;\n}\n\n.info-section summary span{\nposition:absolute;\nright:0;\ntop:0;\n}\n\n.info-section p{\nmargin-top:10px;\nline-height:1.6;\n}\n\n</style>\n<div class=\"info-section\">\n<details>\n<summary>Versand <span>▾</span></summary>\n<p><strong>Lieferzeit:</strong> 1–3 Werktage innerhalb Deutschlands<br><strong>Versand:</strong> DHL (klimaneutral)<br><strong>Versandkosten:</strong> 5,90 €<br><strong>Kostenloser Versand</strong> ab 59 € Bestellwert</p>\n</details>\n<details>\n<summary>Garantie <span>▾</span></summary>\n<p>Unsere Produkte stehen für <strong>langlebige Qualität</strong> und durchdachtes Design. Wir wählen Materialien sorgfältig aus, damit Funktion und Ästhetik perfekt zusammenpassen.</p>\n<p><em>Praktisch. Hochwertig. Zeitlos.</em></p>\n</details>\n</div>",
+      "published_at": "2025-02-27T21:12:18+01:00",
+      "created_at": "2025-02-27T21:12:18+01:00",
+      "updated_at": "2026-09-05T21:03:51+02:00",
+      "vendor": "Alanda's",
+      "product_type": "Physical",
+      "tags": [
+        "Zubehör"
+      ],
+      "variants": [
+        {
+          "id": 55879618199934,
+          "title": "Default Title",
+          "option1": "Default Title",
+          "option2": null,
+          "option3": null,
+          "sku": "10070",
+          "requires_shipping": true,
+          "taxable": true,
+          "featured_image": null,
+          "available": true,
+          "price": "3.90",
+          "grams": 50,
+          "compare_at_price": null,
+          "position": 1,
+          "product_id": 14973473292670,
+          "created_at": "2025-06-26T14:04:46+02:00",
+          "updated_at": "2026-09-05T21:03:51+02:00"
+        }
+      ],
+      "images": [
+        {
+          "id": 77121414791550,
+          "created_at": "2025-07-10T19:52:40+02:00",
+          "position": 1,
+          "updated_at": "2026-05-15T15:23:56+02:00",
+          "product_id": 14973473292670,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Massl_ffel_Edelstahl_Tee_dosieren_Alandas_Produktbild.webp?v=1778851436",
+          "width": 1656,
+          "height": 1656
+        },
+        {
+          "id": 83019217371518,
+          "created_at": "2026-03-30T18:57:06+02:00",
+          "position": 2,
+          "updated_at": "2026-05-15T13:44:41+02:00",
+          "product_id": 14973473292670,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Tea_Experience_Box_Edelstahl_Massl_ffel_Alanda_s_Tea.jpg?v=1778845481",
+          "width": 1500,
+          "height": 1500
+        },
+        {
+          "id": 73490756436350,
+          "created_at": "2025-02-27T21:49:46+01:00",
+          "position": 3,
+          "updated_at": "2026-05-15T15:24:43+02:00",
+          "product_id": 14973473292670,
+          "variant_ids": [],
+          "src": "https://cdn.shopify.com/s/files/1/0910/0679/6158/files/Massl_ffel_Edelstahl_Lifestyle_Alandas_Tee_dosieren.png?v=1778851483",
+          "width": 800,
+          "height": 800
+        }
+      ],
+      "options": [
+        {
+          "name": "Title",
+          "position": 1,
+          "values": [
+            "Default Title"
+          ]
+        }
+      ]
+    }
+  ]
+}

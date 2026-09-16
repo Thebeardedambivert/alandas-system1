@@ -1,0 +1,133 @@
+# Deploy System 1 With Coolify
+
+This is the deployment path for Sidy's Hetzner server.
+
+Server seen in Hetzner:
+
+- name: `sidy-platform-prod`
+- public IP: `95.216.205.99`
+- type: `CX33`
+- disk: `80 GB`
+- region: Helsinki
+
+## Cost
+
+No new server cost is expected if we use the existing Hetzner server.
+
+Paid tools are separate. The call budget was EUR 60 max for tools at the start. Do not spend from that budget until the exact tool and price are approved.
+
+## What gets deployed
+
+System 1 deploys as a separate Coolify Docker Compose service:
+
+- `postgres`: Alandas app database
+- `temporal-postgres`: Temporal state database
+- `temporal`: Temporal server
+- `temporal-admin-tools`: Temporal CLI tools
+- `temporal-ui`: Temporal web UI, private first
+- `system1-worker`: Python worker for lead workflows
+
+## Coolify steps
+
+1. Open Coolify on `sidy-platform-prod`.
+2. Create a new project or resource named `alandas-system1`.
+3. Best path: choose a Git-backed Docker Compose application and use `docker-compose.system1.coolify.yml`.
+4. If using `Docker Compose Empty`, paste the contents of `docker-compose.system1.coolify-empty.yml`.
+5. Save and let Coolify parse the services.
+6. Open Environment Variables.
+7. Add values from `.env.system1.example`.
+8. Replace both password values with long random passwords.
+   To generate a paste-ready block locally, run:
+
+```bash
+python scripts/system1_generate_env.py
+```
+
+9. Review Persistent Storages. Confirm these volumes appear:
+   - `system1-postgres-data`
+   - `temporal-postgres-data`
+   - `system1-runtime`
+10. If using `Docker Compose Empty`, confirm the Source Compose contains file mounts with `content:` for:
+   - `/docker-entrypoint-initdb.d/01-system1-schema.sql`
+   - `/etc/temporal/config/dynamicconfig/development-sql.yaml`
+11. Deploy.
+12. Check logs for `system1-worker`.
+
+## Network rule
+
+Keep Temporal private.
+
+Do not expose:
+
+- Postgres port `5432`
+- Temporal port `7233`
+
+Expose Temporal UI only if needed, and protect it behind Coolify authentication or a private domain.
+
+## First verification
+
+After deployment:
+
+1. Open the `system1-worker` logs.
+2. Confirm it connects to Temporal.
+3. Run the sample workflow from the worker container:
+
+```bash
+python -m system_1.start_sample_workflow
+```
+
+4. Open Temporal UI.
+5. Confirm a workflow with ID starting `alandas-lead-` exists.
+6. Signal approval only for test data:
+
+```bash
+temporal workflow signal --workflow-id <workflow-id> --name approve_by_sidy
+temporal workflow signal --workflow-id <workflow-id> --name record_sent
+```
+
+7. Confirm the audit file exists inside the worker volume:
+
+```bash
+cat /app/runtime/audit/system1_audit.jsonl
+```
+
+8. Confirm Postgres has the workflow row:
+
+```bash
+psql "$DATABASE_URL" -c "select workflow_id, venue_name, status from leads;"
+```
+
+9. Import leads from CSV after the sample workflow passes:
+
+```bash
+python -m system_1.import_leads /app/data/system1_leads_template.csv
+```
+
+10. Operate the workflow:
+
+```bash
+python -m system_1.workflow_cli state <workflow-id>
+python -m system_1.workflow_cli approve <workflow-id>
+python -m system_1.workflow_cli record-sent <workflow-id>
+```
+
+## Failure rules
+
+- If the worker cannot connect to Temporal, check `TEMPORAL_ADDRESS`.
+- If Temporal cannot start, check the `temporal-postgres` password and logs.
+- If a volume is missing, stop before using the stack. Persistence is required.
+- If an old Sidy project is running on the same server, do not edit it.
+
+## Done means
+
+Setup is done when:
+
+- all containers are running
+- worker connects to Temporal
+- sample workflow starts
+- CSV import starts lead workflows
+- approval signal works
+- send-record signal works
+- audit log is written
+- lead row is written to Postgres
+- no public database or Temporal port is exposed

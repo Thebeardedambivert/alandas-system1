@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Cyril's AI Engineering Path v12</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f9f9fb;color:#111;padding:16px;max-width:680px;margin:0 auto;}
+:root{--color-text-primary:#111;--color-text-secondary:#666;--color-background-primary:#fff;--color-background-secondary:#f3f3f5;--color-border-secondary:#e0e0e6;--color-border-tertiary:#ebebf0;--border-radius-lg:12px;--border-radius-md:8px;}
+.tab-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.tab{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;font-size:12px;border-radius:99px;cursor:pointer;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);background:transparent;}
+.tab.on{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC;}
+.tab.on.teal{background:#E1F5EE;color:#0F6E56;border-color:#5DCAA5;}
+.tab.on.amber{background:#FAEEDA;color:#854F0B;border-color:#E8B96A;}
+.tab.on.indigo{background:#EEF0FE;color:#3B4AAB;border-color:#9BA8E8;}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:8px;cursor:pointer;}
+.card.open{border:1.5px solid #534AB7;}
+.card.open.teal-card{border:1.5px solid #0F6E56;}
+.card.open.amber-card{border:1.5px solid #854F0B;}
+.card.open.indigo-card{border:1.5px solid #3B4AAB;}
+.card.open.green-card{border:1.5px solid #0F6E56;}
+.ch{display:flex;align-items:center;gap:10px;}
+.badge{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0;}
+.meta{flex:1;min-width:0;}
+.title{font-size:13px;font-weight:500;color:var(--color-text-primary);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sub{font-size:11px;color:var(--color-text-secondary);margin-top:1px;}
+.pill{font-size:10px;font-weight:500;padding:2px 8px;border-radius:var(--border-radius-md);flex-shrink:0;}
+.pill-purple{background:#EEEDFE;color:#534AB7;}
+.pill-teal{background:#E1F5EE;color:#0F6E56;}
+.pill-amber{background:#FAEEDA;color:#854F0B;}
+.pill-gray{background:var(--color-background-secondary);color:var(--color-text-secondary);}
+.pill-coral{background:#FAECE7;color:#993C1D;}
+.pill-indigo{background:#EEF0FE;color:#3B4AAB;}
+.body{margin-top:10px;padding-top:10px;border-top:0.5px solid var(--color-border-tertiary);}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:10px;}
+.tp{font-size:11px;padding:4px 8px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);color:var(--color-text-secondary);display:flex;align-items:center;gap:5px;}
+.pbox{border-radius:var(--border-radius-md);padding:9px 12px;margin-bottom:8px;}
+.plabel{font-size:10px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;margin-bottom:2px;}
+.pname{font-size:12px;font-weight:500;}
+.pdesc{font-size:11px;margin-top:2px;}
+.new-tag{display:inline-flex;align-items:center;gap:3px;font-size:9px;padding:1px 6px;border-radius:99px;background:#FAECE7;color:#993C1D;border:0.5px solid #F0997B;margin-left:5px;vertical-align:middle;}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px;}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:8px;text-align:center;}
+.snum{font-size:18px;font-weight:500;color:var(--color-text-primary);}
+.slabel{font-size:9px;color:var(--color-text-secondary);margin-top:1px;}
+.chips{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:12px;}
+.chip{font-size:10px;padding:2px 7px;border-radius:99px;border:0.5px solid var(--color-border-secondary);color:var(--color-text-secondary);}
+.chip.new{background:#FAECE7;color:#993C1D;border-color:#F0997B;}
+.chip.core{background:#EEEDFE;color:#534AB7;border-color:#AFA9EC;}
+.chip.gap{background:#FAEEDA;color:#854F0B;border-color:#E8B96A;}
+.notice{display:flex;gap:8px;align-items:flex-start;background:#FAEEDA;border-radius:var(--border-radius-md);padding:8px 10px;margin-bottom:8px;}
+.when-box{display:flex;gap:9px;align-items:flex-start;background:#F3F3F8;border:0.5px solid #D9D9E3;border-radius:8px;padding:9px 10px;margin:8px 0 10px;}
+.when-label{font-size:9px;font-weight:700;letter-spacing:.06em;color:#3B4AAB;margin-bottom:3px;}
+.when-text{font-size:11px;line-height:1.45;color:#444;}
+.guide-wrap{display:flex;flex-direction:column;gap:10px;}
+.guide-hero{background:#EEEDFE;border:0.5px solid #C9C7EE;border-radius:12px;padding:14px;}
+.guide-title{font-size:15px;font-weight:700;color:#252F7A;margin-bottom:5px;}
+.guide-intro{font-size:12px;line-height:1.5;color:#4A4A55;}
+.guide-rule{display:flex;gap:10px;align-items:flex-start;background:#fff;border:0.5px solid #E0E0E6;border-radius:9px;padding:11px;}
+.guide-num{width:24px;height:24px;border-radius:7px;background:#EEF0FE;color:#3B4AAB;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.guide-rule-title{font-size:12px;font-weight:700;color:#222;margin-bottom:2px;}
+.guide-rule-text{font-size:11px;line-height:1.45;color:#555;}
+.guide-flow{font-size:11px;line-height:1.6;background:#F8F8FA;border:0.5px dashed #CFCFD8;border-radius:9px;padding:11px;color:#333;}
+.go-btn{width:100%;font-size:12px;padding:7px;display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;margin-top:6px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);}
+.go-btn:hover{background:var(--color-background-secondary);}
+.prog-track{height:3px;background:var(--color-background-secondary);border-radius:2px;margin-top:8px;}
+.prog-fill{height:3px;border-radius:2px;background:#7F77DD;}
+.section-label{font-size:10px;font-weight:500;color:var(--color-text-secondary);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="section" style="margin:24px 0;padding:20px;border:2px solid #333;border-radius:12px;">
+<h2>Universal Tool Mastery Layer</h2>
+<p><strong>The framework is not the subject, and it is not optional.</strong> Every major technology is learned at two levels: the underlying engineering concept and the concrete tool that implements it.</p>
+<ol>
+<li><strong>Orient:</strong> purpose, abstraction, mental model.</li>
+<li><strong>Map primitives:</strong> core objects, APIs, configuration, lifecycle, execution semantics.</li>
+<li><strong>Build:</strong> implement the conceptual pattern with the tool.</li>
+<li><strong>Inspect:</strong> inspect state, traces, logs, artifacts, and relevant implementation behavior.</li>
+<li><strong>Break:</strong> deliberately inject failures, invalid inputs, concurrency, retries, and edge cases.</li>
+<li><strong>Debug:</strong> explain the mechanism behind the failure and fix it from evidence.</li>
+<li><strong>Compare:</strong> reproduce the pattern with another tool or without the framework.</li>
+<li><strong>Defend:</strong> justify the tool, its guarantees, limitations, abstraction leaks, and trade-offs.</li>
+</ol>
+<p><strong>Every major technology must answer:</strong> What is it? How does it work? How do I use it? When should I use it? What happens when it breaks? What guarantees does it actually provide? Where does its abstraction leak?</p>
+<p><strong>Mastery target:</strong> conceptual + API + implementation + debugging + operational mastery + architectural judgment.</p>
+</div>
+
+
+<div style="padding:1rem 0 0.5rem;">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+    <div style="width:36px;height:36px;border-radius:50%;background:#EEEDFE;display:flex;align-items:center;justify-content:center;font-weight:500;font-size:13px;color:#534AB7;">CN</div>
+    <div>
+      <div style="font-size:18px;font-weight:500;color:var(--color-text-primary);">Cyril's AI engineering path v14</div>
+      <div style="font-size:11px;color:var(--color-text-secondary);">8 weeks · mastery curriculum · production engineering · architecture · interview readiness</div>
+    </div>
+  </div>
+  <div class="prog-track"><div class="prog-fill" style="width:0%"></div></div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="snum">8</div><div class="slabel">Weeks</div></div>
+  <div class="stat"><div class="snum">18</div><div class="slabel">Projects</div></div>
+  <div class="stat"><div class="snum">7</div><div class="slabel">Frameworks / protocols</div></div>
+  <div class="stat"><div class="snum" style="color:#993C1D;">10</div><div class="slabel">Engineering layers</div></div>
+  <div class="stat"><div class="snum" style="color:#3B4AAB;">7</div><div class="slabel">Interview modules</div></div>
+</div>
+
+
+<div class="notice" style="margin-top:10px;">
+  <i class="ti ti-school" style="font-size:14px;color:#854F0B;flex-shrink:0;margin-top:1px;"></i>
+  <span style="font-size:11px;color:#854F0B;"><strong>v14 mastery standard:</strong> framework-neutral mechanism first, implementation second. Passing requires mechanism + failure mode + prediction + verification + architecture defense.</span>
+</div>
+
+<div class="section-label">Full stack</div>
+<div class="chips">
+  <span class="chip core">n8n</span><span class="chip core">Python</span><span class="chip core">Supabase</span><span class="chip core">Pinecone</span><span class="chip core">Gemini 3.x</span><span class="chip core">FastAPI</span><span class="chip core">PostgreSQL</span><span class="chip core">Docker</span><span class="chip core">Redis</span><span class="chip core">Cloudflare</span>
+  <span class="chip">OpenAI SDK</span><span class="chip">CrewAI</span><span class="chip">LangGraph</span><span class="chip">AutoGen</span><span class="chip">MCP</span>
+  <span class="chip new">Temporal</span><span class="chip new">Context Eng.</span><span class="chip new">Evals</span><span class="chip new">OpenTelemetry</span><span class="chip new">Harness Eng.</span>
+  <span class="chip gap">Linux/bash</span><span class="chip gap">Git & CI/CD</span><span class="chip gap">Async Python</span><span class="chip gap">SQL/Postgres</span><span class="chip gap">Secrets mgmt</span><span class="chip gap">Model & inference</span><span class="chip gap">AI security</span><span class="chip gap">Data engineering</span>
+</div>
+
+<div class="tab-row">
+  <button class="tab on" id="tab-main" onclick="show('main')"><i class="ti ti-cpu" style="font-size:13px;"></i> Main track</button>
+  <button class="tab" id="tab-prod" onclick="show('prod')"><i class="ti ti-shield-check" style="font-size:13px;"></i> Production layer</button>
+  <button class="tab" id="tab-arch" onclick="show('arch')"><i class="ti ti-building-arch" style="font-size:13px;"></i> Architecture</button>
+  <button class="tab" id="tab-eng" onclick="show('eng')"><i class="ti ti-tool" style="font-size:13px;"></i> Eng. foundations</button>
+  <button class="tab" id="tab-int" onclick="show('int')"><i class="ti ti-briefcase" style="font-size:13px;"></i> Interview prep</button>
+  <button class="tab" id="tab-port" onclick="show('port')"><i class="ti ti-award" style="font-size:13px;"></i> Portfolio</button>
+  <button class="tab" id="tab-guide" onclick="show('guide')"><i class="ti ti-route" style="font-size:13px;"></i> How to progress</button>
+</div>
+
+<div id="view-main"></div>
+<div id="view-prod" style="display:none;"></div>
+<div id="view-arch" style="display:none;"></div>
+<div id="view-eng" style="display:none;"></div>
+<div id="view-int" style="display:none;"></div>
+<div id="view-port" style="display:none;"></div>
+<div id="view-guide" style="display:none;"></div>
+
+<script>
+const mainWeeks=[
+  {id:'w1',num:'W1',title:'LLM Systems Foundations and Agent Runtime',sub:'LLM mechanics · APIs · raw agent loops · tools · context · inference',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Start here',statusCls:'pill-purple',
+   topics:[['ti-cpu','LLM request/response mechanics'],['ti-api','Provider APIs and message models'],['ti-repeat','Framework-independent agent loop'],['ti-tool','Tool schemas, dispatch and termination']],
+   newTopics:[['ti-brain','Context engineering fundamentals'],['ti-adjustments','Model selection and provider-neutral interfaces'],['ti-cpu','Inference: tokens, KV cache, batching, constrained generation'],['ti-settings','Sampling, structured output and reasoning models'],['ti-shield-check','Trust boundaries and untrusted model output']],
+   project:{label:'Week 1 project',name:'AI ops audit bot + minimal runtime',desc:'Build the runtime before the application. Implement tool schemas, dispatch, context assembly, retry policy, termination conditions, structured output validation and observable execution. Then use that runtime to audit a real business workflow.',col:'purple'},
+   notice:{text:'Mastery target: you must be able to explain the agent loop without naming a framework, predict its failure modes, and swap the underlying model/provider without redesigning the application.',tab:'main'},
+   prompt:'Start Week 1: teach me LLM systems and the framework-independent agent runtime.'},
+
+  {id:'w2',num:'W2',title:'OpenAI Agents SDK - Agent Runtime Laboratory',sub:'Handoffs · agents-as-tools · guardrails · sessions · tracing · MCP',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-arrows-exchange','Handoffs vs manager-style agents-as-tools'],['ti-shield-check','Guardrails, approvals and safety boundaries'],['ti-hierarchy','Multi-agent coordination and sessions'],['ti-eye','Tracing, hooks and OpenTelemetry']],
+   newTopics:[['ti-brand-open-source','Provider-neutral tracing concepts'],['ti-plug','MCP-backed capability boundary'],['ti-alert-triangle','Failure injection: timeouts, malformed outputs and repeated calls']],
+   project:{label:'Week 2 project',name:'Lead qualification agent system',desc:'Build a multi-agent SDR workflow, deliberately implement both handoff and manager-style orchestration, compare them, add guardrails and session state, instrument the run, and break the system with timeout and malformed-output scenarios.',col:'purple'},
+   notice:{text:'The SDK is the laboratory, not the subject. Every framework feature must be translated into a framework-neutral architectural concept before it counts as learned.',tab:'main'},
+   prompt:'Start Week 2: use the Agents SDK to teach me agent runtime architecture, orchestration and failure behavior.'},
+
+  {id:'w3',num:'W3',title:'CrewAI - Role-Based Agent Teams',sub:'Agents · tasks · crews · flows · memory · custom tools · persistence',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-users','Role-based agent design'],['ti-list-check','Task chaining and delegation'],['ti-database','Memory and context sharing'],['ti-bolt','Process and team orchestration'],['ti-git-merge','Flows, routing and persisted state']],
+   newTopics:[['ti-tool','Typed custom tools, validation and retries'],['ti-clock','Resume and long-running execution'],['ti-arrows-split','CrewAI patterns mapped to prior orchestration models']],
+   project:{label:'Week 3 project',name:'Proposal generation crew',desc:'Build researcher + writer + reviewer in two phases: broken first, then hardened. Introduce bad context wiring, schema mismatch, sync blocking and retry problems intentionally. Wrap the crew in a typed Flow with conditional routing and persisted state.',col:'purple'},
+   notice:{text:'From W3 onward, every project is built broken-first and instrumented. Do not merely fix exceptions. Identify the violated invariant, observable symptom, owner of the failure and prevention mechanism.',tab:'prod'},
+   prompt:'Start Week 3: teach role-based agent teams, then make me compare CrewAI orchestration with the models from W2.'},
+
+  {id:'w4',num:'W4',title:'LangGraph - Stateful and Cyclical Agent Workflows',sub:'State graphs · reducers · persistence · interrupts · cycles · evaluation gates',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-git-branch','Explicit graph topology and state transitions'],['ti-database-export','Typed state, reducers and checkpoint persistence'],['ti-user-check','Interrupts, approval and resume semantics'],['ti-refresh','Conditional cycles, retries and iteration caps']],
+   newTopics:[['ti-test-pipe','Evaluation gates and LLM-as-judge'],['ti-report-analytics','Concurrency, reducers and write collisions'],['ti-alert-triangle','Replay and repeated side-effect analysis'],['ti-layout-grid','Where deterministic routing ends and probabilistic judgment begins']],
+   project:{label:'Week 4 project - Portfolio flagship',name:'Self-reflective client report agent',desc:'Ingest transcripts, draft a report, score it with an LLM judge, critique and regenerate until a threshold is met, cap iterations, persist checkpoints, and require human approval for low-confidence cases. For every edge, document state ownership, failure behavior and replay risk.',col:'purple'},
+   notice:{text:'This is the final week focused primarily on a single stateful agent workflow. W5 begins when the thing across the boundary is another agent, process or service rather than simply another graph node.',tab:'main'},
+   prompt:'Start Week 4: teach me LangGraph as a stateful workflow engine, not as a collection of APIs.'},
+
+  {id:'w5',num:'W5',title:'Multi-Agent Systems Engineering - Microsoft Agent Framework Laboratory',sub:'First principles · contracts · orchestration · A2A · capabilities · reliability',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-hierarchy','Multi-agent systems from first principles'],['ti-message-2','Agent contracts, messages and typed state'],['ti-arrows-split','Sequential, parallel, supervisor, handoff and consensus patterns'],['ti-world','A2A and remote-agent boundaries']],
+   newTopics:[['ti-shield-check','Capability boundaries, least privilege and approvals'],['ti-refresh','Idempotency, delivery semantics and distributed failure'],['ti-eye','Observability across agent boundaries'],['ti-history','AutoGen lineage and migration reasoning'],['ti-plug','MCP as a capability boundary, before W6 depth']],
+   project:{label:'Week 5 project',name:'Multi-agent follow-up and debate platform',desc:'Progress through six builds: sequential specialists, parallel fan-out/fan-in, supervisor, debate/consensus, remote A2A specialist, then a production-style follow-up workflow. Every agent has a typed contract, failure contract and capability policy. Deliberately inject timeout, duplicate delivery, unknown-success and unavailable-agent failures.',col:'purple'},
+   notice:{text:'W5 is no longer a framework survey. Microsoft Agent Framework is the implementation laboratory. The subject is multi-agent systems as distributed systems: contracts, coordination, state ownership, failure, security and observability.',tab:'main'},
+   prompt:'Start Week 5: teach multi-agent systems from first principles, then use Microsoft Agent Framework as the implementation laboratory.'},
+
+  {id:'w6',num:'W6',title:'MCP - Capability Infrastructure Engineering',sub:'Protocol boundary · discovery · statelessness · authorization · Tasks · scaling',bg:'#EEEDFE',tc:'#534AB7',pill:'pill-purple',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-plug','MCP client/server and capability boundary'],['ti-search','Discovery, capability filtering and dynamic tools'],['ti-arrows-exchange','Stateless protocol core and request semantics'],['ti-adjustments','Routing, caching and horizontal scaling']],
+   newTopics:[['ti-clock','Tasks and long-running work'],['ti-shield-check','Authorization, OAuth, least privilege and tenant isolation'],['ti-alert-triangle','Unknown success, duplicate requests and partial availability'],['ti-hexagon','Ports and adapters around MCP servers'],['ti-world','Protocol evolution and compatibility discipline']],
+   project:{label:'Week 6 project',name:'Production MCP integration layer',desc:'Build an MCP capability layer around Supabase, Postgres, Pinecone and one external API. Separate protocol concerns from application state and business logic. Add capability discovery, policy-based tool filtering, authentication, authorization, audit events, caching, routing and multi-instance deployment. Add one long-running task and failure tests.',col:'purple'},
+   notice:{text:'Do not memorize protocol fields in isolation. For every MCP feature, explain the problem it solves, the boundary it creates, the state it owns, the failure it introduces and the security consequence.',tab:'main'},
+   prompt:'Start Week 6: teach MCP as capability infrastructure. Start from the protocol boundary and statelessness, then discovery, auth, Tasks and scaling.'},
+
+  {id:'w7',num:'W7',title:'Temporal - Durable Systems Engineering',sub:'Durable execution · workflow/activity boundary · retries · replay · versioning',bg:'#FAECE7',tc:'#993C1D',pill:'pill-coral',cardCls:'',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-refresh','Durable execution and workflow history'],['ti-clock','Long-running business process state'],['ti-activity','Activities, workers and task queues'],['ti-arrow-back-up','Crash recovery and retry semantics']],
+   newTopics:[['ti-alert-triangle','Unknown-success side effects and idempotency'],['ti-git-branch','Deterministic replay and workflow versioning'],['ti-hierarchy-2','LangGraph vs MCP Tasks vs Temporal boundaries'],['ti-shield-check','Cancellation, compensation and safe deployment']],
+   project:{label:'Week 7 project',name:'Durable lead follow-up workflow',desc:'Build lead created → wait → email → wait → WhatsApp → notify as a durable workflow. Kill workers, restart them, force activity timeouts, simulate unknown-success side effects, add idempotency, replay histories, deploy a version change and prove old executions remain safe.',col:'coral'},
+   notice:{text:'Temporal is not another agent framework. Its job is durable execution. The lesson passes only when you can explain what survives process failure, what is replayed, what is retried, and what must be idempotent.',tab:'main'},
+   prompt:'Start Week 7: teach durable execution from first principles, then Temporal workflow/activity mechanics.'},
+
+  {id:'w8',num:'W8',title:'Production AI Systems Architecture - Capstone Examination',sub:'Runtime · agents · RAG · MCP · A2A · Temporal · security · governance',bg:'#EAF3DE',tc:'#3B6D11',pill:'pill-teal',cardCls:'teal-card',
+   isNew:true,status:'Locked',statusCls:'pill-gray',
+   topics:[['ti-layout-grid','Architecture and explicit system boundaries'],['ti-shield','Reliability, security and governance'],['ti-chart-bar','Observability, evaluation and cost'],['ti-trophy','Deployment, scaling and incident response']],
+   newTopics:[['ti-user-check','Agentic UX: approval, escalation, intervention and undo'],['ti-shield-check','Policy, auditability, lineage, retention and tenant isolation'],['ti-alert-triangle','Attack and recover: failure injection across every boundary'],['ti-messages','Architecture defense under interview pressure']],
+   project:{label:'Capstone examination',name:'Full AI operations platform',desc:'Lead capture → qualification → RAG-grounded proposal → approval → follow-up → CRM. Use multi-agent orchestration, production RAG, MCP capabilities, one A2A boundary, Temporal durability, OpenTelemetry, auth, tenant isolation, capability policies, eval-gated deployment, audit trails and explicit human intervention. Finish with a simulated production incident and architecture defense.',col:'teal'},
+   notice:{text:'This is an engineering examination disguised as a product. You do not pass because the demo works. You pass when you can predict behavior, explain boundaries, break the system deliberately, diagnose it from evidence and defend the design under constraints.',tab:'main'},
+   prompt:'Start Week 8: walk me through the architecture before we write any capstone code.'}
+];
+
+const prodPhases=[
+  {id:'p1',num:'P1',title:'Context Engineering',sub:'Make context deliberate, typed and bounded',bg:'#FAECE7',tc:'#993C1D',pill:'pill-coral',cardCls:'amber-card',
+   status:'Do before W2',statusCls:'pill-coral',
+   topics:[['ti-brain','Context window and information budgets'],['ti-file-text','Prompt structure and instruction hierarchy'],['ti-database','State, memory and retrieval boundaries'],['ti-tool','Tool and skill documentation']],
+   newTopics:[['ti-shield-check','Trust boundaries and untrusted context'],['ti-chart-line','Retrieval-aware context construction'],['ti-layout-grid','Prompt vs skill vs tool vs memory vs RAG decisions']],
+   project:{label:'Exercise',name:'Context audit',desc:'Audit three real n8n/agent workflows. Mark every implicit dependency, oversized context, duplicated instruction and untrusted input. Redesign the context contract and measure the effect on reliability.',col:'coral'},
+   notice:null,
+   prompt:'Teach context engineering from first principles, then make me audit a real agent context boundary.'},
+
+  {id:'p2',num:'P2',title:'Evals - AI System Verification',sub:'Datasets · judges · metrics · regression gates · failure taxonomy',bg:'#FAECE7',tc:'#993C1D',pill:'pill-coral',cardCls:'amber-card',
+   status:'Do before W4',statusCls:'pill-coral',
+   topics:[['ti-test-pipe','Evaluation datasets and test cases'],['ti-robot','LLM-as-a-judge and rubric design'],['ti-git-branch','Regression gates in CI/CD'],['ti-adjustments','Task, quality and safety metrics']],
+   newTopics:[['ti-radar','Harness sensors and early-victory detection'],['ti-alert-triangle','Loud vs silent failure classification'],['ti-chart-bar','Evaluation of retrieval, tools and agent trajectories']],
+   project:{label:'Exercise',name:'Evaluation pipeline',desc:'Build a fixed evaluation set for the audit bot and proposal crew. Score correctness, completeness, safety and task completion. Make the gate block a deployment, then introduce a deliberate regression and prove the gate catches it.',col:'coral'},
+   notice:null,
+   prompt:'Teach AI evals as an engineering verification system, not as a leaderboard.'},
+
+  {id:'p3',num:'P3',title:'Observability - Explain Live System Behavior',sub:'OpenTelemetry · traces · metrics · logs · cost · causality',bg:'#FAECE7',tc:'#993C1D',pill:'pill-coral',cardCls:'amber-card',
+   status:'Do before W7',statusCls:'pill-coral',
+   topics:[['ti-eye','Distributed traces across agent/tool boundaries'],['ti-coin','Token, latency and cost telemetry'],['ti-alert-triangle','Errors, retries and saturation'],['ti-arrows-exchange','Logs vs metrics vs traces']],
+   newTopics:[['ti-brand-open-source','OpenTelemetry GenAI semantic conventions'],['ti-radar','Observability as harness sensors'],['ti-chart-bar','Correlation IDs and causal debugging'],['ti-shield-check','Audit events vs operational telemetry']],
+   project:{label:'Exercise',name:'Trace the proposal crew',desc:'Instrument the multi-agent workflow so you can answer: what happened, where, why, how long, what it cost, what retried, what state changed and what external side effect occurred.',col:'coral'},
+   notice:null,
+   prompt:'Teach observability by making me diagnose a failure from evidence rather than from source code alone.'},
+
+  {id:'p4',num:'P4',title:'Harness Engineering - Systematic Agent Control',sub:'Guides · sensors · data context · verification · continuity',bg:'#FAECE7',tc:'#993C1D',pill:'pill-coral',cardCls:'amber-card',
+   isNew:true,status:'Do before W5',statusCls:'pill-coral',
+   topics:[['ti-layout-grid','Guides, sensors and data context'],['ti-file-text','AGENTS.md and repository instructions'],['ti-list-check','Acceptance criteria and feature lists'],['ti-clock','Progress and session continuity']],
+   newTopics:[['ti-shield-check','Instructions vs enforcement'],['ti-radar','Detecting premature success claims'],['ti-test-pipe','Verification loops as control surfaces'],['ti-lock','Capability and permission checks as harness controls']],
+   project:{label:'Exercise',name:'Minimal harness pack',desc:'Create a repository-level instruction pack, acceptance criteria, progress state, verification commands and capability policy for the proposal system. Run with and without the harness and compare consistency, regression rate and recovery behavior.',col:'coral'},
+   notice:{text:'Harness engineering is the control layer that makes the rest of the curriculum operational. Guides tell the system what good looks like; sensors tell you whether it happened; data context makes the right state available.',tab:'prod'},
+   prompt:'Teach harness engineering as a control system around an agent, then make me build one for the current project.'}
+];
+
+const archModules=[
+  {id:'a1',num:'A1',title:'Architecture Primer - Boundaries and System Patterns',sub:'Complete before W1 · vocabulary layer',bg:'#E1F5EE',tc:'#0F6E56',pill:'pill-teal',cardCls:'teal-card',
+   status:'Do first',statusCls:'pill-teal',
+   topics:[['ti-layers-difference','Monolith, modular monolith and services'],['ti-server','Distributed systems and service boundaries'],['ti-layout-grid','Layered and onion architecture'],['ti-hexagon','Hexagonal / ports and adapters']],
+   newTopics:[['ti-arrows-exchange','Ownership of state and side effects'],['ti-alert-triangle','Failure domains and trust boundaries']],
+   project:{label:'Exercise',name:'Map your real workflows',desc:'Take three existing n8n/AI builds and identify components, boundaries, state owners, external dependencies and failure domains. Defend why each boundary exists.',col:'teal'},
+   notice:null,
+   prompt:'Teach architecture from boundaries first, then make me map one of my real systems.'},
+
+  {id:'a1_5',num:'A1.5',title:'Distributed Systems Fundamentals',sub:'Complete before W4 · failure vocabulary',bg:'#E1F5EE',tc:'#0F6E56',pill:'pill-teal',cardCls:'teal-card',
+   status:'Before W4',statusCls:'pill-teal',
+   topics:[['ti-arrows-shuffle','CAP and consistency models'],['ti-repeat','Idempotency and safe retry'],['ti-wind','Backpressure and flow control'],['ti-alert-triangle','Partial failure, timeouts and network uncertainty']],
+   newTopics:[['ti-bolt','Event-driven architecture and queues'],['ti-alert-circle','At-least-once delivery, DLQs and ordering'],['ti-database','Protocol state vs application state']],
+   project:{label:'Exercise',name:'Unknown-success drill',desc:'Simulate an external API succeeding while your process times out before recording the result. Design the idempotency and reconciliation strategy. Carry the same problem into LangGraph, MCP and Temporal later.',col:'teal'},
+   notice:null,
+   prompt:'Teach distributed systems fundamentals as tensions I will later encounter in agent workflows.'},
+
+  {id:'a2',num:'A2',title:'Architecture Judgment - Patterns and Trade-offs',sub:'Complete before W4 · design judgment',bg:'#E1F5EE',tc:'#0F6E56',pill:'pill-teal',cardCls:'teal-card',
+   status:'Before W4',statusCls:'pill-teal',
+   topics:[['ti-arrows-split','Sagas and distributed transactions'],['ti-database-export','CQRS and read/write separation'],['ti-history','Event sourcing and auditability'],['ti-layout-columns','MVC, MVP and MVVM']],
+   newTopics:[['ti-scale','When each pattern is not worth the complexity'],['ti-target','Decision records and explicit trade-offs'],['ti-shield-check','Security boundaries as architecture']],
+   project:{label:'Exercise',name:'Architecture decision record set',desc:'For each pattern, write the problem, constraints, decision, alternative, failure mode and reason not to use it. Design an event-sourced memory boundary for the LangGraph system without assuming it is automatically justified.',col:'teal'},
+   notice:null,
+   prompt:'Teach architecture patterns through decision-making, including when NOT to use them.'},
+
+  {id:'a3',num:'A3',title:'System Design Under Constraints',sub:'Complete after W4 · interview-critical',bg:'#E1F5EE',tc:'#0F6E56',pill:'pill-teal',cardCls:'teal-card',
+   isNew:true,status:'After W4',statusCls:'pill-coral',
+   topics:[['ti-ruler-2','Requirements, estimation and bottleneck analysis'],['ti-building','Scale the LangGraph proposal system'],['ti-world','Cold-start system design exercises'],['ti-messages','Think aloud and defend trade-offs']],
+   newTopics:[['ti-target','Reusable system-design response framework'],['ti-chart-bar','Capacity, cost, latency and reliability budgets'],['ti-alert-triangle','Failure-first design review']],
+   project:{label:'Capstone exercise',name:'Design the system at scale',desc:'Scale the W4 system to a realistic workload. Estimate throughput, concurrency, storage, model cost and bottlenecks. Then solve two unfamiliar domains without relying on a memorized architecture.',col:'teal'},
+   notice:null,
+   prompt:'Teach system design under constraints, then make me defend a design rather than copy a diagram.'}
+];
+
+const engModules=[
+  {id:'e1',num:'E1',title:'Docker - Reproducible Runtime Packaging',sub:'Images · Dockerfile · Compose · health checks · multi-service stacks',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Do before W2',statusCls:'pill-amber',
+   topics:[['ti-box','Containers vs VMs'],['ti-file-code','Production Dockerfiles'],['ti-layers','Compose and service networking'],['ti-lock','Volumes and secrets']],
+   newTopics:[['ti-activity','Multi-stage builds and health checks'],['ti-heartbeat','Graceful shutdown and readiness']],
+   project:{label:'Exercise',name:'Containerise the audit runtime',desc:'Package the W1 runtime with Postgres and Redis, add health checks, environment configuration and a reproducible local start command. Break a dependency and diagnose the failure.',col:'amber'},
+   prompt:'Teach Docker through the runtime boundary and failure behavior, not command memorization.'},
+
+  {id:'e2',num:'E2',title:'Linux and Bash - Operate the Machine',sub:'Filesystem · SSH · permissions · processes · logs · text tools',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Do before W1',statusCls:'pill-amber',
+   topics:[['ti-terminal','Filesystem and shell fundamentals'],['ti-key','SSH and remote access'],['ti-shield','Permissions and users'],['ti-clock','Processes, services and cron']],
+   newTopics:[['ti-search','grep, awk and sed for operational diagnosis'],['ti-alert-triangle','Process failure and log inspection']],
+   project:{label:'Exercise',name:'Server operations drill',desc:'Operate a remote Linux environment: inspect processes, configure a service account, schedule a health check, inspect logs and diagnose a deliberately failed process.',col:'amber'},
+   prompt:'Teach Linux as the operating layer underneath AI systems.'},
+
+  {id:'e3',num:'E3',title:'Git and CI/CD - Controlled Change',sub:'Branches · PRs · CI checks · deployment gates · rollback',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Do before W3',statusCls:'pill-amber',
+   topics:[['ti-git-branch','Branching and pull requests'],['ti-git-merge','Merge conflicts and history'],['ti-brand-github','CI pipelines'],['ti-shield-check','Evaluation and security gates']],
+   newTopics:[['ti-rocket','Automated deployment'],['ti-refresh','Rollback and failed deployment recovery']],
+   project:{label:'Exercise',name:'Agent CI/CD pipeline',desc:'On every change, run tests and evals, build the container and deploy only if verification passes. Introduce a failing evaluation and a broken deployment, then practice rollback.',col:'amber'},
+   prompt:'Teach Git and CI/CD as a reliability system for AI projects.'},
+
+  {id:'e4',num:'E4',title:'Async Python - Concurrency You Can Explain',sub:'asyncio · event loops · concurrent I/O · cancellation · debugging',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Do before W2',statusCls:'pill-amber',
+   topics:[['ti-repeat','Event loop and coroutine model'],['ti-arrows-exchange','async/await vs threads vs processes'],['ti-network','Concurrent API calls'],['ti-hierarchy','Parallel agent work']],
+   newTopics:[['ti-alert-triangle','Cancellation, timeouts and async failure'],['ti-search','Debugging blocked or leaked tasks']],
+   project:{label:'Exercise',name:'Parallel agent calls',desc:'Run three independent model/tool calls concurrently, measure latency, add cancellation and timeout behavior, and diagnose one intentionally blocked task.',col:'amber'},
+   prompt:'Teach async Python by making me predict scheduling and failure behavior.'},
+
+  {id:'e5',num:'E5',title:'SQL and Postgres - Durable Data Ownership',sub:'Queries · indexes · transactions · pgvector · RLS · performance',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Do before W4',statusCls:'pill-amber',
+   topics:[['ti-database','SELECT, JOIN, GROUP BY and indexes'],['ti-filter','Pagination and query shape'],['ti-search','pgvector and retrieval data'],['ti-brand-supabase','RLS, functions and realtime']],
+   newTopics:[['ti-chart-bar','EXPLAIN ANALYZE and query performance'],['ti-lock','Transactions, isolation and concurrent writes'],['ti-database-export','Schema ownership for agent state']],
+   project:{label:'Exercise',name:'Agent state and telemetry store',desc:'Store agent decisions, tool calls, state snapshots and evaluation records. Query latency, error rate and per-step behavior. Add one concurrent-write scenario and explain the chosen transaction boundary.',col:'amber'},
+   prompt:'Teach SQL/Postgres through state ownership, concurrency and observability.'},
+
+  {id:'e6',num:'E6',title:'Integration Engineering - Reliable APIs and Events',sub:'HTTP · webhooks · auth · retries · idempotency · queues',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Before W5',statusCls:'pill-amber',
+   topics:[['ti-api','HTTP semantics, status codes and pagination'],['ti-world','GraphQL and API trade-offs'],['ti-webhook','Signed webhooks and replay protection'],['ti-refresh','Retries, idempotency and async jobs']],
+   newTopics:[['ti-shield-check','API keys, OAuth and service identity'],['ti-alert-triangle','Timeouts, partial failure and DLQs'],['ti-database','Reconciliation after unknown success']],
+   project:{label:'Exercise',name:'Reliable integration service',desc:'Receive a signed webhook, validate it, deduplicate it, queue work, retry safely, expose status and reconcile unknown-success outcomes. Reuse this failure model in W5-W7.',col:'amber'},
+   prompt:'Teach integration engineering as the bridge from API calls to reliable distributed systems.'},
+
+  {id:'e7',num:'E7',title:'Kubernetes - Deploy and Debug Stateless Services',sub:'Pods · Deployments · Services · probes · scaling · incident response',bg:'#FAEEDA',tc:'#854F0B',pill:'pill-amber',cardCls:'amber-card',
+   isNew:true,status:'Before capstone',statusCls:'pill-amber',
+   topics:[['ti-box','Pods, Deployments and Services'],['ti-heartbeat','Readiness, liveness and shutdown'],['ti-scale','Resources and horizontal scaling'],['ti-terminal','Logs, events and failed Pod diagnosis']],
+   newTopics:[['ti-lock','Secrets and service identity'],['ti-rocket','Rolling deploys, rollback and ingress'],['ti-alert-triangle','Capacity and failure drills']],
+   project:{label:'Exercise',name:'Deploy and break the MCP service',desc:'Run multiple MCP replicas, add probes, route traffic through a Service, kill a Pod, inspect evidence, recover and perform a controlled rollout. Focus on operating the service, not memorizing Kubernetes YAML.',col:'amber'},
+   prompt:'Teach Kubernetes through deployment and incident diagnosis of a service I already understand.'}
+];
+
+const intModules=[
+  {id:'i1',num:'I1',title:'AI System Design Interviews',sub:'Requirements · capacity · architecture · trade-offs · defense',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'After W4/A3',statusCls:'pill-indigo',
+   topics:[['ti-layout-grid','Reusable system-design framework'],['ti-database','RAG at realistic scale'],['ti-hierarchy','Multi-agent architecture'],['ti-arrows-split','Latency, cost, accuracy and reliability']],
+   newTopics:[['ti-alert-triangle','Failure-first design review'],['ti-message-2','Think aloud without hiding uncertainty']],
+   project:{label:'Exercise',name:'Timed system-design defense',desc:'Design an inbound-lead AI platform for a realistic workload. State requirements, estimate capacity, draw boundaries, identify bottlenecks, defend trade-offs and handle a failure injected halfway through.',col:'indigo'},
+   prompt:'Coach me through an AI system-design interview using the architecture I actually built.'},
+
+  {id:'i2',num:'I2',title:'Framework and Protocol Trade-offs',sub:'Agents SDK · CrewAI · LangGraph · Agent Framework · MCP · A2A · Temporal',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'After W5-W7',statusCls:'pill-indigo',
+   topics:[['ti-scale','CrewAI vs LangGraph'],['ti-arrows-exchange','Agents SDK vs Microsoft Agent Framework'],['ti-plug','MCP vs direct tools vs A2A'],['ti-clock','Temporal vs LangGraph vs MCP Tasks']],
+   newTopics:[['ti-shield-check','Security and ownership trade-offs'],['ti-alert-triangle','Failure behavior by boundary'],['ti-layout-grid','Translate framework features into primitives']],
+   project:{label:'Exercise',name:'Architecture trade-off matrix',desc:'For every framework/protocol, document responsibility, abstraction level, state model, failure model, strongest use case, biggest trade-off, security boundary and a real example from your portfolio.',col:'indigo'},
+   prompt:'Teach me framework trade-offs from mechanisms and boundaries, not feature lists.'},
+
+  {id:'i3',num:'I3',title:'RAG Engineering - Ingestion to Grounded Answers',sub:'Data pipeline · retrieval · reranking · evaluation · security · lineage',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'Deep track',statusCls:'pill-indigo',
+   topics:[['ti-file-text','Parsing, cleaning, metadata and OCR'],['ti-scissors','Fixed, semantic, hierarchical and parent-child chunking'],['ti-vector','Embedding models and versioning'],['ti-search','Vector, BM25, hybrid, MMR and metadata filters']],
+   newTopics:[['ti-adjustments','Reranking and query transformation'],['ti-quote','Grounding, citations and abstention'],['ti-test-pipe','Recall@K, Precision@K, MRR and faithfulness'],['ti-refresh','Corrective and agentic retrieval'],['ti-shield-check','Prompt injection and tenant isolation'],['ti-database','Ingestion, validation, re-indexing and deletion'],['ti-git-branch','Data lineage and freshness']],
+   project:{label:'Flagship exercise',name:'Production RAG platform',desc:'Build ingestion → validation → chunking → metadata → embedding → hybrid retrieval → reranking → grounded response. Track versions, lineage, freshness and deletion. Evaluate retrieval and answer quality, then add agentic retrieval and abstention.',col:'indigo'},
+   notice:{text:'RAG is a data and retrieval engineering discipline. Do not solve poor retrieval by blindly changing the LLM. Measure the retrieval layer first.',tab:'prod'},
+   prompt:'Teach RAG engineering as a full data-to-evidence system, not a vector database demo.'},
+
+  {id:'i4',num:'I4',title:'Model, Cost and Latency Engineering',sub:'Budgets · caching · routing · batching · hosted vs local inference',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'After traces exist',statusCls:'pill-indigo',
+   topics:[['ti-coin','Token and cost budgets'],['ti-database','Semantic caching'],['ti-arrows-split','Model routing and fallback'],['ti-layers','Batching and throughput']],
+   newTopics:[['ti-chart-line','Production cost telemetry'],['ti-cpu','Quantization, GPU memory and serving'],['ti-world','Hosted vs local inference trade-offs'],['ti-alert-triangle','Quality regressions caused by cost optimization']],
+   project:{label:'Exercise',name:'Cost and latency audit',desc:'Measure the real proposal system. Find the two largest cost/latency contributors, optimize each differently, measure the result, and defend why the quality impact is acceptable.',col:'indigo'},
+   prompt:'Teach model and inference optimization from measured system behavior.'},
+
+  {id:'i5',num:'I5',title:'AI Security, Identity and Governance',sub:'Secrets · injection · capability security · tenants · audit · policy',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'Start early, finish before users',statusCls:'pill-indigo',
+   topics:[['ti-key','Secret storage and rotation'],['ti-shield','Prompt injection and untrusted content'],['ti-lock','Least privilege and identity'],['ti-user-check','Tenant isolation and approvals']],
+   newTopics:[['ti-plug','MCP authorization and tool trust'],['ti-shield-check','Tool poisoning, excessive agency and exfiltration'],['ti-list-check','Audit trails, lineage, retention and policy controls'],['ti-alert-triangle','Security failure injection']],
+   project:{label:'Exercise',name:'Security and governance audit',desc:'Audit every portfolio system for secrets, trust boundaries, excessive permissions, unsafe tool outputs, tenant isolation, approval points and auditability. Attack the system with deliberate injection and capability misuse scenarios.',col:'indigo'},
+   prompt:'Teach AI security by making me identify and exploit unsafe boundaries, then redesign them.'},
+
+  {id:'i6',num:'I6',title:'Behavioural and Technical Storytelling',sub:'STAR · architecture narratives · failure stories · measurable outcomes',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'After real failures',statusCls:'pill-indigo',
+   topics:[['ti-message-2','Technical STAR stories'],['ti-trophy','Three flagship project narratives'],['ti-brain','Explain complex systems simply'],['ti-users','Ownership, judgment and learning']],
+   newTopics:[['ti-alert-triangle','Failure and recovery stories'],['ti-chart-bar','Quantify outcomes without fabrication']],
+   project:{label:'Exercise',name:'Three evidence-backed stories',desc:'Build and rehearse three stories from actual projects. Each must include the problem, architectural decision, failure or constraint, action, measurable result and what you would change now.',col:'indigo'},
+   prompt:'Coach me on technical storytelling using only evidence from systems I actually built.'},
+
+  {id:'i7',num:'I7',title:'AI Architecture Boundary Mastery',sub:'Runtime · skills · tools · memory · RAG · MCP · A2A · Temporal',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'After W5-W7',statusCls:'pill-indigo',
+   topics:[['ti-layout-grid','Runtime vs framework'],['ti-tool','Skill vs tool vs MCP'],['ti-database','Memory vs RAG vs context'],['ti-clock','MCP Tasks vs Temporal vs app jobs']],
+   newTopics:[['ti-world','A2A vs in-process agent communication'],['ti-shield-check','Capability and trust boundaries'],['ti-message-2','Two-minute architecture defense']],
+   project:{label:'Exercise',name:'Boundary decision drill',desc:'Given ten realistic requirements, place each responsibility in the correct layer and defend the choice. For every wrong placement, identify the failure, scaling or security consequence it creates.',col:'indigo'},
+   prompt:'Teach me how to place responsibilities in an AI system and make me defend every boundary.'}
+];
+
+const lessonWhen={
+  main:{
+    w1:"Start here. Before W2 you must explain an LLM request, context assembly, tool dispatch, termination and model/provider substitution without relying on a framework.",
+    w2:"After W1 + P1 + E1 + E4. The goal is to see a production agent runtime and compare orchestration mechanisms.",
+    w3:"After W2. Study role/task/crew orchestration as an architectural model, then map it back to the W2 mechanisms.",
+    w4:"After W3 + A1.5 + A2 + P2 + E5. This is where explicit state, persistence, interrupts, reducers, cycles and replay risk become central.",
+    w5:"After W4 + P4. This is the major conceptual expansion from one stateful workflow to a system of agents and remote boundaries. Learn first principles before framework syntax.",
+    w6:"After W5 + E6. Start when you can explain why a capability protocol boundary is preferable to a pile of direct integrations.",
+    w7:"After W6 + P3. Start when retries, idempotency, state ownership and distributed failure are familiar. Temporal teaches durability, not agent orchestration.",
+    w8:"Last. Start only after the main track and required production, architecture and engineering prerequisites are satisfied."
+  },
+  prod:{
+    p1:"Before W2, then revisit whenever you add tools, skills, memory or retrieval.",
+    p2:"Before W4, then treat evaluations as a permanent regression system.",
+    p3:"Before W7, once the system has enough steps that source-code inspection alone is insufficient for diagnosis.",
+    p4:"After P1 and before W5. Apply it to every later project."
+  },
+  arch:{
+    a1:"Do first. This gives you the vocabulary for boundaries, state and failure domains.",
+    a1_5:"Before W4. Learn distributed failure before stateful production workflows.",
+    a2:"Before W4. Use it to develop design judgment, including when patterns are not justified.",
+    a3:"After W4. Scale something you actually understand, then transfer the method to unfamiliar systems."
+  },
+  eng:{
+    e1:"Before W2.",
+    e2:"Before W1 and continue using it throughout the curriculum.",
+    e3:"Before W3.",
+    e4:"Before W2.",
+    e5:"Before W4.",
+    e6:"Before W5.",
+    e7:"Before the capstone, after the production concepts are comfortable."
+  },
+  int:{
+    i1:"After W4 and A3, when you have a real system to defend.",
+    i2:"After W5-W7, so the comparison comes from experience.",
+    i3:"Run as a deep track before PP3 and revisit whenever retrieval is the bottleneck.",
+    i4:"After P3 and a working system with real telemetry.",
+    i5:"Start early, but complete before exposing tools or data to real users.",
+    i6:"After real failures and trade-offs exist in your portfolio.",
+    i7:"After W5-W7, when runtime, capabilities, agent boundaries and durability have all been encountered."
+  }
+};
+
+const progressGuide = {
+  title:"How to progress through the path",
+  intro:"This is a dependency-driven mastery curriculum, not a checklist. Move when the entry condition is satisfied and demonstrated.",
+  rules:[
+    ["1","Understand before implementing","Every new concept begins with a mechanism and invariant. Framework syntax comes after the underlying problem is understood."],
+    ["2","Use the framework as a laboratory","A framework feature never counts as mastery by itself. Translate it into framework-neutral primitives, then compare it with another design."],
+    ["3","Prove understanding before code","After each major concept, answer the mechanism and failure-mode check. If either is weak, stay on the concept."],
+    ["4","Build broken-first","Every substantial project must contain at least one intentional failure. Observe the symptom, explain the violated invariant, then repair it."],
+    ["5","Separate deterministic from probabilistic work","Routing, validation, authorization, retries, timeouts, state transitions and limits should be deterministic where practical. Reasoning, classification, planning and semantic judgment may be probabilistic."],
+    ["6","Treat state ownership as an explicit decision","For every stateful system, identify who owns the state, who may mutate it, what is persisted, and what happens after restart or resume."],
+    ["7","Perform the side-effect/replay check","For any retry, checkpoint, interrupt or durable workflow, ask what happens if the operation runs twice. Design idempotency or reconciliation when required."],
+    ["8","Keep boundaries explicit","Classify each interaction as in-process function/tool, MCP capability, A2A agent interaction, application job or Temporal durable execution. Do not blur these responsibilities."],
+    ["9","Use evidence for diagnosis","When something fails, prefer traces, logs, state snapshots, evaluation results and external responses over intuition. The question is not only 'what failed?' but 'what evidence proves it?'"],
+    ["10","Model-agnostic by design","Be able to swap providers, models and inference endpoints. Learn the behavior and trade-offs of the model layer, not only one SDK."],
+    ["11","Revisit instead of restarting","Later modules should send you back to earlier ones: MCP to E6, RAG failures to I3, scaling to A1.5/A3, security findings to P4, durability failures to idempotency."],
+    ["12","Portfolio work compounds","Prefer one instrumented, production-hardened system over many shallow demos. Layer new capabilities onto the same systems whenever possible."],
+    ["13","Mastery requires prediction","Before running code, predict what will happen. After running it, compare prediction with evidence. A correct outcome without a correct mechanism is not a full pass."],
+    ["14","Mastery requires defense","At module gates, defend why the architecture has its agents, state, boundaries, retries, permissions, observability and failure behavior. Be able to explain why an alternative is worse or unnecessary."],
+    ["15","Use the 'why now?' test","Before starting a lesson, state the concrete problem it solves. If you cannot name the problem, complete the prerequisite or keep building at the current layer."]
+  ]
+};
+
+const portfolioProjects=[
+  {id:'pp1',num:'PP1',title:'Self-Reflective Report Agent',sub:'LangGraph · reflect loop · evaluation gate · HITL',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   status:'W4 flagship',statusCls:'pill-indigo',
+   topics:[['ti-refresh','Cyclic reflect and revise loop'],['ti-user-check','Human approval boundary'],['ti-report-analytics','LLM judge and regeneration'],['ti-database','Checkpointed state and replay analysis']],
+   project:{label:'Flagship',name:'Client report agent',desc:'One coherent LangGraph system that demonstrates explicit state, cycles, evaluation gating, human intervention, persistence and side-effect/replay reasoning.',col:'indigo'},
+   prompt:'Build the self-reflective report agent and make me defend every state transition.'},
+
+  {id:'pp2',num:'PP2',title:'proposal_crew - Production-Hardened',sub:'CrewAI · observability · cost routing · security · CI',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   status:'Continuous flagship',statusCls:'pill-indigo',
+   topics:[['ti-braces','Structured outputs and typed contracts'],['ti-plug','Multi-tool orchestration'],['ti-database','Memory and data ownership'],['ti-coin','Cost-aware model routing'],['ti-eye','Tracing and diagnostics'],['ti-shield-check','Capability and secret controls']],
+   project:{label:'Flagship',name:'Harden what you already built',desc:'Do not rebuild it as a new demo. Layer verification, observability, cost controls, security and deployment discipline onto proposal_crew as the curriculum advances.',col:'indigo'},
+   prompt:'Harden proposal_crew using the current production layer and architecture principles.'},
+
+  {id:'pp3',num:'PP3',title:'Production RAG Platform',sub:'Ingestion · hybrid retrieval · reranking · grounding · evaluation · MCP',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   status:'I3 + W6 flagship',statusCls:'pill-indigo',
+   topics:[['ti-quote','Citation grounding and abstention'],['ti-webhook','Event-triggered idempotent ingestion'],['ti-search','Hybrid retrieval and reranking'],['ti-shield-check','Tenant-aware retrieval and injection defense'],['ti-plug','MCP retrieval boundary']],
+   project:{label:'Flagship',name:'Production RAG platform',desc:'Build the full retrieval lifecycle with data lineage, freshness, deletion, evaluation and a capability boundary. Measure retrieval quality before tuning generation.',col:'indigo'},
+   prompt:'Build the production RAG platform as a data and evidence system.'},
+
+  {id:'pp4',num:'PP4',title:'Multi-Agent Debate and Consensus System',sub:'Propose · critique · vote · synthesize · confidence',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   status:'W5 flagship',statusCls:'pill-indigo',
+   topics:[['ti-users-group','Parallel proposal agents'],['ti-scale','Voting and aggregation'],['ti-message-2','Confidence-aware synthesis'],['ti-alert-triangle','Agent failure and quorum behavior']],
+   project:{label:'Flagship',name:'Debate / consensus swarm',desc:'Multiple agents propose, a critic evaluates, deterministic consensus logic decides, and an aggregator synthesizes. Add timeouts, unavailable agents and quorum rules so the swarm has explicit failure behavior.',col:'indigo'},
+   prompt:'Build the debate system and make me defend why each agent exists.'},
+
+  {id:'pp5',num:'PP5',title:'Durable Agent Operations Platform',sub:'Temporal · MCP · A2A · LangGraph · observability',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'W7 integration',statusCls:'pill-indigo',
+   topics:[['ti-clock','Durable business workflow'],['ti-plug','External capabilities via MCP'],['ti-world','Remote specialist via A2A'],['ti-refresh','Recovery and idempotent side effects'],['ti-eye','End-to-end traces']],
+   project:{label:'Flagship',name:'Durable lead operations platform',desc:'Combine the boundaries deliberately: LangGraph for agent workflow state, MCP for external capabilities, A2A for remote agents and Temporal for durable business execution. Prove each boundary has a distinct responsibility.',col:'indigo'},
+   prompt:'Integrate LangGraph, MCP, A2A and Temporal without collapsing their responsibilities.'},
+
+  {id:'pp6',num:'PP6',title:'Open-Source Engineering Contribution',sub:'Git · CI · framework pattern · benchmark · documentation',bg:'#EEF0FE',tc:'#3B4AAB',pill:'pill-indigo',cardCls:'indigo-card',
+   isNew:true,status:'Ongoing',statusCls:'pill-indigo',
+   topics:[['ti-brand-github','Real pull request'],['ti-git-pull-request','Tests and CI'],['ti-book','Documentation and design rationale'],['ti-chart-bar','Benchmark and evidence']],
+   project:{label:'Continuous flagship',name:'Contribute, do not just consume',desc:'Finish the active open-source contribution first, then upstream a small framework pattern or engineering improvement backed by tests, documentation and a benchmark. The contribution should reflect concepts already mastered.',col:'indigo'},
+   prompt:'Help me turn a mastered engineering pattern into a credible open-source contribution.'}
+];
+
+/* v14 curriculum refresh — added model/inference engineering, deeper agent security, AI data engineering, agentic UX and governance, plus local inference concepts.
+   /* v10 curriculum refresh — verified against current official docs on 2026-08-12.
+   Major updates: MCP 2026-07-28, AutoGen -> Microsoft Agent Framework, LangGraph v1,
+   current OpenAI Agents SDK/Responses API, Gemini 3.x, current OpenTelemetry GenAI conventions, A2A as the agent-to-agent protocol boundary,
+   core RAG engineering, agent-runtime fundamentals, skills, event-driven integration, Kubernetes, and agent security. */
+
+let openCards={main:'w1',prod:'p1',arch:'a1',eng:'e1',int:'i1',port:'pp1'};
+let currentView='main';
+
+const viewKeys=['main','prod','arch','eng','int','port','guide'];
+const tabAmber=['eng'];
+const tabIndigo=['int','port','guide'];
+const tabTeal=['prod','arch'];
+
+function show(v){
+  currentView=v;
+  viewKeys.forEach(x=>{
+    document.getElementById('view-'+x).style.display=x===v?'block':'none';
+    const t=document.getElementById('tab-'+x);
+    let cls='tab'+(x===v?' on':'');
+    if(x===v){
+      if(tabAmber.includes(x)) cls+=' amber';
+      else if(tabIndigo.includes(x)) cls+=' indigo';
+      else if(tabTeal.includes(x)) cls+=' teal';
+    }
+    t.className=cls;
+  });
+}
+
+function render(){
+  renderGroup('main',mainWeeks);
+  renderGroup('prod',prodPhases);
+  renderGroup('arch',archModules);
+  renderGroup('eng',engModules);
+  renderGroup('int',intModules);
+  renderGroup('port',portfolioProjects);
+  renderGuide();
+}
+
+function renderGuide(){
+  const el=document.getElementById('view-guide');
+  const rules=progressGuide.rules.map(([n,t,d])=>`
+    <div class="guide-rule">
+      <div class="guide-num">${n}</div>
+      <div><div class="guide-rule-title">${t}</div><div class="guide-rule-text">${d}</div></div>
+    </div>`).join('');
+  el.innerHTML=`<div class="guide-wrap">
+    <div class="guide-hero">
+      <div class="guide-title">${progressGuide.title}</div>
+      <div class="guide-intro">${progressGuide.intro}</div>
+    </div>
+    <div class="guide-flow"><strong>Recommended flow:</strong><br>
+      E2 → A1 → W1 + P1 → E1 + E4 → W2 → E3 → W3 → E5 + P2 → A1.5 + A2 → W4 →
+      P4 → W5 → E6 → W6 → P3 → W7 → A3 → I3/RAG → I4 + I5 → E7 → I1 + I2 + I6 + I7 → W8
+    </div>
+    ${rules}
+  </div>`;
+}
+
+function renderGroup(key,items){
+  const el=document.getElementById('view-'+key);
+  el.innerHTML='';
+  items.forEach(w=>{
+    const isOpen=openCards[key]===w.id;
+    const div=document.createElement('div');
+    div.className='card'+(isOpen?' open':'')+(w.cardCls?' '+w.cardCls:'');
+    div.onclick=()=>{openCards[key]=isOpen?null:w.id;render();};
+
+    const newBadge=w.isNew?`<span class="new-tag"><i class="ti ti-sparkles" style="font-size:9px;"></i>new</span>`:'';
+    const allTopics=[...w.topics,...(w.newTopics||[])];
+    const topicHtml=allTopics.map(([ic,tx],i)=>{
+      const isNewT=i>=w.topics.length;
+      return `<div class="tp" style="${isNewT?'border:0.5px solid #F0997B;':''}">${isNewT?'<i class="ti ti-sparkles" style="font-size:10px;color:#993C1D;"></i>':''}<i class="ti ${ic}" style="font-size:12px;"></i><span>${tx}</span></div>`;
+    }).join('');
+
+    const projColors={
+      purple:{bg:'#EEEDFE',label:'#534AB7',name:'#3C3489',desc:'#534AB7'},
+      teal:{bg:'#E1F5EE',label:'#0F6E56',name:'#085041',desc:'#0F6E56'},
+      coral:{bg:'#FAECE7',label:'#993C1D',name:'#712B13',desc:'#993C1D'},
+      amber:{bg:'#FAEEDA',label:'#854F0B',name:'#5C3407',desc:'#854F0B'},
+      indigo:{bg:'#EEF0FE',label:'#3B4AAB',name:'#252F7A',desc:'#3B4AAB'},
+    };
+    const pc=projColors[w.project.col]||projColors.purple;
+
+    const noticeHtml=w.notice?`<div class="notice"><i class="ti ti-info-circle" style="font-size:14px;color:#854F0B;flex-shrink:0;margin-top:1px;"></i><span style="font-size:11px;color:#854F0B;">${w.notice.text}</span></div>`:'';
+
+    const resourceHtml=w.resource?`<a href="${w.resource.url}" target="_blank" rel="noopener" style="display:flex;align-items:center;gap:6px;font-size:11px;color:#993C1D;text-decoration:none;background:#FAECE7;border:0.5px solid #F0997B;border-radius:6px;padding:6px 10px;margin-bottom:8px;">
+      <i class="ti ti-external-link" style="font-size:12px;flex-shrink:0;"></i>
+      <span><strong style="font-size:9px;letter-spacing:.05em;text-transform:uppercase;margin-right:4px;">${w.resource.label}</strong>${w.resource.text}</span>
+    </a>`:'';
+
+    const bodyHtml=isOpen?`<div class="body">
+      <div class="tgrid">${topicHtml}</div>
+      ${lessonWhen[key]&&lessonWhen[key][w.id]?`<div class="when-box"><i class="ti ti-route" style="font-size:14px;flex-shrink:0;color:#3B4AAB;margin-top:1px;"></i><div><div class="when-label">WHEN TO STUDY THIS</div><div class="when-text">${lessonWhen[key][w.id]}</div></div></div>`:''}
+      ${noticeHtml}
+      ${resourceHtml}
+      <div class="pbox" style="background:${pc.bg};">
+        <div class="plabel" style="color:${pc.label};">${w.project.label}</div>
+        <div class="pname" style="color:${pc.name};">${w.project.name}</div>
+        <div class="pdesc" style="color:${pc.desc};">${w.project.desc}</div>
+      </div>
+      <button class="go-btn" onclick="event.stopPropagation();">
+        <i class="ti ti-player-play" style="font-size:12px;"></i> ${w.status==='Start here'||w.status==='Do first'?'Begin now':'Study this module'} ↗
+      </button>
+    </div>`:'';
+
+    div.innerHTML=`<div class="ch">
+      <div class="badge" style="background:${w.bg};color:${w.tc};">${w.num}</div>
+      <div class="meta">
+        <div class="title">${w.title}${newBadge}</div>
+        <div class="sub">${w.sub}</div>
+      </div>
+      <span class="pill ${w.statusCls}">${w.status}</span>
+    </div>${bodyHtml}`;
+    el.appendChild(div);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

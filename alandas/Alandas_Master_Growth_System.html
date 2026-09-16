@@ -1,0 +1,2715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alandas Tea Berlin — Master Commercial Growth & Operating System</title>
+
+  <!-- Typography: Luxury Artisanal Editorial & Precision Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===========================================
+       CSS CUSTOM PROPERTIES (THEME TOKENS)
+       Bespoke Artisanal Luxury for Alandas Tea Berlin
+       =========================================== */
+    :root {
+      /* Viewport Stage & Canvas */
+      --stage-bg: #0C0F0C; /* Deep botanical obsidian letterboxing */
+      --slide-bg: #F9F7F2; /* Warm organic ivory/parchment */
+      --slide-gradient: radial-gradient(1300px 900px at 50% 0%, #FFFFFF 0%, #F9F7F2 65%, #F2EEE4 100%);
+
+      /* Typography */
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      /* Primary Brand Colors */
+      --olive: #444C32;
+      --olive-dark: #2E3422;
+      --olive-light: #EEF2E8;
+      --olive-border: #D1D9C5;
+
+      --ochre: #C48737;
+      --ochre-dark: #9A6622;
+      --ochre-light: #FCF4E8;
+      --ochre-border: #F0DFC2;
+
+      --forest: #2F5339;
+      --forest-dark: #1E3725;
+      --forest-light: #EDF5EF;
+      --forest-border: #C8DEC2;
+
+      /* Neutrals & Surfaces */
+      --text-main: #181916;
+      --text-muted: #5C5950;
+      --text-subtle: #8C887C;
+      --card-bg: #FFFFFF;
+      --card-alt: #F3EFE6;
+      --border: #E4DFD3;
+      --border-light: #EFECE4;
+      --border-focus: #C8BFAD;
+
+      /* Elevation & Shadows */
+      --shadow-sm: 0 4px 16px rgba(24, 25, 22, 0.04), 0 1px 3px rgba(24, 25, 22, 0.02);
+      --shadow-md: 0 10px 30px rgba(24, 25, 22, 0.07), 0 2px 6px rgba(24, 25, 22, 0.03);
+      --shadow-lg: 0 20px 48px rgba(24, 25, 22, 0.10), 0 4px 12px rgba(24, 25, 22, 0.04);
+
+      /* Motion */
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-normal: 0.55s;
+    }
+
+    /* Global resets */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* ===========================================
+       MANDATORY VIEWPORT BASE STYLES
+       (From .agents/skills/frontend-slides/viewport-base.css)
+       =========================================== */
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES
+   Include this ENTIRE file in every presentation.
+   Slides are authored at 1920×1080 and scaled as a whole.
+   =========================================== */
+
+/* 1. Lock the browser viewport */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 2. Full-window deck viewport */
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+
+/* 3. Fixed 16:9 design canvas.
+   JavaScript sets transform: translate(...) scale(...). */
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+
+/* 4. Slides stack inside the fixed stage.
+   Content must be laid out at 1920×1080, not reflowed per device. */
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+
+/* 5. Keep media inside authored slide bounds */
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* 6. Presentation chrome stays outside the slide design system */
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+/* 7. Print one fixed-size slide per page */
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+
+    .deck-controls {
+        display: none !important;
+    }
+}
+
+/* 8. Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+
+    /* ===========================================
+       SLIDE CANVAS & TYPOGRAPHY (1920x1080 STAGE)
+       Authored at 1920x1080 design size
+       =========================================== */
+    .deck-stage {
+      background: var(--slide-bg);
+      background-image: var(--slide-gradient);
+    }
+
+    .slide {
+      background: var(--slide-bg);
+      background-image: var(--slide-gradient);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 56px 88px 36px 88px;
+      font-family: var(--font-body);
+      color: var(--text-main);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Slide Header */
+    .slide-header {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      margin-bottom: 12px;
+    }
+
+    .kicker {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--olive);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .kicker::before {
+      content: '';
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--ochre);
+      box-shadow: 0 0 12px rgba(196, 135, 55, 0.5);
+    }
+
+    h1.slide-title {
+      font-family: var(--font-display);
+      font-size: 56px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.14;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    #slide-1 h1.slide-title {
+      font-size: 70px;
+      line-height: 1.1;
+      margin-top: 10px;
+      margin-bottom: 18px;
+    }
+
+    p.slide-lead {
+      font-size: 24px;
+      line-height: 1.45;
+      color: var(--text-muted);
+      max-width: 1560px;
+      font-weight: 400;
+    }
+
+    #slide-1 p.slide-lead {
+      font-size: 26px;
+      line-height: 1.45;
+      margin-bottom: 24px;
+    }
+
+    /* Slide Body (Center Canvas) */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+      width: 100%;
+      margin: 10px 0 12px 0;
+    }
+
+    /* Slide Footer / Meta */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      margin-bottom: 14px;
+      flex-shrink: 0;
+    }
+
+    .footer-meta {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-subtle);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .footer-counter {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--olive);
+      letter-spacing: 0.1em;
+    }
+
+    /* ===========================================
+       GRIDS & CARD ARCHITECTURE (1920x1080 OPTIMIZED)
+       =========================================== */
+    .grid {
+      display: grid;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 40px;
+    }
+
+    .grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .grid-5 {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .grid-6 {
+      grid-template-columns: repeat(6, 1fr);
+      gap: 18px;
+    }
+
+    /* Base Cards */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 38px 36px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.25s var(--ease-out-expo), box-shadow 0.25s var(--ease-out-expo), border-color 0.25s var(--ease-out-expo);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      position: relative;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--border-focus);
+      transform: translateY(-3px);
+    }
+
+    .card.highlight {
+      background: var(--card-alt);
+      border-color: var(--border-focus);
+    }
+
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--olive);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      margin-bottom: 12px;
+    }
+
+    .card-tag.ochre { color: var(--ochre); }
+    .card-tag.forest { color: var(--forest); }
+
+    .card h3 {
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 16px;
+      line-height: 1.25;
+    }
+
+    .card p {
+      font-size: 19px;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card li {
+      font-size: 19px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      position: relative;
+      padding-left: 24px;
+    }
+
+    .card li::before {
+      content: '•';
+      position: absolute;
+      left: 0;
+      color: var(--olive);
+      font-weight: bold;
+      font-size: 22px;
+      line-height: 1;
+    }
+
+    .card li strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* 1-Row Grid-2 Cards (Slides 5, 9, 14, 16, 17, 18, 19, 20, 25, 28) */
+    .grid-2 .card {
+      padding: 46px 46px;
+      min-height: 520px;
+    }
+    .grid-2 .card h3 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+    .grid-2 .card li {
+      font-size: 20px;
+      line-height: 1.6;
+    }
+    .grid-2 .card ul {
+      gap: 16px;
+    }
+
+    /* 1-Row Grid-3 Cards (Slides 7, 12, 22) */
+    .grid-3 .card {
+      padding: 42px 36px;
+      min-height: 520px;
+    }
+    .grid-3 .card h3 {
+      font-size: 28px;
+      margin-bottom: 18px;
+    }
+    .grid-3 .card li {
+      font-size: 19px;
+      line-height: 1.55;
+    }
+    .grid-3 .card ul {
+      gap: 14px;
+    }
+
+    /* 1-Row Grid-4 Cards (Slides 2, 21, 23) */
+    .grid-4 .card {
+      padding: 36px 28px;
+      min-height: 520px;
+    }
+    .grid-4 .card h3 {
+      font-size: 26px;
+      margin-bottom: 16px;
+    }
+    .grid-4 .card li {
+      font-size: 17.5px;
+      line-height: 1.5;
+    }
+    .grid-4 .card ul {
+      gap: 12px;
+    }
+
+    /* 1-Row Grid-5 Cards (Slides 6, 10, 15) */
+    .grid-5 .card {
+      padding: 32px 22px;
+      min-height: 520px;
+    }
+    .grid-5 .card h3 {
+      font-size: 23px;
+      margin-bottom: 14px;
+    }
+    .grid-5 .card li {
+      font-size: 16.5px;
+      line-height: 1.45;
+    }
+    .grid-5 .card p {
+      font-size: 16.5px;
+      line-height: 1.45;
+    }
+    .grid-5 .card ul {
+      gap: 10px;
+    }
+
+    /* Slide 1 Sprints Cards */
+    #slide-1 .grid-5 .card {
+      padding: 38px 26px;
+      min-height: 240px;
+    }
+    #slide-1 .grid-5 .card .card-tag {
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+    #slide-1 .grid-5 .card h3 {
+      font-size: 26px;
+      margin-bottom: 14px;
+    }
+    #slide-1 .grid-5 .card p {
+      font-size: 17.5px;
+      line-height: 1.5;
+    }
+
+    /* 1-Row Grid-6 Cards (Slide 27 Roadmap) */
+    .grid-6 .card {
+      padding: 28px 20px;
+      min-height: 520px;
+    }
+    .grid-6 .card-tag {
+      font-size: 13.5px;
+      margin-bottom: 8px;
+    }
+    .grid-6 .card h3 {
+      font-size: 21px;
+      margin-bottom: 12px;
+    }
+    .grid-6 .card li {
+      font-size: 15.5px;
+      line-height: 1.45;
+    }
+    .grid-6 .card ul {
+      gap: 8px;
+    }
+
+    /* Special 2-row grid-3 on Slide 13 (The Evidence-Based Intervention Loop) */
+    #slide-13 .grid-3 {
+      gap: 28px;
+    }
+    #slide-13 .card {
+      padding: 40px 38px;
+      min-height: 240px;
+      justify-content: center;
+    }
+    #slide-13 .card-tag {
+      font-size: 15px;
+      margin-bottom: 10px;
+    }
+    #slide-13 .card h3 {
+      font-size: 30px;
+      margin-bottom: 14px;
+    }
+    #slide-13 .card p {
+      font-size: 20px;
+      line-height: 1.55;
+    }
+
+    /* Special 2-row grid-3 on Slide 4 (6 Gaps) */
+    #slide-4 .grid-3 {
+      gap: 24px;
+    }
+    #slide-4 .card {
+      padding: 28px 30px;
+      min-height: 240px;
+    }
+    #slide-4 .card-tag {
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    #slide-4 .card h3 {
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+    #slide-4 .card li {
+      font-size: 17px;
+      line-height: 1.45;
+    }
+    #slide-4 .card ul {
+      gap: 9px;
+    }
+
+    /* Special 3-row grid-3 on Slide 8 (9 Stages) */
+    #slide-8 .grid-3 {
+      gap: 16px;
+    }
+    #slide-8 .card {
+      padding: 20px 24px;
+      min-height: 155px;
+    }
+    #slide-8 .card-tag {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+    #slide-8 .card h3 {
+      font-size: 22px;
+      margin-bottom: 8px;
+    }
+    #slide-8 .card p {
+      font-size: 16px;
+      line-height: 1.42;
+    }
+
+    /* Special 2-row grid-3 on Slide 26 (What Success Looks Like) */
+    #slide-26 .grid-3 {
+      gap: 24px;
+    }
+    #slide-26 .card {
+      padding: 36px 34px;
+      min-height: 240px;
+      justify-content: center;
+    }
+    #slide-26 .card h3 {
+      font-size: 26px;
+      margin-bottom: 12px;
+    }
+    #slide-26 .card p {
+      font-size: 19px;
+      line-height: 1.5;
+    }
+
+    /* Stat Box (Slide 3 & Slide 24 metrics) */
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 58px;
+      font-weight: 700;
+      color: var(--olive);
+      line-height: 1;
+      margin-bottom: 8px;
+    }
+
+    .stat-number.ochre { color: var(--ochre); }
+    .stat-number.forest { color: var(--forest); }
+
+    .stat-label {
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .stat-sub {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Slide 3 Layout Customization */
+    #slide-3 .grid-2 .card {
+      min-height: 330px;
+      padding: 38px 40px;
+    }
+
+    /* Table Architecture (Slide 11 Scoring Rubric) */
+    .table-container {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      background: var(--olive);
+      color: #FFFFFF;
+      font-size: 17px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 20px 26px;
+    }
+
+    td {
+      padding: 18px 26px;
+      font-size: 17.5px;
+      color: var(--text-main);
+      border-bottom: 1px solid var(--border-light);
+      line-height: 1.5;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) td {
+      background: var(--card-alt);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .badge-olive {
+      background: var(--olive-light);
+      color: var(--olive-dark);
+      border: 1px solid var(--olive-border);
+    }
+
+    .badge-ochre {
+      background: var(--ochre-light);
+      color: var(--ochre-dark);
+      border: 1px solid var(--ochre-border);
+    }
+
+    .badge-forest {
+      background: var(--forest-light);
+      color: var(--forest-dark);
+      border: 1px solid var(--forest-border);
+    }
+
+    /* ===========================================
+       ANIMATIONS (REVEAL ON ACTIVE SLIDE)
+       =========================================== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity var(--duration-normal) var(--ease-out-expo),
+                  transform var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.07s; }
+    .reveal-delay-2 { transition-delay: 0.14s; }
+    .reveal-delay-3 { transition-delay: 0.21s; }
+    .reveal-delay-4 { transition-delay: 0.28s; }
+    .reveal-delay-5 { transition-delay: 0.35s; }
+    .reveal-delay-6 { transition-delay: 0.42s; }
+
+    /* ===========================================
+       PRESENTATION CHROME & CONTROLS (OUTSIDE STAGE)
+       =========================================== */
+    .viewport-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3.5px;
+      background: linear-gradient(90deg, var(--olive) 0%, var(--ochre) 100%);
+      width: 0%;
+      transition: width 0.3s ease;
+      z-index: 9999;
+    }
+
+    .deck-controls {
+      position: fixed;
+      bottom: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(14, 18, 15, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 7px 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    }
+
+    .ctrl-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      padding: 5px 13px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: #FFFFFF;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      font-family: var(--font-body);
+    }
+
+    .ctrl-btn:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .ctrl-counter {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #E8E4DB;
+      min-width: 76px;
+      text-align: center;
+      letter-spacing: 0.08em;
+    }
+
+    /* ===========================================
+       INLINE EDITING UI
+       =========================================== */
+    .edit-hotzone {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 80px;
+      height: 80px;
+      z-index: 10000;
+      cursor: pointer;
+    }
+
+    .edit-toggle {
+      position: fixed;
+      top: 18px;
+      left: 18px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.2s ease;
+      z-index: 10001;
+      background: #181916;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      padding: 7px 15px;
+      font-size: 12px;
+      font-weight: 700;
+      font-family: var(--font-body);
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .edit-toggle.show,
+    .edit-toggle.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .edit-toggle.active {
+      background: var(--ochre);
+      color: #181916;
+      border-color: #FFFFFF;
+    }
+
+    .edit-banner {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-60px);
+      background: rgba(24, 25, 22, 0.95);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--ochre);
+      color: #FFFFFF;
+      padding: 8px 24px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 10002;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: transform 0.35s var(--ease-out-expo);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+
+    .edit-banner.active {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .edit-banner-badge {
+      background: var(--ochre);
+      color: #181916;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .edit-btn-action {
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #FFF;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: 11.5px;
+      cursor: pointer;
+    }
+
+    .edit-btn-action:hover {
+      background: rgba(255,255,255,0.22);
+    }
+
+    .editable-active {
+      outline: 2px dashed rgba(196, 135, 55, 0.5) !important;
+      outline-offset: 3px;
+      border-radius: 4px;
+      cursor: text;
+    }
+
+    .editable-active:focus {
+      outline: 2px solid var(--ochre) !important;
+      background: rgba(196, 135, 55, 0.05);
+    }
+
+    .edit-toast {
+      position: fixed;
+      bottom: 74px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #181916;
+      color: #FFFFFF;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 8px 18px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+      z-index: 10005;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.3s ease;
+    }
+
+    .edit-toast.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Progress Bar (outside stage) -->
+  <div class="viewport-progress-bar" id="viewportProgressBar"></div>
+
+  <!-- Inline Editing Hotzone & Trigger -->
+  <div class="edit-hotzone" title="Hover corner or press 'E' for Inline Edit Mode"></div>
+  <button class="edit-toggle" id="editToggle" title="Edit mode (E)">
+    <span>✏️</span> <span>Edit Deck</span>
+  </button>
+
+  <!-- Edit Mode Banner -->
+  <div class="edit-banner" id="editBanner">
+    <span class="edit-banner-badge">Edit Mode Active</span>
+    <span>Click text on slide to edit • Changes auto-save to browser • Press <strong>E</strong> to finish</span>
+    <button class="edit-btn-action" id="btnResetEdits">Reset to Original</button>
+  </div>
+
+  <!-- Main Presentation Viewport Wrapper -->
+  <div class="deck-viewport">
+    <!-- Fixed 1920x1080 Design Canvas -->
+    <main class="deck-stage" id="deckStage">
+    <!-- SLIDE 1: Title -->
+    <section class="slide active visible" id="slide-1">
+      <header class="slide-header reveal">
+        <div class="kicker">ALANDAS TEA // NATIONWIDE COMMERCIAL ARCHITECTURE</div>
+        <h1 class="slide-title">Master Commercial Growth &amp;<br>Customer Operating System</h1>
+        <p class="slide-lead">
+        Turning Alandas' verified hospitality proposition into a predictable nationwide B2B acquisition, qualification, and recurring-order revenue machine across Germany.
+      </p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-5">
+      <div class="reveal reveal-delay-1 card highlight">
+        <div class="reveal reveal-delay-2 card-tag">Sprint 1</div>
+        <h3>01 Validate</h3>
+        <p style="color: var(--text-muted);">Process, unit economics &amp; founder workload audit</p>
+      </div>
+      <div class="reveal reveal-delay-3 card highlight">
+        <div class="reveal reveal-delay-4 card-tag">Sprint 2</div>
+        <h3>02 Foundation</h3>
+        <p style="color: var(--text-muted);">Storefront triage, partner proof &amp; sample price sync</p>
+      </div>
+      <div class="reveal reveal-delay-5 card highlight">
+        <div class="reveal reveal-delay-6 card-tag">Sprint 3</div>
+        <h3>03 Acquire</h3>
+        <p style="color: var(--text-muted);">Inbound comment-to-DM &amp; nationwide venue blitz</p>
+      </div>
+      <div class="reveal reveal-delay-6 card highlight">
+        <div class="reveal reveal-delay-6 card-tag">Sprint 4</div>
+        <h3>04 Convert</h3>
+        <p style="color: var(--text-muted);">Intake qualification filter &amp; Turnkey Starter Crate</p>
+      </div>
+      <div class="reveal reveal-delay-6 card highlight">
+        <div class="reveal reveal-delay-6 card-tag">Sprint 5+</div>
+        <h3>05 Retain &amp; Scale</h3>
+        <p style="color: var(--text-muted);">Day-25 predictive refills &amp; B2C lifecycle flows</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">EXECUTIVE PRESENTATION • PREPARED BY CYRIL UZOCHUKWU FOR SIDY SOW</span>
+        <span class="footer-counter">01 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 2: What I See in Alandas -->
+    <section class="slide" id="slide-2">
+      <header class="slide-header reveal">
+        <div class="kicker">01 // Executive Observation</div>
+        <h1 class="slide-title">What I See in Alandas Tea Berlin</h1>
+        <p class="slide-lead">The product and proposition are already validated in the market. The opportunity is connecting them with an automated commercial operating system.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-4">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Asset 01</div>
+        <h3>Distinctive Luxury Brand</h3>
+        <ul>
+          <li>Organic whole-leaf positioning against commodity dust tea</li>
+          <li>Aesthetic glass and wooden counter presentation</li>
+          <li>Strong artisan reputation among Berlin culinary tastemakers</li>
+          <li>Compelling visual ritual that guests love filming</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Asset 02</div>
+        <h3>Proven B2B Proposition</h3>
+        <ul>
+          <li>Handcrafted Teebar display creates counter presence</li>
+          <li>96% gross profit margin for hospitality operators</li>
+          <li>Turnkey setup requiring zero barista training</li>
+          <li>Direct answer to low-quality supermarket tea bags</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">Asset 03</div>
+        <h3>13 Live Partner Venues</h3>
+        <ul>
+          <li>Verified accounts in Berlin (Vesuvio, Melt, Friedrichs, Hürrem Sultan)</li>
+          <li>Regional accounts in Würzburg, Bochum, Münster, Ochtrup</li>
+          <li>Demonstrates product-market fit across multiple restaurant types</li>
+          <li>Unexploited social proof ready to drive new pipeline</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag">Asset 04</div>
+        <h3>Omnichannel Foundation</h3>
+        <ul>
+          <li>Shopify storefront + custom domain established</li>
+          <li>Direct WhatsApp customer dialogues active</li>
+          <li>Dual Instagram Channels (@alandastea B2C + dedicated B2B hospitality page)</li>
+          <li>Formal wholesale catalog and price list in circulation</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">DIAGNOSIS: STRONG PRODUCT-MARKET FIT • SYSTEM LEVEL: UNSTRUCTURED FOUNDER EFFORT</span>
+        <span class="footer-counter">02 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 3: The B2B Opportunity -->
+    <section class="slide" id="slide-3">
+      <header class="slide-header reveal">
+        <div class="kicker">02 // Wholesale Potential</div>
+        <h1 class="slide-title">The B2B Opportunity: Why Wholesale Leads</h1>
+        <p class="slide-lead">The wholesale catalog and verified venue relationships prove that B2B is Alandas' highest-leverage engine of predictable cash flow.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-4">
+      <div class="reveal reveal-delay-1 stat-box">
+        <div class="stat-number">13</div>
+        <div class="stat-label">Verified Live Accounts</div>
+        <div class="stat-sub">Active restaurants and cafes serving Alandas across Germany</div>
+      </div>
+      <div class="reveal reveal-delay-2 stat-box">
+        <div class="stat-number ochre">18+</div>
+        <div class="stat-label">Artisan Tea SKUs</div>
+        <div class="stat-sub">Covering black, green, herbal, fruit, and wellness blends</div>
+      </div>
+      <div class="reveal reveal-delay-3 stat-box">
+        <div class="stat-number forest">50%</div>
+        <div class="stat-label">Organic Ingredient Share</div>
+        <div class="stat-sub">Certified bio teas meeting specialty hospitality standards</div>
+      </div>
+      <div class="reveal reveal-delay-4 stat-box">
+        <div class="stat-number">€0.195</div>
+        <div class="stat-label">Leaf Cost per Pot</div>
+        <div class="stat-sub">Enables 96% gross profit margin for venues charging €5.00/pot</div>
+      </div>
+    </div>
+    <div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Commercial Advantage</div>
+        <h3>Why Cafes Choose Alandas</h3>
+        <ul>
+          <li>Counter display immediately elevates cafe interior aesthetic</li>
+          <li>Whole-leaf blooming ritual justifies €4.50–€6.00 menu price point</li>
+          <li>Replaces commodity tea bags with a premium sensory experience</li>
+          <li>Staff need only boil water and use the pre-measured dosing spoon</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Financial Predictability</div>
+        <h3>Compounding Account Economics</h3>
+        <ul>
+          <li>Starter Crate establishes €249 netto immediate hardware revenue</li>
+          <li>Average venue consumes 4–8 pouches/month (€50–€150 replenishment)</li>
+          <li>Phase 1: 25 accounts (€2,500–€5k/mo) → Master Goal: 100 accounts (€15,000–€30,000/mo freedom milestone)</li>
+          <li>Near-zero churn once the Teebar display is integrated into the bar</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">03 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 4: Operational Diagnosis -->
+    <section class="slide" id="slide-4">
+      <header class="slide-header reveal">
+        <div class="kicker">03 // Current Bottlenecks</div>
+        <h1 class="slide-title">Operational Diagnosis: Where Friction Lives</h1>
+        <p class="slide-lead">Current commercial operations depend entirely on manual founder effort, creating conversion leaks and administrative exhaustion.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag ochre">Gap 01</div>
+        <h3>Fragmented Lead Capture</h3>
+        <ul>
+          <li>Inquiries scattered across Instagram DMs, personal WhatsApp, website email</li>
+          <li>No single pane of glass or centralized CRM tracking pipeline stages</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Gap 02</div>
+        <h3>Unsystematic Qualification</h3>
+        <ul>
+          <li>No automated intake filter measuring seating capacity or intent</li>
+          <li>Founder spends hours texting home consumers asking for free wholesale samples</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Gap 03</div>
+        <h3>Undefined Trial Journey</h3>
+        <ul>
+          <li>Free sample boxes dispatched ad-hoc without structured follow-up</li>
+          <li>High ghosting rate after delivery due to lack of a tasting cadence</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Gap 04</div>
+        <h3>Manual Order Processing</h3>
+        <ul>
+          <li>Orders written in WhatsApp chats without real-time inventory sync</li>
+          <li>Invoice generation requires manual back-and-forth communication</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Gap 05</div>
+        <h3>Memory-Based Refills</h3>
+        <ul>
+          <li>Replenishment depends entirely on cafe remembering to text Sidy</li>
+          <li>No consumption forecasting or automated reorder reminders on Day 25</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Gap 06</div>
+        <h3>Zero Funnel Telemetry</h3>
+        <ul>
+          <li>No analytics tracking discovery-to-trial or trial-to-customer conversion</li>
+          <li>Impossible to forecast monthly inventory needs or ad ROI</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">04 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 5: Strategic Separation B2B vs B2C -->
+    <section class="slide" id="slide-5">
+      <header class="slide-header reveal">
+        <div class="kicker">04 // Channel Strategy</div>
+        <h1 class="slide-title">B2C Has a Different Problem</h1>
+        <p class="slide-lead">B2C e-commerce and B2B wholesale have fundamentally different unit economics and must be treated as separate, parallel workstreams.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">B2B Wholesale Engine</div>
+        <h3>Account-Level Relationship &amp; Retention</h3>
+        <ul>
+          <li><strong>Target Buyer:</strong> Cafe owners, F&amp;B managers, boutique hoteliers, head baristas</li>
+          <li><strong>Sales Cycle:</strong> 7 to 21 days from sample trial to Starter Crate installation</li>
+          <li><strong>Order Value:</strong> €249 Day-1 setup + €150–€300/month recurring refills</li>
+          <li><strong>Core Bottleneck:</strong> Lead qualification, structured follow-up &amp; reorder automation</li>
+          <li><strong>Operating Goal:</strong> Build 30–50 compounding accounts generating €75k–€150k/yr</li>
+          <li><strong>Strategic Value:</strong> High Customer Lifetime Value, low churn, predictable cashflow</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">B2C E-Commerce Funnel</div>
+        <h3>Consumer Traffic, Conversion &amp; Gifting</h3>
+        <ul>
+          <li><strong>Target Buyer:</strong> Premium home tea enthusiasts, aesthetic lifestyle buyers, gift givers</li>
+          <li><strong>Sales Cycle:</strong> Impulse / 24-hour decision on mobile</li>
+          <li><strong>Order Value:</strong> €25 to €60 average order value (AOV)</li>
+          <li><strong>Core Bottleneck:</strong> Storefront UX drop-offs, shipping threshold conflict, cart abandonment</li>
+          <li><strong>Operating Goal:</strong> Fix GA4 tracking, optimize checkout, automate retention emails</li>
+          <li><strong>Strategic Value:</strong> Brand awareness, consumer prestige, Q4 holiday gifting spikes</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">05 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 6: Why Start with B2B -->
+    <section class="slide" id="slide-6">
+      <header class="slide-header reveal">
+        <div class="kicker">05 // Strategic Focus</div>
+        <h1 class="slide-title">Why Start with B2B Wholesale First?</h1>
+        <p class="slide-lead">There is already a formal catalog, validated customer proof, and immediate cash flow potential. B2B yields the highest return on engineering investment.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-5">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">01 Evidence</div>
+        <h3>Market Validation</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">13 live accounts prove venues will buy and serve Alandas without needing product redesign.</p>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">02 Cashflow</div>
+        <h3>Predictable LTV</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Each wholesale client represents €1,800–€3,600 in recurring revenue, smoothing consumer seasonality.</p>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">03 Process</div>
+        <h3>Finite Journey</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Clear linear pipeline: Prospect → Qualify → Trial → Crate → Refill. Straightforward to automate.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag">04 Freedom</div>
+        <h3>Founder Relief</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Eliminates 15+ hours/week of manual messaging so Sidy can focus on high-value tastings.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag">05 Synergy</div>
+        <h3>Living Billboards</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Every cafe counter serves as a branded showroom, driving passive consumer awareness across Berlin.</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">06 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 7: Account Economics & LTV -->
+    <section class="slide" id="slide-7">
+      <header class="slide-header reveal">
+        <div class="kicker">06 // Economic Architecture</div>
+        <h1 class="slide-title">What Account Economics Mean for Alandas</h1>
+        <p class="slide-lead">Average Order Value is a consumer metric. In B2B wholesale, enterprise value is created through compounding Account Lifetime Value.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Transaction 01</div>
+        <h3>Day-1 Starter Crate</h3>
+        <div class="stat-number" style="font-size: 1.8rem; margin: 0.4rem 0;">€249 Netto</div>
+        <ul>
+          <li>Teebar counter rack + 6 jars + 6 pots + trays + spoon + 6 tea pouches</li>
+          <li>Covers equipment cost (~€205.80) + delivers €43.20 Day-1 profit</li>
+          <li>Establishes immediate physical presence on the cafe counter</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Transaction 02+</div>
+        <h3>Monthly Replenishment</h3>
+        <div class="stat-number ochre" style="font-size: 1.8rem; margin: 0.4rem 0;">€150–€300 / Mo</div>
+        <ul>
+          <li>Average venue orders 4 to 8 commercial 220g pouches every 25 days</li>
+          <li>High-margin consumable revenue (~65% gross margin for Alandas)</li>
+          <li>Predictive automated reorder reminders prevent inventory stockouts</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card highlight">
+        <div class="reveal reveal-delay-6 card-tag forest">12-Month Run Rate</div>
+        <h3>Annual Account Value</h3>
+        <div class="stat-number forest" style="font-size: 1.8rem; margin: 0.4rem 0;">€2,000–€3,800 / Yr</div>
+        <ul>
+          <li>10 active accounts = €25,000+ recurring annual wholesale baseline</li>
+          <li>Phase 1: 25 accounts (€75k ARR) • Master Goal: 100 accounts (€180k–€360k recurring ARR) wholesale baseline</li>
+          <li>50 active accounts = €150,000+ recurring annual wholesale baseline</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">07 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 8: 9-Stage Customer Journey -->
+    <section class="slide" id="slide-8">
+      <header class="slide-header reveal">
+        <div class="kicker">07 // Pipeline Architecture</div>
+        <h1 class="slide-title">The Managed 9-Stage B2B Journey</h1>
+        <p class="slide-lead">A disciplined pipeline with an assigned owner, visible status, and automated trigger at every step.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Stage 01</div>
+        <h3>01 // Prospect</h3>
+        <p style="color: var(--text-muted);">Target hospitality venue identified across Germany's top dining clusters (Berlin, Hamburg, Munich, NRW, Frankfurt)</p>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Stage 02</div>
+        <h3>02 // Enquiry</h3>
+        <p style="color: var(--text-muted);">Inbound comment on Instagram or response to outbound margin outreach</p>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">Stage 03</div>
+        <h3>03 // Qualify</h3>
+        <p style="color: var(--text-muted);">60-second intake form scores venue capacity, tea volume, and buyer intent</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 04</div>
+        <h3>04 // Trial</h3>
+        <p style="color: var(--text-muted);">€19.00 €19 credited trial box (ultra-thick shatter-resistant teapot + tray + spoon + 5 blends) dispatched with tasting protocol</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 05</div>
+        <h3>05 // Sales</h3>
+        <p style="color: var(--text-muted);">Day-4 tasting review call, Starter Crate pitch, and credit application</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 06</div>
+        <h3>06 // Order</h3>
+        <p style="color: var(--text-muted);">€249 Starter Crate invoiced and shipped with turnkey barista guide</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Stage 07</div>
+        <h3>07 // Onboard</h3>
+        <p style="color: var(--text-muted);">Teebar installed on counter, staff trained on water temp &amp; dosing</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Stage 08</div>
+        <h3>08 // Reorder</h3>
+        <p style="color: var(--text-muted);">Day-25 predictive refill prompt delivered via WhatsApp</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Stage 09</div>
+        <h3>09 // Expand</h3>
+        <p style="color: var(--text-muted);">Sister location rollouts, seasonal tea swaps, and counter retail pouches</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">08 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 9: Lead Generation Architecture -->
+    <section class="slide" id="slide-9">
+      <header class="slide-header reveal">
+        <div class="kicker">08 // Acquisition Channels</div>
+        <h1 class="slide-title">Lead Generation: Building the Pipeline</h1>
+        <p class="slide-lead">Combining automated social inbound capture with targeted outbound prospecting across Germany's top culinary hubs.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Inbound Architecture</div>
+        <h3>OpenReply Meta Comment-to-DM Loop</h3>
+        <ul>
+          <li><strong>Trigger:</strong> High-aesthetic Instagram Reels showing whole-leaf tea blooming in glass pots</li>
+          <li><strong>Call-to-Action:</strong> "Comment 'TASTE' to receive our Hospitality Wholesale Tasting Kit"</li>
+          <li><strong>Automation:</strong> OpenReply / Meta Graph API immediately sends automated DM</li>
+          <li><strong>Qualification Link:</strong> Routes manager into interactive 60-second intake form</li>
+          <li><strong>Capture:</strong> Zero leads lost in unread Instagram DM requests</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Outbound Campaign</div>
+        <h3>Nationwide Hospitality Blitz (100 Target Venues (Sprint to 100 Active Accounts))</h3>
+        <ul>
+          <li><strong>Target Metro Hubs:</strong> Berlin, Hamburg, Munich, Frankfurt, Cologne/Düsseldorf (NRW)</li>
+          <li><strong>Target Profiles:</strong> High-volume breakfast cafes, boutique bistros, specialty bakeries</li>
+          <li><strong>Economic Hook:</strong> "How top German cafes generate 96% gross profit on table-side tea"</li>
+          <li><strong>3-Touch Sequence:</strong> Direct message/email → WhatsApp follow-up → In-person/express tasting dispatch</li>
+          <li><strong>Goal:</strong> Secure 25 active commercial tasting evaluations in 14 days</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">09 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 10: Lead Qualification Framework -->
+    <section class="slide" id="slide-10">
+      <header class="slide-header reveal">
+        <div class="kicker">09 // Qualification Filter</div>
+        <h1 class="slide-title">Lead Qualification: The 5-Point Validation Test</h1>
+        <p class="slide-lead">Qualification asks one critical question: Is there a real, profitable commercial opportunity here?</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-5">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">01 Fit</div>
+        <h3>Target Venue</h3>
+        <ul>
+          <li>Specialty hospitality</li>
+          <li>Seating capacity &gt; 30</li>
+          <li>Quality coffee / dining</li>
+          <li>Aesthetic interior design</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">02 Need</div>
+        <h3>Reason to Change</h3>
+        <ul>
+          <li>Serving cheap tea bags</li>
+          <li>Bitter brew complaints</li>
+          <li>Wants higher check AOV</li>
+          <li>Table-side guest ritual</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">03 Value</div>
+        <h3>Account Size</h3>
+        <ul>
+          <li>15–30+ daily tea pots</li>
+          <li>&gt; €150/mo reorder potential</li>
+          <li>Multi-location expansion</li>
+          <li>Consistent payment history</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag">04 Timing</div>
+        <h3>Buying Window</h3>
+        <ul>
+          <li>Updating beverage menu</li>
+          <li>Opening new venue/terrace</li>
+          <li>Unhappy with supplier</li>
+          <li>Ready to trial this week</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag">05 Authority</div>
+        <h3>Decision Maker</h3>
+        <ul>
+          <li>Owner or General Manager</li>
+          <li>Head Barista / F&amp;B Lead</li>
+          <li>Direct WhatsApp contact</li>
+          <li>Authority on €249 setup</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">10 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 11: Practical Scoring Model -->
+    <section class="slide" id="slide-11">
+      <header class="slide-header reveal">
+        <div class="kicker">10 // Automated Scoring</div>
+        <h1 class="slide-title">Practical B2B Account Scoring Matrix</h1>
+        <p class="slide-lead">Automating tier classification to ensure Sidy spends 80% of his time closing high-probability accounts.</p>
+      </header>
+      <div class="slide-body">
+<div class="table-container reveal reveal-delay-2">
+      <table>
+        <thead>
+          <tr>
+            <th>Evaluation Criterion</th>
+            <th>Measured Attribute</th>
+            <th>Score Weight</th>
+            <th>Routing &amp; Next Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Premium Concept &amp; Seating &gt; 40</strong></td>
+            <td>Volume Capacity</td>
+            <td><span class="badge badge-olive">+2 Points</span></td>
+            <td>Tier A: Priority tasting box + direct WhatsApp outreach from Sidy</td>
+          </tr>
+          <tr>
+            <td><strong>Already Serves Tea on Menu</strong></td>
+            <td>Category Validation</td>
+            <td><span class="badge badge-olive">+2 Points</span></td>
+            <td>Tier A: Immediate comparison sample dispatch with margin breakdown</td>
+          </tr>
+          <tr>
+            <td><strong>High-Volume Breakfast / Brunch Venue</strong></td>
+            <td>Consumption Velocity</td>
+            <td><span class="badge badge-olive">+1 Point</span></td>
+            <td>Tier A: Tailored pitch focused on morning table-side beverage turnover</td>
+          </tr>
+          <tr>
+            <td><strong>Multiple Locations in Germany</strong></td>
+            <td>Expansion Potential</td>
+            <td><span class="badge badge-olive">+2 Points</span></td>
+            <td>Tier A: Group-level rollout proposal prepared for owners</td>
+          </tr>
+          <tr>
+            <td><strong>Clear Quality Upgrade Intent Stated</strong></td>
+            <td>Buyer Readiness</td>
+            <td><span class="badge badge-olive">+2 Points</span></td>
+            <td>Tier A/B: Fast-tracked to Starter Crate closing call</td>
+          </tr>
+          <tr>
+            <td><strong>Home Consumer / Individual Hobbyist</strong></td>
+            <td>Non-Commercial</td>
+            <td><span class="badge badge-ochre">Disqualify</span></td>
+            <td>Tier C: Automated polite redirect to D2C retail e-commerce store</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">11 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 12: Discovery Questions -->
+    <section class="slide" id="slide-12">
+      <header class="slide-header reveal">
+        <div class="kicker">11 // Diagnostic Discovery</div>
+        <h1 class="slide-title">What We Must Learn First: Discovery Audit</h1>
+        <p class="slide-lead">Engineering without operational facts is guesswork. Discovery replaces assumptions with verified ground truth.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Inquiry Volume</div>
+        <h3>Funnel Inputs</h3>
+        <ul>
+          <li>How many wholesale inquiries does Alandas receive per month?</li>
+          <li>What percentage comes from Instagram vs referrals vs website?</li>
+          <li>How many free sample boxes are currently shipped every month?</li>
+          <li>What is the cost of shipping free samples to unverified leads?</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Conversion Economics</div>
+        <h3>Sales Velocity</h3>
+        <ul>
+          <li>What percentage of sample recipients convert into paying accounts?</li>
+          <li>What is the average initial order basket value (€)?</li>
+          <li>What are the top 3 objections cafe owners raise against buying?</li>
+          <li>How long does it take from first chat to payment clearance?</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Retention &amp; Effort</div>
+        <h3>Account Health</h3>
+        <ul>
+          <li>How many days elapse between an active venue's reorders?</li>
+          <li>How many accounts ordered once and never reordered?</li>
+          <li>How many hours per week does Sidy spend texting leads manually?</li>
+          <li>What happens when a warm prospect goes quiet in WhatsApp?</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">12 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 13: Evidence-Based Method -->
+    <section class="slide" id="slide-13">
+      <header class="slide-header reveal">
+        <div class="kicker">12 // Operating Method</div>
+        <h1 class="slide-title">The Evidence-Based Intervention Loop</h1>
+        <p class="slide-lead">Every commercial and technical enhancement follows a disciplined scientific progression.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Stage 01</div>
+        <h3>Observation</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Sidy manages 10–20 WhatsApp chats daily while working day job in Switzerland; 60% ghost after receiving free tea samples.</p>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Stage 02</div>
+        <h3>Evidence</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Audit reveals €0 sample barrier attracts non-commercial home consumers and disengaged cafes.</p>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">Stage 03</div>
+        <h3>Consequence</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Capital and founder energy bled on non-commercial leads with zero recurring reorder rate.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 04</div>
+        <h3>Hypothesis</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Requiring a €19.00 credited trial box eliminates tire-kickers and doubles closing conversion.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 05</div>
+        <h3>Intervention</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Deploy 60-second Typeform intake filter gating sample orders behind credited checkout.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Stage 06</div>
+        <h3>Measurement</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Track 30-day trial-to-Starter-Crate conversion rate and hours of founder time saved.</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">13 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 14: Phase 1 Discover & Validate -->
+    <section class="slide" id="slide-14">
+      <header class="slide-header reveal">
+        <div class="kicker">13 // Phase 1 Roadmap</div>
+        <h1 class="slide-title">Phase 1: Discover &amp; Validate Operations</h1>
+        <p class="slide-lead">Map the real B2B process, quantify volume, conversion, order economics, and founder manual workload.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Discovery Workstream</div>
+        <h3>Auditing the Ground Truth</h3>
+        <ul>
+          <li>Extract historic sales data from Shopify and manual WhatsApp chat archives</li>
+          <li>Calculate exact gross margins across bulk pouches, glass jars, and display ware</li>
+          <li>Analyze past customer objections and identify why previous accounts churned</li>
+          <li>Log exact weekly hours spent on manual messaging, invoicing, and packaging</li>
+          <li>Establish baseline performance benchmarks before modifying existing systems</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Core Deliverables</div>
+        <h3>Outputs of Phase 1</h3>
+        <ul>
+          <li><strong>B2B Unit Economics Model:</strong> Precise leaf cost, hardware margins &amp; cafe ROI breakdown</li>
+          <li><strong>Customer LTV &amp; Churn Benchmark:</strong> Quantified replenishment velocity of active venues</li>
+          <li><strong>Founder Time Allocation Audit:</strong> Pinpointing manual tasks ready for automation</li>
+          <li><strong>Verified Partner Directory:</strong> Clean data on the 13 live accounts across Germany</li>
+          <li><strong>Intake Specification:</strong> Exact questions and score thresholds for Typeform</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">14 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 15: Phase 2 Fix Commercial Friction -->
+    <section class="slide" id="slide-15">
+      <header class="slide-header reveal">
+        <div class="kicker">14 // Phase 2 Roadmap</div>
+        <h1 class="slide-title">Phase 2: Fix Storefront Commercial Friction</h1>
+        <p class="slide-lead">Resolving contradictory pricing, sample clarity, out-of-stock equipment, and local credibility blockers.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-5">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag ochre">Fix 01</div>
+        <h3>Sample Price Sync</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Standardize sample box at €19.00 netto across all banners and checkout, highlighting the 100% first-order credit.</p>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Fix 02</div>
+        <h3>Partner Proof</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Publish interactive partner map and logo grid showcasing the 13 verified venues (Vesuvio, Melt, Friedrichs).</p>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Fix 03</div>
+        <h3>Teebar Display</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Remove 'out of stock' badge from Teebar shelf; enable 'B2B Pre-Order / Included with Starter Crate'.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Fix 04</div>
+        <h3>Google Maps Pin</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Correct map pin from central Germany to Berlin service hub; forward incoming calls directly to WhatsApp.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Fix 05</div>
+        <h3>Shipping Policy</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Eliminate €59 vs €40 shipping threshold contradiction; unify clearly at €49 across all store pages.</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">15 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 16: Phase 3 Build Lead Engine -->
+    <section class="slide" id="slide-16">
+      <header class="slide-header reveal">
+        <div class="kicker">15 // Phase 3 Roadmap</div>
+        <h1 class="slide-title">Phase 3: Build the Multi-Channel Lead Engine</h1>
+        <p class="slide-lead">Target top hospitality accounts, establish multi-channel acquisition, and centralize all incoming inquiries.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Inbound Capture</div>
+        <h3>OpenReply &amp; Social Triggers</h3>
+        <ul>
+          <li>Connect OpenReply / Meta Graph API integration directly to @alandastea</li>
+          <li>Automate comment triggers ('TASTE', 'TEABAR', 'B2B') on video reels</li>
+          <li>Send personalized Instagram DM with instant 60-second qualification link</li>
+          <li>Deploy floating WhatsApp B2B chat widget on high-intent website pages</li>
+          <li>Capture 100% of social interest into a centralized CRM pipeline</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Outbound Campaign</div>
+        <h3>Nationwide Hospitality Prospecting Blitz</h3>
+        <ul>
+          <li>Compile database of 100 targeted cafes across Berlin, Hamburg, Munich, Frankfurt &amp; NRW</li>
+          <li>Verify decision-maker names (owner, general manager, head barista)</li>
+          <li>Deploy 3-touch outreach sequence focusing on beverage gross margins</li>
+          <li>Express courier tasting kit dispatch with structured video cupping guide</li>
+          <li>Target milestone: 25 active discovery tasting evaluations booked in 14 days</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">16 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 17: Phase 4 Qualification & Trial -->
+    <section class="slide" id="slide-17">
+      <header class="slide-header reveal">
+        <div class="kicker">16 // Phase 4 Roadmap</div>
+        <h1 class="slide-title">Phase 4: Qualification &amp; Trial Automation</h1>
+        <p class="slide-lead">Score leads, route them intelligently, dispatch credited trial boxes, and automate structured follow-up.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Intake Automation</div>
+        <h3>60-Second Qualification Filter</h3>
+        <ul>
+          <li><strong>Step 1:</strong> Collect venue name, address, website / Instagram handle</li>
+          <li><strong>Step 2:</strong> Capture seating capacity (&lt;20, 20–50, &gt;50 seats)</li>
+          <li><strong>Step 3:</strong> Capture current tea setup (teabags, loose-leaf, none)</li>
+          <li><strong>Tier A Routing (&gt;40 seats):</strong> Instant WhatsApp alert dispatched to Sidy</li>
+          <li><strong>Tier C Routing (Consumers):</strong> Polite automated redirect to D2C store</li>
+          <li><strong>Policy:</strong> Charge €19.00 credited fee for sample box to weed out freebie hunters</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Follow-Up Engine</div>
+        <h3>4-Touch Trial Cadence</h3>
+        <ul>
+          <li><strong>Day 0:</strong> DHL tracking number &amp; digital tasting notes sent via WhatsApp</li>
+          <li><strong>Day 2:</strong> Delivery confirmation + whole-leaf brewing temperature cheat sheet</li>
+          <li><strong>Day 4:</strong> Interactive check-in: "Which of the 5 blends did your guests love most?"</li>
+          <li><strong>Day 7:</strong> Turnkey Starter Crate proposal + €19.00 sample credit applied to invoice</li>
+          <li><strong>Outcome:</strong> Eliminates leads ghosting after sample receipt</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">17 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 18: Phase 5 Sales & Onboarding -->
+    <section class="slide" id="slide-18">
+      <header class="slide-header reveal">
+        <div class="kicker">17 // Phase 5 Roadmap</div>
+        <h1 class="slide-title">Phase 5: Sales Conversion &amp; Turnkey Onboarding</h1>
+        <p class="slide-lead">Standardize the Turnkey Starter Crate pitch, barista brewing education, and Day-1 counter rollout.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">The Flagship Offer</div>
+        <h3>The €249 Netto Starter Crate</h3>
+        <ul>
+          <li>Handcrafted wooden Teebar countertop display rack</li>
+          <li>6 airtight borosilicate glass display jars with cork stoppers</li>
+          <li>6 heat-resistant glass teapots with built-in infusers</li>
+          <li>6 bamboo serving presentation trays + stainless/wooden dosing spoon</li>
+          <li>6 commercial 220g pouches (yielding 330 premium cafe pots)</li>
+          <li><strong>Financial Pitch:</strong> Cafe generates €1,650 gross revenue from Day-1 crate</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Barista Training</div>
+        <h3>Zero Friction Counter Deployment</h3>
+        <ul>
+          <li>Laminated counter cheat sheet: Water temp (80°C vs 100°C) &amp; steeping times</li>
+          <li>Pre-measured dosing spoon eliminates tea leaf waste and over-infusion</li>
+          <li>Digital brewing video guide accessible via QR code on display rack</li>
+          <li>Alandas-branded table talkers explaining the whole-leaf ritual to patrons</li>
+          <li><strong>Result:</strong> Baristas brew perfect tea even during chaotic rush hours</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">18 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 19: Phase 6 Replenishment & Retention -->
+    <section class="slide" id="slide-19">
+      <header class="slide-header reveal">
+        <div class="kicker">18 // Phase 6 Roadmap</div>
+        <h1 class="slide-title">Phase 6: Replenishment &amp; Predictive Reorders</h1>
+        <p class="slide-lead">Track purchasing patterns, trigger timely reorder reminders, and make reordering effortless.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Consumption Model</div>
+        <h3>Anticipating Inventory Depletion</h3>
+        <ul>
+          <li><strong>Baseline:</strong> 220g pouch = ~55 pots of tea at 4g/dose</li>
+          <li>Average venue serving 15 pots/day depletes 6 pouches in ~22 days</li>
+          <li><strong>Day 20 Trigger:</strong> Gentle check-in: "How are your jars looking for the weekend?"</li>
+          <li><strong>Day 25 Trigger:</strong> 1-click reorder link sent via WhatsApp with saved blend preferences</li>
+          <li>Eliminates running out of stock and emergency last-minute rush deliveries</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Retention &amp; Health</div>
+        <h3>Active Account Churn Defense</h3>
+        <ul>
+          <li>Automated alert triggered if an active account passes Day 35 without reordering</li>
+          <li>Founder check-in prompt: "Did seasonal foot traffic change or blends run low?"</li>
+          <li>Quarterly blend rotation: Introducing fresh seasonal herbal and iced blends</li>
+          <li>Wholesale customer portal: Fast re-ordering with instant PDF tax invoice</li>
+          <li><strong>Result:</strong> 90-day account retention rate maintained above 85%</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">19 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 20: Phase 7 B2C & Account Expansion -->
+    <section class="slide" id="slide-20">
+      <header class="slide-header reveal">
+        <div class="kicker">19 // Phase 7 Roadmap</div>
+        <h1 class="slide-title">Phase 7: B2C Growth &amp; Account Expansion</h1>
+        <p class="slide-lead">Strengthen B2C e-commerce retention and expand successful B2B accounts across multi-venue groups.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Account Expansion</div>
+        <h3>The 'Land &amp; Expand' Playbook</h3>
+        <ul>
+          <li><strong>Multi-Venue Expansion:</strong> Rolling Alandas into sister locations of existing accounts</li>
+          <li><strong>Seasonal Menu Programs:</strong> Summer artisan cold brew iced tea menus</li>
+          <li><strong>Counter Retail Display:</strong> Supplying 220g retail pouches for cafe guest take-home</li>
+          <li><strong>Corporate Gifting:</strong> Packaging premium tea chests for hospitality corporate clients</li>
+          <li><strong>Impact:</strong> Doubles average account value without acquiring new venues</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">B2C Acceleration</div>
+        <h3>Scaling the Consumer Engine</h3>
+        <ul>
+          <li>Deploy automated post-purchase brewing education email sequence</li>
+          <li>Introduce whole-leaf loose tea monthly home refill subscriptions</li>
+          <li>Curate luxury gifting bundles for Q4 Christmas and holiday spikes</li>
+          <li>Leverage hospitality partner foot traffic via on-menu QR codes</li>
+          <li><strong>Impact:</strong> Scalable consumer e-commerce running on full autopilot</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">20 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 21: Technical Architecture -->
+    <section class="slide" id="slide-21">
+      <header class="slide-header reveal">
+        <div class="kicker">20 // Systems Blueprint</div>
+        <h1 class="slide-title">Technical Architecture: Orchestrating the Machine</h1>
+        <p class="slide-lead">The automation layer orchestrates the business without creating technical debt or fragile complexity.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-4">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Layer 01</div>
+        <h3>Touchpoints</h3>
+        <ul>
+          <li>Shopify Storefront (Alandas.de)</li>
+          <li>Instagram DMs (@alandastea)</li>
+          <li>WhatsApp Business API</li>
+          <li>Typeform / Tally B2B Intake</li>
+          <li>Direct Phone / Email</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Layer 02</div>
+        <h3>Orchestration</h3>
+        <ul>
+          <li>n8n / Make Webhook Router</li>
+          <li>OpenReply Meta API Handler</li>
+          <li>Deterministic Follow-up Rules</li>
+          <li>Notification Dispatcher</li>
+          <li>Error Retry &amp; Dead-Letter Queue</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Layer 03</div>
+        <h3>System of Record</h3>
+        <ul>
+          <li>Dolibarr CRM (System of Record) + Hermes AI Order Parser</li>
+          <li>Venue Profiles &amp; Lead Scores</li>
+          <li>Pipeline Stage Tracking</li>
+          <li>Order History &amp; Refill Logs</li>
+          <li>Active Account Health Alerts</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Layer 04</div>
+        <h3>Commerce &amp; Ops</h3>
+        <ul>
+          <li>Shopify B2B Custom Gating</li>
+          <li>Automated PDF Invoicing</li>
+          <li>Live Inventory Stock Sync</li>
+          <li>DHL / DPD Tracking Hooks</li>
+          <li>SEPA / Card Payment Gateway</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">21 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 22: Where AI Fits -->
+    <section class="slide" id="slide-22">
+      <header class="slide-header reveal">
+        <div class="kicker">21 // Intelligent Automation</div>
+        <h1 class="slide-title">Automation Philosophy: AI-Native, Not AI-Everywhere</h1>
+        <p class="slide-lead">Rigidly separating where AI accelerates workflows from where deterministic rules and human judgment must govern.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">AI Acceleration</div>
+        <h3>Unstructured to Structured</h3>
+        <ul>
+          <li><strong>Prospect Research:</strong> Scraping cafe menus &amp; seating info from Google Maps</li>
+          <li><strong>Message Classification:</strong> Categorizing DMs into Wholesale vs Retail vs Support</li>
+          <li><strong>Dossier Summaries:</strong> Generating pre-call executive briefs for Sidy</li>
+          <li><strong>Outreach Drafting:</strong> Writing personalized messages based on cafe aesthetic</li>
+          <li><strong>Product Q&amp;A:</strong> Answering bounded tea origin &amp; brewing queries</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Deterministic Logic</div>
+        <h3>Zero Guesswork / 100% Rules</h3>
+        <ul>
+          <li><strong>Lead Scoring:</strong> Strict mathematical formula (seats, tea presence, location)</li>
+          <li><strong>Pricing &amp; VAT:</strong> Exact commercial invoicing and volume discount tiers</li>
+          <li><strong>Stage Transitions:</strong> Moving deals in CRM based on verified actions</li>
+          <li><strong>Inventory Truth:</strong> Real-time stock decrement and low-inventory alerts</li>
+          <li><strong>Cadence Policies:</strong> Sending Day 2/4/7 messages at exact timestamps</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Human Role (Sidy)</div>
+        <h3>High-Leverage Superpower</h3>
+        <ul>
+          <li><strong>In-Person Tastings:</strong> Conducting sensory tea experiences with head chefs</li>
+          <li><strong>Commercial Negotiation:</strong> Agreeing terms on multi-venue regional accounts</li>
+          <li><strong>Relationship Building:</strong> Connecting with Berlin's culinary community</li>
+          <li><strong>Custom Blends:</strong> Designing bespoke tea recipes for luxury hotels</li>
+          <li><strong>Strategic Exceptions:</strong> Handling high-value partner requests</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">22 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 23: The B2C Workstream -->
+    <section class="slide" id="slide-23">
+      <header class="slide-header reveal">
+        <div class="kicker">22 // Parallel Operations</div>
+        <h1 class="slide-title">The Parallel B2C E-Commerce Workstream</h1>
+        <p class="slide-lead">Run B2C optimization in parallel, but do not let it distract from proving the core B2B wholesale engine.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-4">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Stage 01</div>
+        <h3>Discover</h3>
+        <ul>
+          <li>SEO optimization for organic whole-leaf tea</li>
+          <li>Instagram aesthetics &amp; brewing reels</li>
+          <li>Customer referrals &amp; gifting shares</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Stage 02</div>
+        <h3>Consider</h3>
+        <ul>
+          <li>Origin transparency &amp; organic certifications</li>
+          <li>Customer tasting reviews and ratings</li>
+          <li>Clear brewing instructions &amp; taste profiles</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Stage 03</div>
+        <h3>Convert</h3>
+        <ul>
+          <li>Unify shipping threshold copy at €49</li>
+          <li>1-click mobile checkout (Apple Pay / PayPal)</li>
+          <li>Fix Sample Box price conflict (€19.00)</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Stage 04</div>
+        <h3>Retain</h3>
+        <ul>
+          <li>Post-purchase email: How to brew loose-leaf</li>
+          <li>Day 40 replenishment reminder sequence</li>
+          <li>Seasonal gifting catalog for winter/holidays</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">23 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 24: B2B Measurement Scoreboard -->
+    <section class="slide" id="slide-24">
+      <header class="slide-header reveal">
+        <div class="kicker">23 // Operational Scoreboard</div>
+        <h1 class="slide-title">B2B Measurement: The Commercial Dashboard</h1>
+        <p class="slide-lead">The operating system requires a real-time scoreboard to measure pipeline velocity and identify conversion bottlenecks.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 stat-box">
+        <div class="stat-number">15–25</div>
+        <div class="stat-label">Inquiry Velocity / Mo</div>
+        <div class="stat-sub">Target weekly inflow of qualified hospitality leads across Inbound &amp; Outbound</div>
+      </div>
+      <div class="reveal reveal-delay-2 stat-box">
+        <div class="stat-number ochre">60%</div>
+        <div class="stat-label">Tier A/B Qualification Rate</div>
+        <div class="stat-sub">Percentage of inquiries meeting seating &amp; commercial criteria, weeding out tire-kickers</div>
+      </div>
+      <div class="reveal reveal-delay-3 stat-box">
+        <div class="stat-number forest">70%</div>
+        <div class="stat-label">Trial Box Conversion</div>
+        <div class="stat-sub">Percentage of qualified leads ordering the €19.00 credited tasting kit</div>
+      </div>
+      <div class="reveal reveal-delay-4 stat-box">
+        <div class="stat-number">40%</div>
+        <div class="stat-label">Starter Crate Close Rate</div>
+        <div class="stat-sub">Percentage of trial box recipients who order the full €249 Starter Crate setup</div>
+      </div>
+      <div class="reveal reveal-delay-5 stat-box">
+        <div class="stat-number ochre">&gt; 85%</div>
+        <div class="stat-label">90-Day Account Retention</div>
+        <div class="stat-sub">Percentage of venues actively placing replenishment orders every 25–30 days</div>
+      </div>
+      <div class="reveal reveal-delay-6 stat-box">
+        <div class="stat-number forest">&lt; 5 Hrs</div>
+        <div class="stat-label">Weekly Founder Admin Time</div>
+        <div class="stat-sub">Down from 20+ hours of chaotic messaging, unlocking focus for growth</div>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">24 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 25: B2C Telemetry & Analytics -->
+    <section class="slide" id="slide-25">
+      <header class="slide-header reveal">
+        <div class="kicker">24 // Commerce Analytics</div>
+        <h1 class="slide-title">B2C Telemetry: Making Commerce Observable</h1>
+        <p class="slide-lead">Instrumenting the e-commerce funnel with modern event telemetry before scaling acquisition budgets.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Full-Funnel Telemetry</div>
+        <h3>GA4 + Google Tag Manager + CAPI</h3>
+        <ul>
+          <li><strong>view_item:</strong> Track product views and tea category interest</li>
+          <li><strong>add_to_cart:</strong> Measure cart intent and popular blend selections</li>
+          <li><strong>begin_checkout:</strong> Monitor checkout friction and payment step drop-offs</li>
+          <li><strong>purchase:</strong> Verify order revenue, tax calculation, and basket product mix</li>
+          <li><strong>Meta CAPI:</strong> Server-side Conversions API for privacy-compliant ad tracking</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Automated Retention Loops</div>
+        <h3>Lifecycle Email Architecture</h3>
+        <ul>
+          <li><strong>Welcome Series (3 emails):</strong> Brand heritage, organic origins, whole-leaf ritual</li>
+          <li><strong>Abandoned Cart Recovery:</strong> Automated 1h and 24h triggers with shipping incentive</li>
+          <li><strong>Post-Purchase Onboarding:</strong> Water temperature &amp; brewing guide videos</li>
+          <li><strong>Day-45 Replenishment:</strong> Timed prompt based on pouch consumption cycle</li>
+          <li><strong>Win-Back Flow:</strong> Exclusive reserve blend offer for inactive customers at Day 90</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">25 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 26: What Success Looks Like -->
+    <section class="slide" id="slide-26">
+      <header class="slide-header reveal">
+        <div class="kicker">25 // Future State</div>
+        <h1 class="slide-title">What Success Looks Like for Alandas</h1>
+        <p class="slide-lead">A commercial operating system that makes revenue opportunities visible, systematic, and compounding.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-3">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Centralized Capture</div>
+        <h3>A Lead Enters Once</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">No inquiry is ever lost in unread Instagram DMs, personal WhatsApp threads, or buried emails.</p>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Automated Intake</div>
+        <h3>A Lead Is Understood</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Venue profile, seat count, and intent scored before Sidy spends a single minute on manual qualification.</p>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">Managed Follow-Up</div>
+        <h3>A Trial Has a Journey</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Every sample box triggers an automated 4-touch tasting and conversion cadence to close the deal.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Predictive Refills</div>
+        <h3>A Customer Has Next Action</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Day 25 reorder reminders ensure steady wholesale cash flow and protect against account churn.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Real-Time Clarity</div>
+        <h3>Management Sees Funnel</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Sidy knows exact pipeline conversion, weekly reorder volume, and forecastable monthly revenue.</p>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Compounding Scale</div>
+        <h3>The System Learns</h3>
+        <p style="color: var(--text-muted); line-height: 1.4;">Feedback from tasting outcomes continually refines messaging, blends, and equipment packages.</p>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">26 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 27: Proposed 6-Sprint Roadmap -->
+    <section class="slide" id="slide-27">
+      <header class="slide-header reveal">
+        <div class="kicker">26 // Implementation Plan</div>
+        <h1 class="slide-title">Proposed Master Roadmap: 6 Sprints to Scale</h1>
+        <p class="slide-lead">Each phase earns the next through empirical evidence, validating assumptions before expanding scope.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-6">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Sprint 1</div>
+        <h3>Validate</h3>
+        <ul>
+          <li>Audit economics</li>
+          <li>Fix 5 site leaks</li>
+          <li>Partner map</li>
+          <li>Sync €19.00 box</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag">Sprint 2</div>
+        <h3>Intake</h3>
+        <ul>
+          <li>60-sec Typeform</li>
+          <li>Credit checkout</li>
+          <li>WhatsApp alerts</li>
+          <li>CRM setup</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-5 card">
+        <div class="reveal reveal-delay-6 card-tag">Sprint 3</div>
+        <h3>Crate &amp; Blitz</h3>
+        <ul>
+          <li>€249 Starter Crate</li>
+          <li>50 target cafes</li>
+          <li>Margin outreach</li>
+          <li>Conduct tastings</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Sprint 4</div>
+        <h3>Inbound</h3>
+        <ul>
+          <li>OpenReply setup</li>
+          <li>Comment triggers</li>
+          <li>4-touch follow-up</li>
+          <li>Site chat widget</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag ochre">Sprint 5</div>
+        <h3>Retention</h3>
+        <ul>
+          <li>Day-25 refills</li>
+          <li>Wholesale portal</li>
+          <li>Barista guides</li>
+          <li>Churn alerts</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-6 card">
+        <div class="reveal reveal-delay-6 card-tag forest">Sprint 6</div>
+        <h3>Scale</h3>
+        <ul>
+          <li>Multi-unit venues</li>
+          <li>GA4 / GTM setup</li>
+          <li>B2C email flows</li>
+          <li>Seasonal menus</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">27 / 28</span>
+      </footer>
+    </section>
+
+    <!-- SLIDE 28: Immediate First Step -->
+    <section class="slide" id="slide-28">
+      <header class="slide-header reveal">
+        <div class="kicker">27 // Immediate Kickoff</div>
+        <h1 class="slide-title">The Immediate First Step: Mapping Ground Truth</h1>
+        <p class="slide-lead">Before building software, we map the exact operational realities of Alandas' current B2B process.</p>
+      </header>
+      <div class="slide-body">
+<div class="grid grid-2">
+      <div class="reveal reveal-delay-1 card">
+        <div class="reveal reveal-delay-2 card-tag">Sprint 1 Scope</div>
+        <h3>7-Day Foundation &amp; Discovery Agenda</h3>
+        <ul>
+          <li>1. Map where past leads originated and why current 13 venues chose Alandas</li>
+          <li>2. Review actual order frequency and pouch consumption of active accounts</li>
+          <li>3. Triage the 5 public website blockers (sample price, out-of-stock shelf, map pin)</li>
+          <li>4. Deploy the standardized 60-second B2B qualification intake form</li>
+          <li>5. Compile the first batch of 25 priority target venues across German metro hubs</li>
+        </ul>
+      </div>
+      <div class="reveal reveal-delay-3 card">
+        <div class="reveal reveal-delay-4 card-tag ochre">Decision For Sidy Today</div>
+        <h3>Agreement &amp; Kickoff Alignment</h3>
+        <ul>
+          <li>Agreement on B2B Wholesale Focus as the primary growth engine</li>
+          <li>Approval to fix the 5 storefront conversion blockers immediately</li>
+          <li>Access to Shopify admin and Meta developer account for integrations</li>
+          <li>Commitment to standardizing the €19.00 credited sample box policy</li>
+          <li>Kick off Sprint 1 immediately to put the automated pipeline in place</li>
+        </ul>
+      </div>
+    </div>
+      </div>
+      <footer class="slide-footer reveal">
+        <span class="footer-meta">ALANDAS TEA BERLIN • MASTER COMMERCIAL GROWTH & OPERATING SYSTEM • NATIONWIDE GERMANY</span>
+        <span class="footer-counter">28 / 28</span>
+      </footer>
+    </section>
+    </main>
+  </div>
+
+  <!-- External Presentation Chrome Controls -->
+  <nav class="deck-controls">
+    <button class="ctrl-btn" id="btnPrev" title="Previous Slide (← or PageUp)">
+      <span>←</span> Prev
+    </button>
+    <div class="ctrl-counter" id="slideCounter">01 / 28</div>
+    <button class="ctrl-btn" id="btnNext" title="Next Slide (→, Space, PageDown)">
+      Next <span>→</span>
+    </button>
+    <button class="ctrl-btn" id="btnFullscreen" title="Toggle Fullscreen (F)">
+      <span>⛶</span>
+    </button>
+  </nav>
+
+  <script>
+    /* ===========================================
+       SLIDE PRESENTATION CONTROLLER
+       =========================================== */
+    class SlidePresentation {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.totalSlides = this.slides.length;
+        this.currentSlide = 0;
+        this.stage = document.getElementById('deckStage');
+        this.progressBar = document.getElementById('viewportProgressBar');
+        this.slideCounter = document.getElementById('slideCounter');
+        this.isWheelThrottled = false;
+
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupTouchNav();
+        this.setupWheelNav();
+        this.setupControls();
+        this.restoreSlideFromHash();
+        this.showSlide(this.currentSlide, false);
+      }
+
+      setupStageScale() {
+        const scale = () => {
+          const factor = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+          const x = (window.innerWidth - 1920 * factor) / 2;
+          const y = (window.innerHeight - 1080 * factor) / 2;
+          this.stage.style.transform = `translate(${x}px, ${y}px) scale(${factor})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+      }
+
+      restoreSlideFromHash() {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#slide-')) {
+          const num = parseInt(hash.replace('#slide-', ''), 10) - 1;
+          if (!isNaN(num) && num >= 0 && num < this.totalSlides) {
+            this.currentSlide = num;
+          }
+        }
+      }
+
+      showSlide(index, updateHash = true) {
+        this.currentSlide = Math.max(0, Math.min(index, this.totalSlides - 1));
+        this.slides.forEach((slide, i) => {
+          const isActive = i === this.currentSlide;
+          slide.classList.toggle('active', isActive);
+          slide.classList.toggle('visible', isActive);
+        });
+
+        // Update counter
+        const curPadded = String(this.currentSlide + 1).padStart(2, '0');
+        const totPadded = String(this.totalSlides).padStart(2, '0');
+        if (this.slideCounter) {
+          this.slideCounter.textContent = `${curPadded} / ${totPadded}`;
+        }
+
+        // Update progress bar
+        if (this.progressBar) {
+          const progress = ((this.currentSlide + 1) / this.totalSlides) * 100;
+          this.progressBar.style.width = `${progress}%`;
+        }
+
+        // Update hash
+        if (updateHash) {
+          history.replaceState(null, '', `#slide-${this.currentSlide + 1}`);
+        }
+      }
+
+      next() {
+        if (this.currentSlide < this.totalSlides - 1) {
+          this.showSlide(this.currentSlide + 1);
+        }
+      }
+
+      prev() {
+        if (this.currentSlide > 0) {
+          this.showSlide(this.currentSlide - 1);
+        }
+      }
+
+      setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+          // Don't hijack if user is editing text
+          if (document.activeElement && document.activeElement.isContentEditable) {
+            return;
+          }
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            this.next();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault();
+            this.prev();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            this.showSlide(0);
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            this.showSlide(this.totalSlides - 1);
+          } else if (e.key === 'f' || e.key === 'F') {
+            if (!document.fullscreenElement) {
+              document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+              document.exitFullscreen().catch(() => {});
+            }
+          }
+        });
+      }
+
+      setupTouchNav() {
+        let startX = 0;
+        let startY = 0;
+        window.addEventListener('touchstart', (e) => {
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+        }, { passive: true });
+
+        window.addEventListener('touchend', (e) => {
+          const deltaX = e.changedTouches[0].clientX - startX;
+          const deltaY = e.changedTouches[0].clientY - startY;
+          if (Math.abs(deltaX) > 50 && Math.abs(deltaX) > Math.abs(deltaY) * 1.5) {
+            if (deltaX < 0) this.next();
+            else this.prev();
+          }
+        }, { passive: true });
+      }
+
+      setupWheelNav() {
+        window.addEventListener('wheel', (e) => {
+          if (this.isWheelThrottled) return;
+          if (document.activeElement && document.activeElement.isContentEditable) return;
+          if (Math.abs(e.deltaY) > 30) {
+            this.isWheelThrottled = true;
+            if (e.deltaY > 0) this.next();
+            else this.prev();
+            setTimeout(() => { this.isWheelThrottled = false; }, 400);
+          }
+        }, { passive: true });
+      }
+
+      setupControls() {
+        const prevBtn = document.getElementById('btnPrev');
+        const nextBtn = document.getElementById('btnNext');
+        const fsBtn = document.getElementById('btnFullscreen');
+        if (prevBtn) prevBtn.addEventListener('click', () => this.prev());
+        if (nextBtn) nextBtn.addEventListener('click', () => this.next());
+        if (fsBtn) fsBtn.addEventListener('click', () => {
+          if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(() => {});
+          } else {
+            document.exitFullscreen().catch(() => {});
+          }
+        });
+      }
+    }
+
+    /* ===========================================
+       INLINE EDITING SYSTEM
+       =========================================== */
+    class InlineEditor {
+      constructor() {
+        this.isActive = false;
+        this.storageKey = 'alandas_deck_edits_v2';
+        this.editableSelectors = 'h1, h2, h3, p, li, .stat-number, .stat-label, .stat-sub, .card-tag, .badge, th, td, .kicker, .footer-meta';
+        this.setupElements();
+        this.restoreEdits();
+        this.setupEvents();
+      }
+
+      setupElements() {
+        this.hotzone = document.querySelector('.edit-hotzone');
+        this.toggleBtn = document.getElementById('editToggle');
+        this.banner = document.getElementById('editBanner');
+        this.hideTimeout = null;
+      }
+
+      setupEvents() {
+        // 1. Click toggle button
+        if (this.toggleBtn) {
+          this.toggleBtn.addEventListener('click', () => this.toggleEditMode());
+        }
+
+        // 2. Hotzone hover with 400ms grace period
+        if (this.hotzone && this.toggleBtn) {
+          this.hotzone.addEventListener('mouseenter', () => {
+            clearTimeout(this.hideTimeout);
+            this.toggleBtn.classList.add('show');
+          });
+          this.hotzone.addEventListener('mouseleave', () => {
+            this.hideTimeout = setTimeout(() => {
+              if (!this.isActive) this.toggleBtn.classList.remove('show');
+            }, 400);
+          });
+          this.toggleBtn.addEventListener('mouseenter', () => {
+            clearTimeout(this.hideTimeout);
+          });
+          this.toggleBtn.addEventListener('mouseleave', () => {
+            this.hideTimeout = setTimeout(() => {
+              if (!this.isActive) this.toggleBtn.classList.remove('show');
+            }, 400);
+          });
+
+          // 3. Hotzone direct click
+          this.hotzone.addEventListener('click', () => this.toggleEditMode());
+        }
+
+        // 4. Keyboard shortcut: 'E' key
+        document.addEventListener('keydown', (e) => {
+          if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable) {
+            e.preventDefault();
+            this.toggleEditMode();
+          }
+          // Ctrl+S / Cmd+S to explicitly save
+          if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+            if (this.isActive) {
+              e.preventDefault();
+              this.saveEdits();
+              this.showSaveToast('Changes saved to LocalStorage!');
+            }
+          }
+        });
+
+        // Auto-save on typing inside stage
+        const stage = document.getElementById('deckStage');
+        if (stage) {
+          stage.addEventListener('input', (e) => {
+            if (this.isActive && e.target.isContentEditable) {
+              this.saveEdits();
+            }
+          });
+        }
+
+        // Reset button
+        const resetBtn = document.getElementById('btnResetEdits');
+        if (resetBtn) {
+          resetBtn.addEventListener('click', () => {
+            if (confirm('Reset all inline edits back to original content?')) {
+              localStorage.removeItem(this.storageKey);
+              location.reload();
+            }
+          });
+        }
+      }
+
+      toggleEditMode() {
+        this.isActive = !this.isActive;
+        if (this.toggleBtn) {
+          this.toggleBtn.classList.toggle('active', this.isActive);
+          this.toggleBtn.classList.toggle('show', this.isActive);
+        }
+        if (this.banner) {
+          this.banner.classList.toggle('active', this.isActive);
+        }
+
+        const elements = document.querySelectorAll(this.editableSelectors);
+        elements.forEach(el => {
+          if (el.closest('.deck-controls') || el.closest('.edit-banner')) return;
+          el.contentEditable = this.isActive ? 'true' : 'false';
+          el.classList.toggle('editable-active', this.isActive);
+        });
+
+        if (this.isActive) {
+          this.showSaveToast('Edit mode enabled. Click any text to edit.');
+        } else {
+          this.saveEdits();
+          this.showSaveToast('Edit mode disabled. All changes saved.');
+        }
+      }
+
+      saveEdits() {
+        const edits = {};
+        const elements = document.querySelectorAll(this.editableSelectors);
+        elements.forEach((el, idx) => {
+          if (el.closest('.deck-controls') || el.closest('.edit-banner')) return;
+          edits[idx] = el.innerHTML;
+        });
+        try {
+          localStorage.setItem(this.storageKey, JSON.stringify(edits));
+        } catch (err) {
+          console.warn('Could not save to localStorage', err);
+        }
+      }
+
+      restoreEdits() {
+        try {
+          const saved = localStorage.getItem(this.storageKey);
+          if (!saved) return;
+          const edits = JSON.parse(saved);
+          const elements = document.querySelectorAll(this.editableSelectors);
+          elements.forEach((el, idx) => {
+            if (el.closest('.deck-controls') || el.closest('.edit-banner')) return;
+            if (edits[idx] !== undefined) {
+              el.innerHTML = edits[idx];
+            }
+          });
+        } catch (err) {
+          console.warn('Could not restore from localStorage', err);
+        }
+      }
+
+      showSaveToast(msg) {
+        let toast = document.getElementById('editToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'editToast';
+          toast.className = 'edit-toast';
+          document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.classList.add('visible');
+        setTimeout(() => {
+          toast.classList.remove('visible');
+        }, 2200);
+      }
+    }
+
+    // Initialize Presentation & Inline Editor on DOM Load
+    document.addEventListener('DOMContentLoaded', () => {
+      window.presentation = new SlidePresentation();
+      window.editor = new InlineEditor();
+    });
+  </script>
+</body>
+</html>

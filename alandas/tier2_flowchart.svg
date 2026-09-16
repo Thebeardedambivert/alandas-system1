@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1600" width="1000" height="1600">
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap');
+      text { font-family: 'Caveat', cursive, sans-serif; }
+    </style>
+    <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#FFFFFF" />
+
+  <text x="480.0" y="53" fill="#181916" font-size="23" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="480.0" dy="0">Tier 2: Professional Revenue Intelligence — Governed Decision Architecture</tspan>
+  </text>
+  <text x="480.0" y="79" fill="#C48737" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Policy Engines  •  Decision Contracts  •  Post-Action Verification  •  Blast Radius: Strictly Bounded</tspan>
+  </text>
+  <ellipse cx="480.0" cy="137.5" rx="135.0" ry="27.5" fill="#FEE2E2" stroke="#F87171" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="137" fill="#991B1B" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Ad Spend &amp; Refill Signal Trigger</tspan>
+    <tspan x="480.0" dy="17">(Meta ROAS &gt; 4.0x / Day-20 Refill)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="165" x2="480" y2="205" stroke="#181916" stroke-width="2" />
+    <polygon points="480,205 473.5,193.7416697508023 486.5,193.7416697508023" fill="#181916" />
+  </g>
+  <rect x="335" y="205" width="290" height="55" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="232" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Ingest Meta Campaign Telemetry</tspan>
+    <tspan x="480.0" dy="17">(CPA, CTR, Daily Spend, Revenue)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="260" x2="480" y2="295" stroke="#181916" stroke-width="2" />
+    <polygon points="480,295 473.5,283.7416697508023 486.5,283.7416697508023" fill="#181916" />
+  </g>
+  <rect x="240" y="295" width="480" height="125" rx="12" fill="#F3E8FF" stroke="#C084FC" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="255" y="320" fill="#7E22CE" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="255" dy="0">Selective LangGraph Agent — Budget &amp; Creative Reasoning</tspan>
+  </text>
+  <rect x="265" y="340" width="200" height="55" rx="12" fill="#FFFFFF" stroke="#A855F7" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="365.0" y="366" fill="#6B21A8" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="365.0" dy="0">Evaluate 7-Day Performance</tspan>
+    <tspan x="365.0" dy="15">(ROAS = 4.2x, CPA = €12)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="465" y1="367" x2="495" y2="367" stroke="#A855F7" stroke-width="2" />
+    <polygon points="495,367 483.7416697508023,373.5 483.7416697508023,360.5" fill="#A855F7" />
+  </g>
+  <rect x="495" y="340" width="200" height="55" rx="12" fill="#FFFFFF" stroke="#A855F7" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="595.0" y="366" fill="#6B21A8" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="595.0" dy="0">Propose Budget Delta:</tspan>
+    <tspan x="595.0" dy="15">Increase €30 ➔ €39/day (+30%)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="420" x2="480" y2="460" stroke="#181916" stroke-width="2" />
+    <polygon points="480,460 473.5,448.7416697508023 486.5,448.7416697508023" fill="#181916" />
+  </g>
+  <rect x="335" y="460" width="290" height="55" rx="12" fill="#FFEDD5" stroke="#FDBA74" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="487" fill="#C2410C" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Serialize to Typed Decision Contract</tspan>
+    <tspan x="480.0" dy="17">(Schema: action, delta, bounds, target)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="515" x2="480" y2="550" stroke="#181916" stroke-width="2" />
+    <polygon points="480,550 473.5,538.7416697508023 486.5,538.7416697508023" fill="#181916" />
+  </g>
+  <polygon points="480.0,550 565,605.0 480.0,660 395,605.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="599" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">JSON Schema</tspan>
+    <tspan x="480.0" dy="17">Valid?</tspan>
+    <tspan x="480.0" dy="17">(Pydantic)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="565" y1="605" x2="660" y2="605" stroke="#EF4444" stroke-width="2" />
+    <polygon points="660,605 648.7416697508023,611.5 648.7416697508023,598.5" fill="#EF4444" />
+  </g>
+  <text x="612.5" y="599.0" fill="#DC2626" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="612.5" dy="0">FAIL</tspan>
+  </text>
+  <rect x="660" y="580" width="165" height="50" rx="12" fill="#FEE2E2" stroke="#F87171" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="742.5" y="603.5" fill="#991B1B" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="742.5" dy="0">Reject Malformed Contract</tspan>
+    <tspan x="742.5" dy="15">Alert Cyril (Zero Action)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="660" x2="480" y2="705" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,705 473.5,693.7416697508023 486.5,693.7416697508023" fill="#15803D" />
+  </g>
+  <text x="523.0" y="684.5" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">PASS</tspan>
+  </text>
+  <rect x="230" y="705" width="500" height="115" rx="12" fill="#E0F2FE" stroke="#0284C7" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="245" y="730" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="245" dy="0">Policy Engine Independent Evaluation (Deterministic Rules)</tspan>
+  </text>
+  <rect x="250" y="750" width="145" height="50" rx="12" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="322.5" y="773.5" fill="#0369A1" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="322.5" dy="0">Daily Ceiling Check</tspan>
+    <tspan x="322.5" dy="15">(€39 &lt;= €50 cap)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="395" y1="775" x2="420" y2="775" stroke="#0284C7" stroke-width="2" />
+    <polygon points="420,775 408.7416697508023,781.5 408.7416697508023,768.5" fill="#0284C7" />
+  </g>
+  <rect x="420" y="750" width="145" height="50" rx="12" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="492.5" y="773.5" fill="#0369A1" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="492.5" dy="0">Min Run Time Check</tspan>
+    <tspan x="492.5" dy="15">(Active &gt; 7 Days)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="565" y1="775" x2="590" y2="775" stroke="#0284C7" stroke-width="2" />
+    <polygon points="590,775 578.7416697508023,781.5 578.7416697508023,768.5" fill="#0284C7" />
+  </g>
+  <rect x="590" y="750" width="145" height="50" rx="12" fill="#FFFFFF" stroke="#38BDF8" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="662.5" y="773.5" fill="#0369A1" font-size="11.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="662.5" dy="0">Max Daily Delta</tspan>
+    <tspan x="662.5" dy="15">(&lt;= +35% Rule)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="820" x2="480" y2="860" stroke="#181916" stroke-width="2" />
+    <polygon points="480,860 473.5,848.7416697508023 486.5,848.7416697508023" fill="#181916" />
+  </g>
+  <polygon points="480.0,860 565,915.0 480.0,970 395,915.0" fill="#FEF08A" stroke="#EAB308" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="909" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Policy Engine</tspan>
+    <tspan x="480.0" dy="17">Passed?</tspan>
+    <tspan x="480.0" dy="17">(Zero Risk)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="565" y1="915" x2="660" y2="915" stroke="#EF4444" stroke-width="2" />
+    <polygon points="660,915 648.7416697508023,921.5 648.7416697508023,908.5" fill="#EF4444" />
+  </g>
+  <text x="612.5" y="909.0" fill="#DC2626" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="612.5" dy="0">VIOLATION</tspan>
+  </text>
+  <rect x="660" y="890" width="165" height="50" rx="12" fill="#FEE2E2" stroke="#F87171" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="742.5" y="914" fill="#991B1B" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="742.5" dy="0">Halt Execution</tspan>
+    <tspan x="742.5" dy="15">Log Policy Breach</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="970" x2="480" y2="1015" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,1015 473.5,1003.7416697508023 486.5,1003.7416697508023" fill="#15803D" />
+  </g>
+  <text x="523.0" y="994.5" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">COMPLIANT</tspan>
+  </text>
+  <polygon points="480.0,1015 565,1070.0 480.0,1125 395,1070.0" fill="#FEF08A" stroke="#EAB308" stroke-width="3" filter="url(#handDrawn)" />
+  <text x="480.0" y="1064" fill="#854D0E" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Delta &gt; €5/day?</tspan>
+    <tspan x="480.0" dy="17">(Human Sign-Off</tspan>
+    <tspan x="480.0" dy="17">Required)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="395" y1="1070" x2="300" y2="1070" stroke="#15803D" stroke-width="2" />
+    <polygon points="300,1070 311.2583302491977,1063.5 311.2583302491977,1076.5" fill="#15803D" />
+  </g>
+  <text x="347.5" y="1064.0" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="347.5" dy="0">NO (&lt;= €5)</tspan>
+  </text>
+  <rect x="125" y="1045" width="175" height="50" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="212.5" y="1069" fill="#166534" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="212.5" dy="0">Auto-Execution Permitted</tspan>
+    <tspan x="212.5" dy="15">(Within Policy Bounds)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1125" x2="480" y2="1170" stroke="#C48737" stroke-width="2" />
+    <polygon points="480,1170 473.5,1158.7416697508022 486.5,1158.7416697508022" fill="#C48737" />
+  </g>
+  <text x="523.0" y="1149.5" fill="#C48737" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">YES (+€9/day)</tspan>
+  </text>
+  <rect x="335" y="1170" width="290" height="55" rx="12" fill="#FCF4E8" stroke="#C48737" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="1197" fill="#9A6622" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Sidy 1-Tap WhatsApp Approval</tspan>
+    <tspan x="480.0" dy="17">[Approve +€9/day] or [Reject]</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1225" x2="480" y2="1265" stroke="#15803D" stroke-width="2" />
+    <polygon points="480,1265 473.5,1253.7416697508022 486.5,1253.7416697508022" fill="#15803D" />
+  </g>
+  <text x="523.0" y="1247.0" fill="#15803D" font-size="12" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="523.0" dy="0">APPROVED</tspan>
+  </text>
+  <rect x="335" y="1265" width="290" height="55" rx="12" fill="#E0F2FE" stroke="#38BDF8" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="1292" fill="#0369A1" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Temporal Activity Dispatch:</tspan>
+    <tspan x="480.0" dy="17">Update Meta AdSet Budget to €39.00</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1320" x2="480" y2="1355" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1355 473.5,1343.7416697508022 486.5,1343.7416697508022" fill="#181916" />
+  </g>
+  <rect x="335" y="1355" width="290" height="55" rx="12" fill="#DCFCE7" stroke="#4ADE80" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="480.0" y="1382" fill="#166534" font-size="13" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Post-Action Verification Query</tspan>
+    <tspan x="480.0" dy="17">(Re-query Meta API to confirm state = €39.00)</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="480" y1="1410" x2="480" y2="1445" stroke="#181916" stroke-width="2" />
+    <polygon points="480,1445 473.5,1433.7416697508022 486.5,1433.7416697508022" fill="#181916" />
+  </g>
+  <rect x="310" y="1445" width="340" height="60" rx="12" fill="#DCFCE7" stroke="#22C55E" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="480.0" y="1470.5" fill="#15803D" font-size="13.5" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="middle">
+    <tspan x="480.0" dy="0">Immutable Audit Trail Written</tspan>
+    <tspan x="480.0" dy="17">(PostgreSQL + OpenTelemetry Distributed Trace)</tspan>
+  </text>
+</svg>

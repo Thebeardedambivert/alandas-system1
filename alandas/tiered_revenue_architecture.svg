@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1300 800" width="1300" height="800">
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap');
+      text { font-family: 'Caveat', cursive, sans-serif; }
+    </style>
+    <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#FFFFFF" />
+
+  <rect x="80" y="50" width="1140" height="110" rx="12" fill="#F9F7F2" stroke="#444C32" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="650.0" y="96" fill="#181916" font-size="28" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="650.0" dy="0">TIERED REVENUE ARCHITECTURE (ALANDAS CASE STUDY)</tspan>
+  </text>
+  <text x="650.0" y="130" fill="#444C32" font-size="18" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="650.0" dy="0">Complexity must be purchased by a requirement  •  Tiering by operational maturity, not tech count</tspan>
+  </text>
+  <rect x="80" y="190" width="360" height="480" rx="12" fill="#EEF2E8" stroke="#444C32" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="100" y="223" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">TIER 1 // ESSENTIAL</tspan>
+  </text>
+  <text x="100" y="259" fill="#181916" font-size="24" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="100" dy="0">Durable Automation</tspan>
+  </text>
+  <text x="100" y="284" fill="#5C5950" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">Human-Directed Execution (Blast Radius: Zero)</tspan>
+  </text>
+  <text x="100" y="325" fill="#181916" font-size="15" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">• Runtime: Temporal Engine + Python/TS</tspan>
+    <tspan x="100" dy="19">• Storage: Single PostgreSQL Database</tspan>
+    <tspan x="100" dy="19">• Intake: Waterfall Scraper &amp; OpenReply</tspan>
+    <tspan x="100" dy="19">• WhatsApp: Multimodal OCR Order Parser</tspan>
+    <tspan x="100" dy="19">• CRM: Dolibarr Leads &amp; PDF Invoices</tspan>
+    <tspan x="100" dy="19">• Autonomy: Read ➔ Analyze ➔ Propose</tspan>
+    <tspan x="100" dy="19">  ➔ Human Approves in 1 Tap ➔ Execute</tspan>
+    <tspan x="100" dy="19">• Target: 25 to 40 Accounts (€5,000/mo)</tspan>
+    <tspan x="100" dy="19">• Value: Saves Sidy 15+ hours/week</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="440" y1="430" x2="470" y2="430" stroke="#C48737" stroke-width="3" />
+    <polygon points="470,430 458.7416697508023,436.5 458.7416697508023,423.5" fill="#C48737" />
+  </g>
+  <rect x="470" y="190" width="360" height="480" rx="12" fill="#FCF4E8" stroke="#C48737" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="490" y="223" fill="#C48737" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="490" dy="0">TIER 2 // PROFESSIONAL</tspan>
+  </text>
+  <text x="490" y="259" fill="#181916" font-size="24" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="490" dy="0">Governed Intelligence</tspan>
+  </text>
+  <text x="490" y="284" fill="#9A6622" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="490" dy="0">Human-Governed Decisions (Bounded Radius)</tspan>
+  </text>
+  <text x="490" y="325" fill="#181916" font-size="15" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="490" dy="0">• All of Tier 1 Foundation Intact</tspan>
+    <tspan x="490" dy="19">• Policy Engine: Strict Ad &amp; Pricing Bounds</tspan>
+    <tspan x="490" dy="19">• Decision Contracts: Typed JSON Schemas</tspan>
+    <tspan x="490" dy="19">• Verification: Post-Action State Query</tspan>
+    <tspan x="490" dy="19">• Churn Defense: Day-25 WhatsApp Refills</tspan>
+    <tspan x="490" dy="19">• Graphs: Bounded LangGraph Creative Eval</tspan>
+    <tspan x="490" dy="19">• Tracing: OpenTelemetry Immutable Audit</tspan>
+    <tspan x="490" dy="19">• Target: 40 to 70 Accounts (€12,000/mo)</tspan>
+    <tspan x="490" dy="19">• Value: Prevents Churn &amp; Zero Bad Ad Spend</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="830" y1="430" x2="860" y2="430" stroke="#2F5339" stroke-width="3" />
+    <polygon points="860,430 848.7416697508023,436.5 848.7416697508023,423.5" fill="#2F5339" />
+  </g>
+  <rect x="860" y="190" width="360" height="480" rx="12" fill="#EDF5EF" stroke="#2F5339" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="880" y="223" fill="#2F5339" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="880" dy="0">TIER 3 // AUTONOMOUS</tspan>
+  </text>
+  <text x="880" y="259" fill="#181916" font-size="24" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="880" dy="0">Autonomous Platform</tspan>
+  </text>
+  <text x="880" y="284" fill="#1E3725" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="880" dy="0">Policy-Governed Autonomy (Circuit Breakers)</tspan>
+  </text>
+  <text x="880" y="325" fill="#181916" font-size="15" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="880" dy="0">• Multi-Agent Coordination via Temporal</tspan>
+    <tspan x="880" dy="19">• Domain Specialists: Acq, Creative, RevOps</tspan>
+    <tspan x="880" dy="19">• MCP Layer: Standard Tool Interface Protocol</tspan>
+    <tspan x="880" dy="19">• Closed-Loop Flywheel: LTV Reorders Feed Ads</tspan>
+    <tspan x="880" dy="19">• Multi-City Scale: Berlin, Munich, Vienna, Zurich</tspan>
+    <tspan x="880" dy="19">• Circuit Breakers: Automatic Outlier Halt</tspan>
+    <tspan x="880" dy="19">• Executive Role: Sidy as Supervisor</tspan>
+    <tspan x="880" dy="19">• Target: 100+ Accounts (€20k–€30k/mo)</tspan>
+    <tspan x="880" dy="19">• Value: Sidy Quits Swiss Job to be 100% Boss</tspan>
+  </text>
+  <rect x="80" y="690" width="1140" height="80" rx="12" fill="#F9F7F2" stroke="#444C32" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="100" y="715" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">NON-DESTRUCTIVE EVOLUTION LAW</tspan>
+  </text>
+  <text x="100" y="739" fill="#181916" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">Higher tiers wrap around lower tiers rather than replacing them. Tier 1 code is never discarded; Tier 2 adds Policy Gates,</tspan>
+    <tspan x="100" dy="18">and Tier 3 adds Autonomous Loops. Complexity is earned only when concrete business scale demands it.</tspan>
+  </text>
+</svg>

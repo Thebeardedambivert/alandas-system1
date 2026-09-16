@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  body { background: transparent; display: flex; align-items: center; justify-content: center; width: 840px; height: 640px; }
+  .window {
+    width: 800px;
+    height: 600px;
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1.5px solid #D1D9C5;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .win-header {
+    background: #444C32;
+    padding: 10px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #FFF;
+  }
+  .win-brand { font-size: 14px; font-weight: 700; letter-spacing: 0.06em; display: flex; align-items: center; gap: 8px; }
+  .win-pills { display: flex; gap: 6px; }
+  .pill { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.3); }
+
+  .crm-content {
+    flex: 1;
+    display: flex;
+    background: #F9F7F2;
+  }
+  .sidebar {
+    width: 220px;
+    background: #F2EEE4;
+    border-right: 1px solid #E2DDD0;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+  }
+  .nav-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #545148;
+    font-weight: 600;
+  }
+  .nav-item.active { background: #444C32; color: #FFF; }
+
+  .main-panel {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1.5px solid #E2DDD0;
+    padding-bottom: 12px;
+  }
+  .doc-title { font-size: 18px; font-weight: 700; color: #181916; }
+  .badge-status { background: #EEF2E8; color: #444C32; border: 1px solid #D1D9C5; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; }
+
+  .order-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .card-ocr {
+    background: #FFF;
+    border: 1px solid #E2DDD0;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 12.5px;
+  }
+  .card-ocr-title { font-size: 11.5px; font-weight: 700; color: #C48737; text-transform: uppercase; margin-bottom: 6px; }
+  .ocr-preview { background: #FAF8F2; border: 1px dashed #D1D9C5; border-radius: 6px; padding: 8px; font-style: italic; color: #545148; line-height: 1.4; }
+
+  .line-items-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFF;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #E2DDD0;
+    font-size: 12px;
+  }
+  .line-items-table th { background: #F2EEE4; padding: 8px 10px; text-align: left; color: #444C32; font-weight: 700; }
+  .line-items-table td { padding: 8px 10px; border-top: 1px solid #F0EBE0; color: #181916; }
+  .total-row td { font-weight: 700; background: #EEF2E8; color: #444C32; }
+
+  .footer-action {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #FFF;
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid #E2DDD0;
+    font-size: 12.5px;
+  }
+  .btn-pdf { background: #C48737; color: #FFF; font-weight: 700; border: none; padding: 6px 14px; border-radius: 6px; }
+</style>
+</head>
+<body>
+
+<div class="window">
+  <div class="win-header">
+    <div class="win-brand">DOLIBARR CRM &amp; INVOICE GENERATOR // ALANDAS TEA BERLIN</div>
+    <div class="win-pills"><div class="pill"></div><div class="pill"></div><div class="pill"></div></div>
+  </div>
+  <div class="crm-content">
+    <div class="sidebar">
+      <div class="nav-item">🏢 Third Parties (Cafes)</div>
+      <div class="nav-item active">📄 Invoices &amp; Orders</div>
+      <div class="nav-item">📦 Inventory &amp; Stock</div>
+      <div class="nav-item">🤖 Hermes / Temporal Log</div>
+    </div>
+    <div class="main-panel">
+      <div class="panel-header">
+        <div>
+          <div class="doc-title">Invoice #INV-2026-0842 (Draft Auto-Created)</div>
+          <div style="font-size:12px; color:#848074;">Customer: Café am Neuen See • Source: WhatsApp Photo OCR</div>
+        </div>
+        <span class="badge-status">VALIDATED BY SIDY</span>
+      </div>
+
+      <div class="order-grid">
+        <div class="card-ocr">
+          <div class="card-ocr-title">Inbound WhatsApp Note (Parsed)</div>
+          <div class="ocr-preview">
+            "Hi Sidy! We need refills for the weekend:<br>
+            • 2x 1kg Earl Grey Classic<br>
+            • 1x 1kg Bio Chai Spiced<br>
+            • 2x Teapot Sets with Infuser"
+          </div>
+        </div>
+        <div class="card-ocr">
+          <div class="card-ocr-title">Automated Dolibarr Extraction</div>
+          <div style="line-height:1.45; color:#181916;">
+            ✓ Account: Café am Neuen See (#CUST-042)<br>
+            ✓ Wholesale Discount: Level 2 Tier Applied (15%)<br>
+            ✓ Tax: 7% Food &amp; Beverage / 19% Hardware<br>
+            ✓ Due Date: 14 Days Net (SEPA Direct)
+          </div>
+        </div>
+      </div>
+
+      <table class="line-items-table">
+        <tr>
+          <th>Product / Description</th>
+          <th>Qty</th>
+          <th>Unit Price</th>
+          <th>VAT</th>
+          <th>Total</th>
+        </tr>
+        <tr>
+          <td>Alandas Earl Grey Artisan Loose Leaf (1kg Bag)</td>
+          <td>2</td>
+          <td>€34.00</td>
+          <td>7%</td>
+          <td>€68.00</td>
+        </tr>
+        <tr>
+          <td>Alandas Bio Chai Spiced Blend (1kg Bag)</td>
+          <td>1</td>
+          <td>€38.00</td>
+          <td>7%</td>
+          <td>€38.00</td>
+        </tr>
+        <tr>
+          <td>Heavy Borosilicate Cafe Teapot (500ml)</td>
+          <td>2</td>
+          <td>€14.00</td>
+          <td>19%</td>
+          <td>€28.00</td>
+        </tr>
+        <tr class="total-row">
+          <td colspan="4" style="text-align:right;">TOTAL INVOICE (INCL. TAX):</td>
+          <td>€140.24</td>
+        </tr>
+      </table>
+
+      <div class="footer-action">
+        <span>Automatic Sync: PDF invoice queued for email &amp; WhatsApp dispatch</span>
+        <button class="btn-pdf">Download PDF Invoice</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

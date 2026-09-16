@@ -1,0 +1,86 @@
+"""Temporal activities for Alandas System 1.
+
+Activities are allowed to touch files, APIs, and services. The workflow calls
+them in small steps so each result can be retried or audited.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+from datetime import datetime, timezone
+
+from temporalio import activity
+
+from system_1.core import draft_outreach, enrich_lead, validate_lead
+from system_1 import db
+from system_1.models import LeadInput, OutreachDraft
+
+
+def _audit_path() -> str:
+    return os.environ.get("SYSTEM1_AUDIT_PATH", "/app/runtime/audit/system1_audit.jsonl")
+
+
+@activity.defn
+def validate_lead_activity(lead: LeadInput) -> list[str]:
+    """Check the minimum lead fields before drafting starts."""
+
+    return validate_lead(lead)
+
+
+@activity.defn
+def enrich_lead_activity(lead: LeadInput) -> list[str]:
+    """Record known lead data and missing research steps."""
+
+    return enrich_lead(lead)
+
+
+@activity.defn
+def draft_outreach_activity(lead: LeadInput) -> OutreachDraft:
+    """Create a first-contact draft for Sidy's approval."""
+
+    return draft_outreach(lead)
+
+
+@activity.defn
+def append_audit_event_activity(event: dict[str, object]) -> None:
+    """Append one audit event to Postgres and disk."""
+
+    path = _audit_path()
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    payload = {
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        **event,
+    }
+    db.insert_audit_event(
+        workflow_id=str(payload["workflow_id"]),
+        event_name=str(payload["event"]),
+        status=str(payload["status"]),
+        details=dict(payload.get("details", {})),
+    )
+    with open(path, "a", encoding="utf-8") as audit_file:
+        audit_file.write(json.dumps(payload, ensure_ascii=True) + "\n")
+
+
+@activity.defn
+def upsert_lead_activity(input_data: dict[str, object]) -> None:
+    """Persist one lead in Postgres."""
+
+    lead = input_data["lead"]
+    if not isinstance(lead, LeadInput):
+        raise TypeError("lead must be a LeadInput")
+    db.upsert_lead(
+        workflow_id=str(input_data["workflow_id"]),
+        lead=lead,
+        status=str(input_data["status"]),
+    )
+
+
+@activity.defn
+def update_lead_status_activity(input_data: dict[str, str]) -> None:
+    """Persist a lead status change in Postgres."""
+
+    db.update_lead_status(
+        workflow_id=input_data["workflow_id"],
+        status=input_data["status"],
+    )

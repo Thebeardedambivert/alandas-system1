@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+  body { background: transparent; display: flex; align-items: center; justify-content: center; width: 620px; height: 920px; }
+  .phone {
+    width: 540px;
+    height: 860px;
+    background: #0B141A;
+    border-radius: 44px;
+    border: 8px solid #2A2F32;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;
+  }
+  .notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 180px;
+    height: 24px;
+    background: #2A2F32;
+    border-bottom-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    z-index: 10;
+  }
+  .status-bar {
+    height: 36px;
+    background: #202C33;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 24px 0 24px;
+    color: #AEBAC1;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .header {
+    background: #202C33;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    border-bottom: 1px solid #111B21;
+  }
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #444C32;
+    color: #FFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 18px;
+    border: 2px solid #C48737;
+  }
+  .header-info h4 { color: #E9EDEF; font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .badge-check { background: #00A884; color: #FFF; font-size: 10px; padding: 2px 6px; border-radius: 10px; }
+  .header-info p { color: #8696A0; font-size: 12px; margin-top: 2px; }
+
+  .chat-body {
+    flex: 1;
+    background: #0B141A;
+    background-image: radial-gradient(#1B262C 1.5px, transparent 1.5px);
+    background-size: 20px 20px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+  }
+  .bubble {
+    background: #202C33;
+    border-radius: 12px;
+    border-top-left-radius: 2px;
+    padding: 14px 16px;
+    color: #E9EDEF;
+    font-size: 14px;
+    line-height: 1.45;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 1px solid #2A3942;
+  }
+  .lead-badge {
+    display: inline-block;
+    background: rgba(196, 135, 55, 0.2);
+    color: #C48737;
+    font-size: 11.5px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(196, 135, 55, 0.4);
+    letter-spacing: 0.05em;
+  }
+  .lead-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFF;
+    margin-bottom: 6px;
+  }
+  .lead-meta {
+    font-size: 13px;
+    color: #8696A0;
+    margin-bottom: 12px;
+    line-height: 1.4;
+  }
+  .quote-box {
+    background: #111B21;
+    border-left: 4px solid #00A884;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    color: #D1D7DB;
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .btn-approve {
+    background: #00A884;
+    color: #FFF;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14.5px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 168, 132, 0.3);
+  }
+  .btn-secondary-row {
+    display: flex;
+    gap: 8px;
+  }
+  .btn-sec {
+    flex: 1;
+    background: #2A3942;
+    color: #AEBAC1;
+    border: none;
+    border-radius: 6px;
+    padding: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .status-confirmed {
+    background: rgba(0, 168, 132, 0.15);
+    border: 1px dashed #00A884;
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: #25D366;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+</style>
+</head>
+<body>
+
+<div class="phone">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span>09:41</span>
+    <span>📶 5G • 98%</span>
+  </div>
+  <div class="header">
+    <div class="avatar">A</div>
+    <div class="header-info">
+      <h4>Alandas Revenue Copilot <span class="badge-check">SYSTEM</span></h4>
+      <p>Automated B2B Outbound • Dolibarr Synced</p>
+    </div>
+  </div>
+  <div class="chat-body">
+    <div class="bubble">
+      <span class="lead-badge">QUALIFIED CAFE LEAD • ICP 94/100</span>
+      <div class="lead-title">Cafe Einstein Stammhaus</div>
+      <div class="lead-meta">
+        📍 Kurfürstenstraße 58, Berlin-Schöneberg<br>
+        ☕ Specialty Brunch • 65 Terrace Seats • Coffee €4.20<br>
+        👤 Owner: Herr Christian Schmidt (Verified via § 5 TMG)
+      </div>
+
+      <div style="font-size:12px; color:#8696A0; margin-bottom:4px; font-weight:600;">PROPOSED OUTREACH (DRAFT):</div>
+      <div class="quote-box">
+        "Hallo Christian, euer Terrassen-Brunch sieht fantastisch aus! 🌿 Viele Berliner Cafés wechseln gerade auf unseren 96% Marge Bio-Tee.<br><br>
+        Ich würde dir gerne unser €19 Barista-Teekannen-Set (inkl. bruchsicherer Teekanne &amp; 4 Proben) vorbeibringen – die €19 schreiben wir deiner ersten Großpackung zu 100% gut. Passt dir Dienstag?"
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-approve">✅ TAP TO APPROVE &amp; DISPATCH</button>
+        <div class="btn-secondary-row">
+          <div class="btn-sec">✏️ Edit Pitch</div>
+          <div class="btn-sec">❌ Discard Lead</div>
+        </div>
+      </div>
+
+      <div class="status-confirmed">
+        ✓ 1-Tap sends via WhatsApp API • Syncs to Dolibarr CRM • Schedules Day-4 tasting call
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

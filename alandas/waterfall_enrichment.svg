@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1320 740" width="1320" height="740">
+
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@500;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700&amp;display=swap');
+      text { font-family: 'Caveat', cursive, sans-serif; }
+    </style>
+    <filter id="handDrawn" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="3" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="2.2" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="#FFFFFF" />
+
+  <rect x="80" y="50" width="1140" height="110" rx="12" fill="#F9F7F2" stroke="#444C32" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="650.0" y="96" fill="#181916" font-size="28" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="650.0" dy="0">WATERFALL ENRICHMENT: CHEAPEST TOOL FIRST</tspan>
+  </text>
+  <text x="650.0" y="130" fill="#C48737" font-size="18" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="middle">
+    <tspan x="650.0" dy="0">Each tool only gets what the last one missed  •  87% Data Acquisition Cost Reduction</tspan>
+  </text>
+  <rect x="80" y="200" width="260" height="160" rx="12" fill="#EEF2E8" stroke="#2E3422" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="95" y="228" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="95" dy="0">STEP 0 // INGESTION</tspan>
+  </text>
+  <text x="95" y="261" fill="#181916" font-size="21" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="95" dy="0">1,000 Raw Leads</tspan>
+  </text>
+  <text x="95" y="289" fill="#5C5950" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="95" dy="0">Google Maps Cafes &amp;</tspan>
+    <tspan x="95" dy="18">Instagram Engagers</tspan>
+    <tspan x="95" dy="18">Across Germany</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="340" y1="280" x2="390" y2="280" stroke="#444C32" stroke-width="2" />
+    <polygon points="390,280 378.7416697508023,286.5 378.7416697508023,273.5" fill="#444C32" />
+  </g>
+  <rect x="390" y="200" width="260" height="160" rx="12" fill="#EDF5EF" stroke="#2F5339" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="405" y="228" fill="#2F5339" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="405" dy="0">STAGE 0 // €0.00 (FREE)</tspan>
+  </text>
+  <text x="405" y="260" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="405" dy="0">§ 5 TMG Impressum</tspan>
+  </text>
+  <text x="405" y="286" fill="#181916" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="405" dy="0">Scrapes legal notice.</tspan>
+    <tspan x="405" dy="18">480 emails found.</tspan>
+    <tspan x="405" dy="18">520 pass down ➔</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="650" y1="280" x2="700" y2="280" stroke="#444C32" stroke-width="2" />
+    <polygon points="700,280 688.7416697508023,286.5 688.7416697508023,273.5" fill="#444C32" />
+  </g>
+  <rect x="700" y="200" width="260" height="160" rx="12" fill="#FFFFFF" stroke="#444C32" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="715" y="228" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="715" dy="0">STAGE 1 // €0.005 / QUERY</tspan>
+  </text>
+  <text x="715" y="260" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="715" dy="0">GitLeads / Apollo</tspan>
+  </text>
+  <text x="715" y="286" fill="#5C5950" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="715" dy="0">Bulk database check.</tspan>
+    <tspan x="715" dy="18">240 more found.</tspan>
+    <tspan x="715" dy="18">280 pass down ➔</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="960" y1="280" x2="1010" y2="280" stroke="#444C32" stroke-width="2" />
+    <polygon points="1010,280 998.7416697508023,286.5 998.7416697508023,273.5" fill="#444C32" />
+  </g>
+  <rect x="1010" y="200" width="260" height="160" rx="12" fill="#FCF4E8" stroke="#C48737" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="1025" y="228" fill="#C48737" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="1025" dy="0">STAGE 2 // €0.02 / QUERY</tspan>
+  </text>
+  <text x="1025" y="260" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="1025" dy="0">Origami / Prospeo</tspan>
+  </text>
+  <text x="1025" y="286" fill="#9A6622" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="1025" dy="0">Deep social &amp; MX scrape.</tspan>
+    <tspan x="1025" dy="18">180 more found.</tspan>
+    <tspan x="1025" dy="18">~90% find rate total!</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="1140" y1="360" x2="1140" y2="420" stroke="#2F5339" stroke-width="2.5" />
+    <polygon points="1140,420 1133.5,408.7416697508023 1146.5,408.7416697508023" fill="#2F5339" />
+  </g>
+  <rect x="1010" y="420" width="260" height="160" rx="12" fill="#EDF5EF" stroke="#2F5339" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="1025" y="448" fill="#2F5339" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="1025" dy="0">VALIDATE // €0.002 / CHECK</tspan>
+  </text>
+  <text x="1025" y="480" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="1025" dy="0">MillionVerifier</tspan>
+  </text>
+  <text x="1025" y="506" fill="#2F5339" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="1025" dy="0">Valid, risky, catch-all.</tspan>
+    <tspan x="1025" dy="18">Discard bad records.</tspan>
+    <tspan x="1025" dy="18">&lt;1.5% bounce rate guaranteed!</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="1010" y1="500" x2="960" y2="500" stroke="#C48737" stroke-width="2" />
+    <polygon points="960,500 971.2583302491977,493.5 971.2583302491977,506.5" fill="#C48737" />
+  </g>
+  <rect x="700" y="420" width="260" height="160" rx="12" fill="#FCF4E8" stroke="#C48737" stroke-width="2" filter="url(#handDrawn)" />
+  <text x="715" y="448" fill="#C48737" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="715" dy="0">STAGE 3 // BONUS MOBILE</tspan>
+  </text>
+  <text x="715" y="480" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="715" dy="0">LeadMagic Mobile</tspan>
+  </text>
+  <text x="715" y="506" fill="#9A6622" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="715" dy="0">Mobile lookup on top.</tspan>
+    <tspan x="715" dy="18">650 WhatsApp numbers.</tspan>
+    <tspan x="715" dy="18">Enables direct B2B chats!</tspan>
+  </text>
+  <g filter="url(#handDrawn)">
+    <line x1="700" y1="500" x2="650" y2="500" stroke="#444C32" stroke-width="2.5" />
+    <polygon points="650,500 661.2583302491977,493.5 661.2583302491977,506.5" fill="#444C32" />
+  </g>
+  <rect x="390" y="420" width="260" height="160" rx="12" fill="#EEF2E8" stroke="#444C32" stroke-width="2.5" filter="url(#handDrawn)" />
+  <text x="405" y="448" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="405" dy="0">DESTINATION // DOLIBARR</tspan>
+  </text>
+  <text x="405" y="480" fill="#181916" font-size="20" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="405" dy="0">Dolibarr CRM Lead</tspan>
+  </text>
+  <text x="405" y="506" fill="#444C32" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="405" dy="0">Clean, verified entity.</tspan>
+    <tspan x="405" dy="18">WhatsApp draft queued.</tspan>
+    <tspan x="405" dy="18">Sidy approves with 1 tap.</tspan>
+  </text>
+  <rect x="80" y="420" width="260" height="160" rx="12" fill="#FFFFFF" stroke="#181916" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="95" y="449" fill="#181916" font-size="14" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="95" dy="0">UNIT ECONOMICS</tspan>
+  </text>
+  <text x="95" y="482" fill="#2F5339" font-size="22" font-family="Caveat, cursive, sans-serif" font-weight="700" text-anchor="start">
+    <tspan x="95" dy="0">87% Savings</tspan>
+  </text>
+  <text x="95" y="509" fill="#5C5950" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="95" dy="0">Flat Scrape: €80 / 1k</tspan>
+    <tspan x="95" dy="18">Waterfall: €10 / 1k</tspan>
+    <tspan x="95" dy="18">Net Save: €70 per 1k leads!</tspan>
+  </text>
+  <rect x="80" y="620" width="1190" height="85" rx="12" fill="#F9F7F2" stroke="#444C32" stroke-width="1.5" filter="url(#handDrawn)" />
+  <text x="100" y="645" fill="#444C32" font-size="13" font-family="JetBrains Mono, monospace" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">TEMPORAL DURABILITY GUARANTEE</tspan>
+  </text>
+  <text x="100" y="669" fill="#181916" font-size="14" font-family="Caveat, cursive, sans-serif" font-weight="600" text-anchor="start">
+    <tspan x="100" dy="0">Each waterfall stage is an isolated Temporal Activity with automatic exponential backoff. If Apollo or Prospeo times out,</tspan>
+    <tspan x="100" dy="18">the workflow catches the exception and falls back to the next provider gracefully — zero dropped leads or corrupted records.</tspan>
+  </text>
+</svg>

@@ -1,0 +1,2 @@
+venue_name,city,venue_type,website,instagram,email,phone,impressum_url,decision_maker,seat_estimate,fit_score,fit_reason,source_url,status,next_action
+Example Cafe,Berlin,cafe,https://example.de,https://instagram.com/example,hello@example.de,+49 30 123456,https://example.de/impressum,Maria Beispiel,40,4,premium brunch cafe with visible tea and coffee service,https://example.de,new,draft outreach
