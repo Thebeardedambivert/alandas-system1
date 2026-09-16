@@ -10,6 +10,7 @@ from concurrent.futures import ThreadPoolExecutor
 from temporalio.client import Client
 from temporalio.worker import Worker
 
+from system_1.db import ensure_schema
 from system_1.activities import (
     append_audit_event_activity,
     draft_outreach_activity,
@@ -66,6 +67,7 @@ async def main() -> None:
     namespace = os.environ.get("TEMPORAL_NAMESPACE", "default")
     task_queue = os.environ.get("TEMPORAL_TASK_QUEUE", "alandas-system1")
 
+    ensure_schema()
     client = await connect_temporal_with_retry(address, namespace)
     with ThreadPoolExecutor(max_workers=8) as activity_executor:
         worker = Worker(
