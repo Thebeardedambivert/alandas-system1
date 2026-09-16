@@ -43,7 +43,7 @@ def draft_outreach_activity(lead: LeadInput) -> OutreachDraft:
 
 
 @activity.defn
-def append_audit_event_activity(event: dict[str, object]) -> None:
+def append_audit_event_activity(event: dict) -> None:
     """Append one audit event to Postgres and disk."""
 
     path = _audit_path()
@@ -56,19 +56,21 @@ def append_audit_event_activity(event: dict[str, object]) -> None:
         workflow_id=str(payload["workflow_id"]),
         event_name=str(payload["event"]),
         status=str(payload["status"]),
-        details=dict(payload.get("details", {})),
+        details=dict(payload.get("details") or {}),
     )
     with open(path, "a", encoding="utf-8") as audit_file:
         audit_file.write(json.dumps(payload, ensure_ascii=True) + "\n")
 
 
 @activity.defn
-def upsert_lead_activity(input_data: dict[str, object]) -> None:
+def upsert_lead_activity(input_data: dict) -> None:
     """Persist one lead in Postgres."""
 
     lead = input_data["lead"]
-    if not isinstance(lead, LeadInput):
-        raise TypeError("lead must be a LeadInput")
+    if isinstance(lead, dict):
+        lead = LeadInput(**lead)
+    elif not isinstance(lead, LeadInput):
+        raise TypeError("lead must be a LeadInput or lead dict")
     db.upsert_lead(
         workflow_id=str(input_data["workflow_id"]),
         lead=lead,
