@@ -26,7 +26,7 @@ def main() -> None:
     print("TEMPORAL_POSTGRES_DB=temporal")
     print()
     print("TEMPORAL_VERSION=1.27.2")
-    print("TEMPORAL_ADMINTOOLS_VERSION=1.27.2")
+    print("TEMPORAL_ADMINTOOLS_VERSION=1.32.0")
     print("TEMPORAL_UI_VERSION=2.39.0")
     print("TEMPORAL_ADDRESS=temporal:7233")
     print("TEMPORAL_NAMESPACE=default")
@@ -38,4 +38,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

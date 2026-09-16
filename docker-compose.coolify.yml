@@ -49,7 +49,7 @@ services:
     restart: unless-stopped
 
   temporal-admin-tools:
-    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION:-1.27.2}
+    image: temporalio/admin-tools:${TEMPORAL_ADMINTOOLS_VERSION:-1.32.0}
     depends_on:
       - temporal
     environment:
