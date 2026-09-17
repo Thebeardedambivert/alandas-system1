@@ -146,11 +146,8 @@ Temporal schedule, or spend money.
 The local `master` branch contains deployed commit `83f2ae5`.
 
 The incorrect multi-argument `ScheduleActionStartWorkflow` call remains in the
-currently deployed commit. It has not yet been edited locally. There is one
-intentional, uncommitted test change from this debugging session:
-
-- `tests/test_system1_core.py` — a regression test for the previously fixed
-  `time_zone_name` keyword.
+currently deployed commit. It has not yet been edited locally. There are no
+pending intentional code or test edits from this debugging session.
 
 There are also existing untracked local items that must not be staged or
 deleted: `.tmp/`, `_skill_staging/`, and `alandas-slice1-skills.zip`.
