@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import unittest
 from datetime import date
+from decimal import Decimal
 
 from system_1.core import (
     apply_research_evidence,
@@ -36,9 +37,26 @@ from system_1.outscraper_google_maps import candidate_to_lead as outscraper_cand
 from system_1.outscraper_google_maps import map_outscraper_callback
 from system_1.outscraper_webhook import receive_outscraper_callback, validate_webhook_token
 from system_1.discovery_policy import TrialPolicy
+from system_1.discovery_runs import InMemoryDiscoveryStore, retry_decision
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_provider_submission_is_idempotent(self) -> None:
+        store = InMemoryDiscoveryStore()
+
+        first = store.record_submission(
+            "discovery:trial-v1:2026-09-17", "apify", "run-a", Decimal("1.40")
+        )
+        second = store.record_submission(
+            "discovery:trial-v1:2026-09-17", "apify", "run-a", Decimal("1.40")
+        )
+
+        self.assertEqual(first, second)
+
+    def test_unknown_charge_outcome_requires_reconciliation(self) -> None:
+        decision = retry_decision(status_code=None, outcome_known=False, attempt_number=1)
+
+        self.assertEqual(decision.action, "reconcile")
     def test_trial_policy_has_approved_allocations(self) -> None:
         policy = TrialPolicy.default(date(2026, 9, 17))
 
