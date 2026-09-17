@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import unittest
-from datetime import date
+from datetime import date, datetime, timezone
 import json
 from decimal import Decimal
 
@@ -42,7 +42,13 @@ from system_1.discovery_runs import InMemoryDiscoveryStore, retry_decision
 from system_1.apify_provider import ApifyProvider, CostLimitExceeded
 from system_1.outscraper_provider import OutscraperProvider
 from system_1.provider_http import HttpResponse
-from system_1.discovery_scheduler import daily_workflow_id, policy_for_trial_start, schedule_action
+from system_1.discovery_scheduler import (
+    daily_workflow_id,
+    policy_for_trial_start,
+    schedule_action,
+    scheduled_day_in_berlin,
+    trial_schedule_definition,
+)
 from system_1.discovery_workflows import final_daily_status
 from system_1.discovery_controls import format_daily_status, validate_scheduler_environment
 
@@ -126,6 +132,19 @@ class System1CoreTests(unittest.TestCase):
         policy = policy_for_trial_start("2026-09-17")
 
         self.assertEqual(schedule_action(policy, date(2026, 9, 24)), "pause")
+
+    def test_scheduler_uses_the_berlin_calendar_day(self) -> None:
+        instant = datetime(2026, 9, 17, 22, 30, tzinfo=timezone.utc)
+
+        self.assertEqual(scheduled_day_in_berlin(instant), date(2026, 9, 18))
+
+    def test_trial_schedule_has_a_berlin_clock_and_day_eight_end(self) -> None:
+        definition = trial_schedule_definition(TrialPolicy.default(date(2026, 9, 17)))
+
+        self.assertEqual(definition["schedule_id"], "alandas-discovery-trial-v1")
+        self.assertEqual(definition["cron"], "0 9 * * *")
+        self.assertEqual(definition["timezone"], "Europe/Berlin")
+        self.assertEqual(definition["ends_on"], "2026-09-24")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

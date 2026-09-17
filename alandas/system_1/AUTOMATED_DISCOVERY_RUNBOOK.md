@@ -22,9 +22,11 @@ Only after the provider dashboards show estimates at or below the two caps:
 
 1. State the exact displayed total to Cyril and obtain a separate confirmation.
 2. Enable discovery for that one manual run only.
-3. Check the provider request IDs, Postgres audit/run rows, Temporal workflow,
+3. In the Coolify terminal for `system1-worker`, run
+   `python -m system_1.discovery_scheduler start-manual`.
+4. Check the provider request IDs, Postgres audit/run rows, Temporal workflow,
    accepted-candidate count, and duplicate handling.
-4. Switch discovery off again if any result is `needs_attention` or costs are
+5. Switch discovery off again if any result is `needs_attention` or costs are
    unclear. Reconcile the saved provider request; never submit a replacement
    merely because a network call timed out.
 
@@ -36,3 +38,11 @@ Only after the provider dashboards show estimates at or below the two caps:
   reconcile the original request ID or mark it for attention.
 - A single provider failure makes the day `degraded`, not successful.
 - Day eight pauses the trial. Do not extend it without a new reviewed policy.
+
+## Start and stop the seven-day schedule
+
+After the one manual check is accepted, run
+`python -m system_1.discovery_scheduler start-trial` once in the worker
+terminal. It schedules a 09:00 Europe/Berlin run and has an end date before
+day eight. To stop early, run `python -m system_1.discovery_scheduler
+pause-trial`.

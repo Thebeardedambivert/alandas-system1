@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, timedelta
+from datetime import timedelta
 
 from temporalio import workflow
 
@@ -10,6 +10,7 @@ from system_1.discovery_scheduler import (
     daily_workflow_id,
     policy_for_trial_start,
     schedule_action,
+    scheduled_day_in_berlin,
 )
 
 with workflow.unsafe.imports_passed_through():
@@ -25,10 +26,9 @@ class DailyDiscoveryWorkflow:
     """Create one durable daily trial record before provider work is enabled."""
 
     @workflow.run
-    async def run(
-        self, policy_version: str, trial_starts_on: str, scheduled_for: str
-    ) -> dict[str, str]:
-        day = date.fromisoformat(scheduled_for)
+    async def run(self, policy_version: str, trial_starts_on: str) -> dict[str, str]:
+        day = scheduled_day_in_berlin(workflow.now())
+        scheduled_for = day.isoformat()
         policy = policy_for_trial_start(trial_starts_on)
         if policy.policy_version != policy_version:
             raise ValueError("unexpected discovery policy version")
