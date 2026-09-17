@@ -16,7 +16,7 @@ The system has no live Dolibarr, Hermes, Instagram, WhatsApp, email, Shopify,
 or Meta connection. Do not describe any of those as connected.
 
 The automated discovery trial code is deployed on GitHub `master` and Coolify
-at commit `83f2ae5`. The latest Coolify deployment succeeded.
+at commit `75f2782`. The latest Coolify deployment succeeded.
 
 ## Trial agreed with Cyril
 
@@ -60,77 +60,45 @@ time_zone_name='Europe/Berlin'
 end_at=2026-09-24T00:00:00 Europe/Berlin
 ```
 
-## Current blocker
+## Schedule SDK blocker — resolved and deployed
 
-The next in-memory schedule-object test failed without creating a schedule:
+The deployed `temporalio==1.16.0` requires scheduled workflow inputs in
+`args=[...]` and also requires an `id=`. Two focused test-first fixes were
+made, verified, committed, pushed, and deployed:
+
+- `65b3dc7 fix: pass discovery schedule inputs via args`
+- `75f2782 fix: set discovery schedule workflow id`
+
+The deployed `system1-worker` completed the full in-memory schedule-object
+check with this output:
 
 ```text
-TypeError: ScheduleActionStartWorkflow.__init__() takes from 2 to 3
-positional arguments but 4 positional arguments (and 1 keyword-only argument)
-were given
+schedule_id: alandas-discovery-trial-v1
+workflow_id_base: alandas-discovery-trial-v1
+workflow_args: ['trial-v1', '2026-09-17']
+task_queue: alandas-system1
+timezone: Europe/Berlin
 ```
 
-Cause: the code in `system_1/discovery_scheduler.py` gives
-`ScheduleActionStartWorkflow` two positional workflow arguments:
+That check used a memory-only client. It created no Temporal schedule, sent no
+provider request, enabled no provider, and spent no money.
 
-```python
-ScheduleActionStartWorkflow(
-    DailyDiscoveryWorkflow.run,
-    policy.policy_version,
-    policy.starts_on.isoformat(),
-    task_queue=task_queue,
-)
-```
+## First next action — configuration only, still no spend
 
-The installed `temporalio==1.16.0` expects one payload argument (probably a
-single list/tuple/dataclass), but do not guess its required form.
+Have Cyril enter the provider credentials and public callback base URL directly
+in Coolify. Keep `SYSTEM1_DISCOVERY_ENABLED=false`; do not start the schedule
+or a manual run. Do not put credentials or token-bearing URLs in chat, source
+code, Git, screenshots, or these notes.
 
-## First next action — no spend, no state change
-
-Ask Cyril to run exactly this inside Coolify's `system1-worker` terminal and
-paste the output:
-
-```sh
-python -c "from temporalio.client import ScheduleActionStartWorkflow; import inspect; print(inspect.signature(ScheduleActionStartWorkflow))"
-```
-
-This only prints a Python signature. It does not contact providers, create a
-Temporal schedule, or spend money.
-
-## Then follow this order
-
-1. Use the signature output to update only
-   `system_1/discovery_scheduler.py`.
-2. Add a focused regression test in `tests/test_system1_core.py`. The test must
-   fail before the code change and pass after it.
-3. Run the full suite:
-
-   ```powershell
-   python -m unittest tests.test_system1_core
-   ```
-
-   Local Windows needs the `tzdata` package because it lacks system time-zone
-   data; the worker image already includes `tzdata==2025.2`.
-4. Compile the changed files and run:
-
-   ```powershell
-   docker compose -f docker-compose.system1.coolify.yml config --quiet
-   ```
-
-   A local warning about denied access to Docker's desktop `config.json` is
-   known and did not prevent Compose validation.
-5. Commit locally. Do not push unless Cyril explicitly says `push`.
-6. After a successful Coolify deployment, while discovery remains disabled,
-   repeat the complete in-memory schedule object check.
-7. Only after that is green: have Cyril enter provider keys directly in
-   Coolify, set the public callback base URL, and keep discovery disabled.
-8. Before the single paid manual run, state the exact dashboard estimates and
-   ask Cyril for a separate approval. Never infer spending approval.
+After the settings are present while disabled, open each provider dashboard and
+record its displayed estimate. Ask Cyril to approve the exact amount before a
+single paid manual run. The caps remain USD 1.40/day for Apify and USD 0.60/day
+for Outscraper.
 
 ## Key source files
 
 - `system_1/discovery_scheduler.py` — manual/scheduled discovery controls;
-  current SDK-action compatibility issue is here.
+  deployed schedule SDK compatibility is now verified.
 - `system_1/discovery_temporal_workflow.py` — one durable daily workflow.
 - `system_1/discovery_activities.py` — provider calls, disabled unless the
   feature flag is explicitly true.
@@ -141,13 +109,11 @@ Temporal schedule, or spend money.
 - `system_1/AUTOMATED_DISCOVERY_RUNBOOK.md` — operator steps and recovery.
 - `system_1/CURRENT_PROJECT_STATE.md` — broader business/system state.
 
-## Working-tree state when this handoff was written
+## Working-tree state when this handoff was updated
 
-The local `master` branch contains deployed commit `83f2ae5`.
-
-The incorrect multi-argument `ScheduleActionStartWorkflow` call remains in the
-currently deployed commit. It has not yet been edited locally. There are no
-pending intentional code or test edits from this debugging session.
+GitHub `master` and Coolify are at deployed commit `75f2782`. The two schedule
+SDK fixes are committed and pushed. No provider configuration, Temporal
+schedule, or paid discovery run has been created in this session.
 
 There are also existing untracked local items that must not be staged or
 deleted: `.tmp/`, `_skill_staging/`, and `alandas-slice1-skills.zip`.

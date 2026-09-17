@@ -1,6 +1,6 @@
 # Alandas System 1 — Current Project State
 
-**Last updated:** 2026-09-17 (discovery-trial deployment and SDK validation)
+**Last updated:** 2026-09-17 (discovery schedule SDK fixes deployed and verified)
 **Use this file first when resuming work in a new session.**
 
 ## One-sentence purpose
@@ -118,35 +118,36 @@ Safety controls already implemented:
 
 ### Latest deployment and live checks
 
-- GitHub/Coolify deployment `83f2ae5` succeeded on 2026-09-17.
+- GitHub/Coolify deployment `75f2782` succeeded on 2026-09-17.
 - In the deployed worker, `python -m system_1.discovery_status today` showed:
   `not_started`, discovery disabled, and neither provider configured.
 - The deployed Temporal SDK accepted `ScheduleSpec` with
   `time_zone_name='Europe/Berlin'` and the intended end date.
 
-### Current blocker — do not enable discovery yet
+### Schedule SDK compatibility — resolved, do not enable discovery yet
 
-The next no-spend, in-memory schedule-object test exposed one remaining SDK
-compatibility mismatch:
+Two deployed fixes make the schedule action compatible with
+`temporalio==1.16.0`:
+
+- `65b3dc7` passes the two workflow inputs through `args=[...]`.
+- `75f2782` supplies the required stable workflow-ID base.
+
+The deployed worker built the complete schedule object with a memory-only
+client and printed:
 
 ```text
-ScheduleActionStartWorkflow.__init__() takes one workflow argument payload,
-not two separate positional workflow arguments.
+schedule_id: alandas-discovery-trial-v1
+workflow_id_base: alandas-discovery-trial-v1
+workflow_args: ['trial-v1', '2026-09-17']
+task_queue: alandas-system1
+timezone: Europe/Berlin
 ```
 
-No Temporal schedule, lead-provider request, or paid action was created by that
-test. A local regression test has been added but the correction is not yet
-committed or deployed. The next session must inspect the deployed signature
-before changing the schedule action. Use this safe command in the
-`system1-worker` Coolify terminal:
-
-```sh
-python -c "from temporalio.client import ScheduleActionStartWorkflow; import inspect; print(inspect.signature(ScheduleActionStartWorkflow))"
-```
-
-Then update `system_1/discovery_scheduler.py`, add/adjust a regression test,
-run the full test suite, commit, push only with Cyril's approval, redeploy
-while disabled, and repeat the full in-memory schedule-object check.
+No Temporal schedule, lead-provider request, provider activation, or paid
+action occurred. The next allowed step is to enter provider settings directly
+in Coolify while `SYSTEM1_DISCOVERY_ENABLED=false` remains set. Before any
+manual paid run, read the exact dashboard estimates and get Cyril's separate
+approval for those amounts.
 
 For the detailed resume sequence, read `SESSION_HANDOFF_2026-09-17.md`.
 
@@ -216,24 +217,55 @@ or a secure channel:
 Sidy is not technical. Ask for normal login links or screenshots, not API jargon
 or passwords. He should enter sensitive credentials himself if needed.
 
-## Priority order from here
+## Remaining Layer 1 task list
 
-1. Test one $0 discovery-provider run only after its displayed estimate is
-   reviewed. Apify remains the first available provider because Cyril has free
-   account credit. Outscraper is now an optional webhook intake path; see
-   `OUTSCRAPER_WEBHOOK_CONTRACT.md`. Neither provider is live until its feature
-   flag, secret, domain, and one-run verification are complete.
-2. Confirm current commercial facts with Sidy before real outreach: discovery-box
-   price, credit policy, available stock, and shipping threshold.
-3. Inspect Sidy's normal Dolibarr and Hermes screens; build a read-only Dolibarr
-   capability check.
-4. Add paid enrichment providers only after their current prices and the budget
-   are approved.
-5. Add deterministic Gemini qualification and Claude personalization.
-6. Add idempotent Dolibarr prospect upsert.
-7. Add Hermes delivery receipts behind the existing Sidy approval gate.
-8. Add OpenReply to the B2B Instagram account for inbound comment-to-DM flows.
-9. Consider Shopify and Meta ads only as separate, approved workstreams.
+### A. Finish discovery-trial readiness
+
+1. Enter Apify/Outscraper credentials and the public callback base URL directly
+   in Coolify, while discovery remains disabled.
+2. Confirm the feature flag is still `SYSTEM1_DISCOVERY_ENABLED=false` and keep
+   the caps at USD 1.40/day (Apify) and USD 0.60/day (Outscraper).
+3. Open each provider dashboard and record the exact estimate for the intended
+   one-day raw-lead run. Do not infer that the caps are the final price.
+4. Obtain Cyril's separate approval for those exact estimates.
+5. Run one approved manual discovery day only: no paid enrichment, reviews,
+   email validation, or phone lookup.
+6. Inspect the daily-run record, provider reservation/audit records, returned
+   raw candidates, duplicate handling, and failure/reconciliation behaviour.
+7. Only if that run is clean, create and observe the seven-day 09:00
+   Europe/Berlin schedule. Keep the automatic stop before day eight.
+
+### B. Make outreach commercially safe
+
+8. Confirm with Sidy the current tasting-box price, credit policy, available
+   stock, and shipping threshold before any customer draft uses those facts.
+9. Resolve the known conflicting historic figures: EUR 19 versus EUR 9.90
+   netto, free shipping above EUR 40 versus EUR 59, and Teebar availability.
+
+### C. Confirm existing-system access before integration
+
+10. Inspect Sidy's ordinary Dolibarr and Hermes screens with a safe test record
+    or account; obtain the fields, delivery status, and backup information
+    listed in `ACCESS_CHECKLIST.md`.
+11. Build and run a read-only Dolibarr capability check. Do not write prospects
+    or alter stock, invoices, or CRM records.
+
+### D. Add qualification and controlled handoffs
+
+12. Approve current prices/budgets for paid enrichment sources, then add them
+    in the planned cheapest-first waterfall.
+13. Add deterministic Gemini ICP qualification (score at least 70) and Claude
+    personalization, with evidence and claim safeguards.
+14. Add an idempotent Dolibarr prospect upsert only after the read-only check
+    and field contract are approved.
+15. Add Hermes delivery receipts behind Sidy's existing approval gate, including
+    opt-out handling and duplicate-safe status updates.
+16. Add OpenReply to the B2B Instagram account for inbound comment-to-DM work.
+
+### E. Separate future workstreams
+
+17. Consider Shopify and Meta ads only as separately approved projects; neither
+    is part of the discovery trial or current Layer 1 go-live.
 
 ## Known conflicts to resolve before outreach
 
