@@ -39,9 +39,9 @@ Signals are how a human action moves the workflow.
 
 | Signal | Meaning |
 | --- | --- |
-| `approve_by_sidy` | Sidy approved the outreach draft |
+| `approve_by_sidy` | Sidy approved the outreach draft; only accepted while it is `drafted` |
 | `reject_by_sidy` | Sidy rejected the lead or message |
-| `record_sent` | Sidy or Cyril recorded that the message was sent |
+| `record_sent` | Sidy or Cyril recorded that the message was sent; only accepted after approval |
 
 ## Query
 
@@ -80,6 +80,10 @@ The lead cannot become `contacted` until:
 
 1. Sidy approves the draft.
 2. A send event is recorded.
+
+An approval signal received before a draft exists, or a send record received before
+the lead reaches `approved`, is ignored. This prevents an early or duplicated
+operator action from unlocking a later send.
 
 ## Current boundary
 

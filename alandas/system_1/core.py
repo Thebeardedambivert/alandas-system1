@@ -6,7 +6,7 @@ before the server exists.
 
 from __future__ import annotations
 
-from system_1.models import LeadInput, OutreachDraft
+from system_1.models import LeadInput, LeadWorkflowState, OutreachDraft
 
 
 SAFE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789")
@@ -100,4 +100,26 @@ def draft_outreach(lead: LeadInput) -> OutreachDraft:
         subject=f"Loose-leaf tea setup for {lead.venue_name}",
         body=body,
         allowed_to_send=False,
+    )
+
+
+def can_approve_outreach(state: LeadWorkflowState) -> bool:
+    """Return whether Sidy may approve the current, drafted message."""
+
+    return (
+        state.status == "drafted"
+        and state.outreach_draft is not None
+        and not state.rejection_reason
+    )
+
+
+def can_record_send(state: LeadWorkflowState) -> bool:
+    """Return whether a recorded send belongs to an approved draft."""
+
+    return (
+        state.status == "approved"
+        and state.sidy_approved
+        and state.outreach_draft is not None
+        and state.outreach_draft.allowed_to_send
+        and not state.rejection_reason
     )

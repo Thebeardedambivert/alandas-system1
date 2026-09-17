@@ -49,6 +49,13 @@ async def run(args: argparse.Namespace) -> int:
         return 0
 
     if args.command == "record-sent":
+        state = await handle.query(CafeLeadWorkflow.current_state)
+        if state is None or state.status != "approved":
+            print(
+                f"cannot record a send for {args.workflow_id}: "
+                "Sidy must approve the drafted message first"
+            )
+            return 2
         await handle.signal(CafeLeadWorkflow.record_sent)
         print(f"send recorded for {args.workflow_id}")
         return 0

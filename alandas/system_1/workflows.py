@@ -6,6 +6,7 @@ from datetime import timedelta
 
 from temporalio import workflow
 
+from system_1.core import can_approve_outreach, can_record_send
 from system_1.models import LeadInput, LeadWorkflowState
 
 with workflow.unsafe.imports_passed_through():
@@ -90,8 +91,10 @@ class CafeLeadWorkflow:
 
     @workflow.signal
     async def approve_by_sidy(self) -> None:
-        if self.state is not None:
+        if self.state is not None and can_approve_outreach(self.state):
+            # A send record is valid only for the draft Sidy has just approved.
             self.state.sidy_approved = True
+            self.state.outreach_draft.allowed_to_send = True
 
     @workflow.signal
     async def reject_by_sidy(self, reason: str) -> None:
@@ -100,7 +103,7 @@ class CafeLeadWorkflow:
 
     @workflow.signal
     async def record_sent(self) -> None:
-        if self.state is not None:
+        if self.state is not None and can_record_send(self.state):
             self.state.sent_recorded = True
 
     @workflow.query
