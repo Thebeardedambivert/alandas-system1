@@ -25,9 +25,10 @@ waterfall.
 | --- | --- | --- |
 | Duration | 7 calendar days | Enough samples to compare sources without open-ended spend |
 | Geography | Germany | The market is Germany, not only Berlin, Hamburg, or Munich |
-| Category | Cafes | Matches the immediate Alandas buyer profile |
-| Apify cap | 50 source rows/day | Bounds a single actor run |
-| Outscraper cap | 50 source rows/day | Bounds a single vendor request |
+| Apify categories | 20 cafes; 10 brunch venues; 10 specialty coffee venues; 10 boutique hotels | Tests the full agreed ideal-customer mix while retaining enough volume per category |
+| Outscraper category | Cafes, 50 source rows/day | Creates a focused comparison lane for raw Maps discovery |
+| Apify cap | 50 source rows/day | Bounds one actor run across the four category allocations |
+| Outscraper cap | 50 source rows/day | Bounds one focused vendor request |
 | Combined cap | 100 source rows/day; 700/week | Makes the maximum exposure known before a run |
 | Provider extras | Disabled | The trial measures raw discovery quality first |
 | Paid waterfall stages | Disabled for this trial | Avoids mixing discovery-source quality with enrichment value |
@@ -76,7 +77,7 @@ replaced without changing the lead, approval, or CRM boundaries.
 Temporal daily schedule (Europe/Berlin)
   -> discovery run: YYYY-MM-DD + policy version
   -> budget/cap/duration check
-  -> start Apify and Outscraper independently
+  -> start Apify with the four category allocations and Outscraper for cafes
   -> provider run/request ID saved before waiting
   -> retrieve result or accept callback
   -> provider mapper: only raw Maps business fields
