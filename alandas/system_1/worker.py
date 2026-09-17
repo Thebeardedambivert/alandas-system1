@@ -24,6 +24,11 @@ from system_1.activities import (
     validate_lead_activity,
 )
 from system_1.workflows import CafeLeadWorkflow
+from system_1.discovery_activities import (
+    create_daily_discovery_run_activity,
+    submit_daily_discovery_providers_activity,
+)
+from system_1.discovery_temporal_workflow import DailyDiscoveryWorkflow
 
 
 logger = logging.getLogger(__name__)
@@ -77,8 +82,10 @@ async def main() -> None:
         worker = Worker(
             client,
             task_queue=task_queue,
-            workflows=[CafeLeadWorkflow],
+            workflows=[CafeLeadWorkflow, DailyDiscoveryWorkflow],
             activities=[
+                create_daily_discovery_run_activity,
+                submit_daily_discovery_providers_activity,
                 validate_lead_activity,
                 validate_intake_activity,
                 normalize_lead_activity,

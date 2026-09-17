@@ -114,6 +114,46 @@ def ensure_schema() -> None:
             ON audit_events (event_key)
             """
         )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS discovery_runs (
+                daily_run_id TEXT PRIMARY KEY,
+                policy_version TEXT NOT NULL,
+                scheduled_for DATE NOT NULL,
+                status TEXT NOT NULL DEFAULT 'pending',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS discovery_provider_runs (
+                daily_run_id TEXT NOT NULL REFERENCES discovery_runs(daily_run_id),
+                provider TEXT NOT NULL,
+                external_id TEXT NOT NULL DEFAULT '',
+                estimated_cost_usd NUMERIC(10,4),
+                actual_cost_usd NUMERIC(10,4),
+                status TEXT NOT NULL DEFAULT 'pending',
+                details JSONB NOT NULL DEFAULT '{}'::JSONB,
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                PRIMARY KEY (daily_run_id, provider)
+            )
+            """
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS discovery_attempts (
+                daily_run_id TEXT NOT NULL,
+                provider TEXT NOT NULL,
+                attempt_number INTEGER NOT NULL,
+                status_code INTEGER,
+                error_class TEXT NOT NULL DEFAULT '',
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                PRIMARY KEY (daily_run_id, provider, attempt_number)
+            )
+            """
+        )
 
 
 def upsert_lead(workflow_id: str, lead: LeadInput, status: str) -> None:
@@ -282,3 +322,114 @@ def insert_audit_event(
             ),
         )
         return cursor.fetchone() is not None
+
+
+def create_or_get_discovery_run(
+    daily_run_id: str, policy_version: str, scheduled_for: str
+) -> tuple[str, str]:
+    """Create one daily run once and return its stable ID and status."""
+
+    with connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO discovery_runs (daily_run_id, policy_version, scheduled_for)
+            VALUES (%s, %s, %s::date)
+            ON CONFLICT (daily_run_id) DO NOTHING
+            """,
+            (daily_run_id, policy_version, scheduled_for),
+        )
+        row = connection.execute(
+            "SELECT daily_run_id, status FROM discovery_runs WHERE daily_run_id = %s",
+            (daily_run_id,),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("discovery run was not persisted")
+    return row[0], row[1]
+
+
+def record_discovery_provider_submission(
+    daily_run_id: str, provider: str, external_id: str, estimated_cost_usd: str
+) -> tuple[str, str, str]:
+    """Persist one provider request once so retries cannot buy another one."""
+
+    with connect() as connection:
+        connection.execute(
+            """
+            INSERT INTO discovery_provider_runs
+                (daily_run_id, provider, external_id, estimated_cost_usd, status)
+            VALUES (%s, %s, %s, %s::numeric, 'submitted')
+            ON CONFLICT (daily_run_id, provider) DO NOTHING
+            """,
+            (daily_run_id, provider, external_id, estimated_cost_usd),
+        )
+        row = connection.execute(
+            """
+            SELECT provider, external_id, status FROM discovery_provider_runs
+            WHERE daily_run_id = %s AND provider = %s
+            """,
+            (daily_run_id, provider),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("provider submission was not persisted")
+    return row[0], row[1], row[2]
+
+
+def reserve_discovery_provider_submission(
+    daily_run_id: str, provider: str, estimated_cost_usd: str
+) -> tuple[str, str, str, bool]:
+    """Reserve an outbound provider call before it can spend money.
+
+    A retry finding this unfinished reservation must reconcile or ask for help;
+    it must never create a second paid request.
+    """
+
+    with connect() as connection:
+        inserted = connection.execute(
+            """
+            INSERT INTO discovery_provider_runs
+                (daily_run_id, provider, estimated_cost_usd, status)
+            VALUES (%s, %s, %s::numeric, 'pending_submission')
+            ON CONFLICT (daily_run_id, provider) DO NOTHING
+            RETURNING provider, external_id, status
+            """,
+            (daily_run_id, provider, estimated_cost_usd),
+        )
+        row = inserted.fetchone()
+        if row is None:
+            row = connection.execute(
+            """
+            SELECT provider, external_id, status FROM discovery_provider_runs
+            WHERE daily_run_id = %s AND provider = %s
+            """,
+            (daily_run_id, provider),
+            ).fetchone()
+    if row is None:
+        raise RuntimeError("provider submission reservation was not persisted")
+    return row[0], row[1], row[2], bool(inserted.rowcount)
+
+
+def complete_discovery_provider_submission(
+    daily_run_id: str, provider: str, external_id: str
+) -> tuple[str, str, str]:
+    """Attach the returned provider ID to its existing reservation once."""
+
+    with connect() as connection:
+        connection.execute(
+            """
+            UPDATE discovery_provider_runs
+            SET external_id = %s, status = 'submitted', updated_at = NOW()
+            WHERE daily_run_id = %s AND provider = %s
+              AND status = 'pending_submission' AND external_id = ''
+            """,
+            (external_id, daily_run_id, provider),
+        )
+        row = connection.execute(
+            """
+            SELECT provider, external_id, status FROM discovery_provider_runs
+            WHERE daily_run_id = %s AND provider = %s
+            """,
+            (daily_run_id, provider),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("provider submission completion was not persisted")
+    return row[0], row[1], row[2]
