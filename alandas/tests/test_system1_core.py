@@ -8,6 +8,9 @@ from datetime import date, datetime, timezone
 import json
 from decimal import Decimal
 from pathlib import Path
+import sys
+from types import ModuleType
+from unittest.mock import patch
 
 from system_1.core import (
     apply_research_evidence,
@@ -48,6 +51,7 @@ from system_1.discovery_scheduler import (
     policy_for_trial_start,
     schedule_action,
     scheduled_day_in_berlin,
+    start_trial_schedule,
     trial_schedule_definition,
 )
 from system_1.discovery_workflows import final_daily_status
@@ -153,6 +157,89 @@ class System1CoreTests(unittest.TestCase):
         )
 
         self.assertIn("time_zone_name=definition[\"timezone\"]", scheduler_source)
+
+    def test_trial_schedule_passes_workflow_inputs_via_temporal_args(self) -> None:
+        """Protect the SDK boundary that only accepts one positional workflow input."""
+
+        unset = object()
+
+        class FakeScheduleActionStartWorkflow:
+            def __init__(
+                self,
+                workflow: object,
+                arg: object = unset,
+                *,
+                args: list[object] | None = None,
+                task_queue: str | None = None,
+            ) -> None:
+                self.workflow = workflow
+                self.arg = arg
+                self.args = args
+                self.task_queue = task_queue
+
+        class FakeSchedule:
+            def __init__(self, *, action: object, spec: object, state: object) -> None:
+                self.action = action
+                self.spec = spec
+                self.state = state
+
+        class FakeScheduleSpec:
+            def __init__(self, **values: object) -> None:
+                self.values = values
+
+        class FakeScheduleState:
+            def __init__(self, **values: object) -> None:
+                self.values = values
+
+        class FakeClient:
+            def __init__(self) -> None:
+                self.created: list[tuple[str, object]] = []
+
+            async def create_schedule(self, schedule_id: str, schedule: object) -> None:
+                self.created.append((schedule_id, schedule))
+
+        async def workflow_run(*_args: object) -> None:
+            return None
+
+        temporalio_module = ModuleType("temporalio")
+        temporalio_client_module = ModuleType("temporalio.client")
+        temporalio_client_module.Schedule = FakeSchedule
+        temporalio_client_module.ScheduleActionStartWorkflow = FakeScheduleActionStartWorkflow
+        temporalio_client_module.ScheduleSpec = FakeScheduleSpec
+        temporalio_client_module.ScheduleState = FakeScheduleState
+        temporalio_module.client = temporalio_client_module
+        workflow_module = ModuleType("system_1.discovery_temporal_workflow")
+        workflow_module.DailyDiscoveryWorkflow = type(
+            "DailyDiscoveryWorkflow", (), {"run": workflow_run}
+        )
+        client = FakeClient()
+
+        with patch.dict(
+            sys.modules,
+            {
+                "temporalio": temporalio_module,
+                "temporalio.client": temporalio_client_module,
+                "system_1.discovery_temporal_workflow": workflow_module,
+            },
+        ), patch("system_1.discovery_scheduler.ZoneInfo", return_value=timezone.utc):
+            schedule_id = asyncio.run(
+                start_trial_schedule(
+                    client,
+                    TrialPolicy.default(date(2026, 9, 17)),
+                    "alandas-system1",
+                )
+            )
+
+        self.assertEqual(schedule_id, "alandas-discovery-trial-v1")
+        self.assertEqual(len(client.created), 1)
+        created_schedule = client.created[0][1]
+        self.assertIs(created_schedule.action.workflow, workflow_run)
+        self.assertIs(created_schedule.action.arg, unset)
+        self.assertEqual(
+            created_schedule.action.args,
+            ["trial-v1", "2026-09-17"],
+        )
+        self.assertEqual(created_schedule.action.task_queue, "alandas-system1")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
