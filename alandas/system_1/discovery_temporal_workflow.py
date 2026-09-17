@@ -13,7 +13,11 @@ from system_1.discovery_scheduler import (
 )
 
 with workflow.unsafe.imports_passed_through():
-    from system_1.discovery_activities import create_daily_discovery_run_activity
+    from system_1.discovery_activities import (
+        create_daily_discovery_run_activity,
+        submit_daily_discovery_providers_activity,
+    )
+    from system_1.discovery_workflows import final_daily_status
 
 
 @workflow.defn
@@ -40,8 +44,22 @@ class DailyDiscoveryWorkflow:
             },
             start_to_close_timeout=timedelta(seconds=30),
         )
+        provider_statuses = await workflow.execute_activity(
+            submit_daily_discovery_providers_activity,
+            {
+                "daily_run_id": daily_run_id,
+                "trial_starts_on": trial_starts_on,
+            },
+            start_to_close_timeout=timedelta(minutes=5),
+        )
+        if provider_statuses.get("status") == "disabled":
+            return {
+                "status": "disabled",
+                "daily_run_id": str(record["daily_run_id"]),
+                "workflow_id": daily_workflow_id(policy, day),
+            }
         return {
-            "status": "not_started",
+            "status": final_daily_status(provider_statuses),
             "daily_run_id": str(record["daily_run_id"]),
             "workflow_id": daily_workflow_id(policy, day),
         }

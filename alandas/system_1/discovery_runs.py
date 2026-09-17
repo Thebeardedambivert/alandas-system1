@@ -39,6 +39,20 @@ class InMemoryDiscoveryStore:
     def __init__(self) -> None:
         self._runs: dict[tuple[str, str], ProviderRun] = {}
 
+    def reserve_submission(
+        self, daily_run_id: str, provider: str, estimated_cost_usd: Decimal
+    ) -> ProviderRun:
+        key = (daily_run_id, provider)
+        if key not in self._runs:
+            self._runs[key] = ProviderRun(
+                daily_run_id=daily_run_id,
+                provider=provider,
+                external_id="",
+                estimated_cost_usd=estimated_cost_usd,
+                status="pending_submission",
+            )
+        return self._runs[key]
+
     def record_submission(
         self,
         daily_run_id: str,

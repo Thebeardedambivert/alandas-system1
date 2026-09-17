@@ -10,12 +10,23 @@ def _enabled(environment: Mapping[str, str]) -> bool:
     return environment.get("SYSTEM1_DISCOVERY_ENABLED", "false").lower() == "true"
 
 
+def discovery_enabled(environment: Mapping[str, str]) -> bool:
+    """Expose the fail-closed switch without exposing configuration values."""
+
+    return _enabled(environment)
+
+
 def validate_scheduler_environment(environment: Mapping[str, str]) -> None:
     """Fail closed before a schedule can create a provider request."""
 
     if not _enabled(environment):
         raise RuntimeError("SYSTEM1_DISCOVERY_ENABLED must be true before discovery can start")
-    required = ("APIFY_API_TOKEN", "OUTSCRAPER_API_KEY", "OUTSCRAPER_WEBHOOK_TOKEN")
+    required = (
+        "APIFY_API_TOKEN",
+        "OUTSCRAPER_API_KEY",
+        "OUTSCRAPER_WEBHOOK_TOKEN",
+        "SYSTEM1_DISCOVERY_OUTSCRAPER_CALLBACK_BASE_URL",
+    )
     missing = [name for name in required if not environment.get(name, "").strip()]
     if missing:
         raise RuntimeError("missing discovery configuration: " + ", ".join(missing))

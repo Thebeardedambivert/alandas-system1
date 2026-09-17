@@ -372,3 +372,64 @@ def record_discovery_provider_submission(
     if row is None:
         raise RuntimeError("provider submission was not persisted")
     return row[0], row[1], row[2]
+
+
+def reserve_discovery_provider_submission(
+    daily_run_id: str, provider: str, estimated_cost_usd: str
+) -> tuple[str, str, str, bool]:
+    """Reserve an outbound provider call before it can spend money.
+
+    A retry finding this unfinished reservation must reconcile or ask for help;
+    it must never create a second paid request.
+    """
+
+    with connect() as connection:
+        inserted = connection.execute(
+            """
+            INSERT INTO discovery_provider_runs
+                (daily_run_id, provider, estimated_cost_usd, status)
+            VALUES (%s, %s, %s::numeric, 'pending_submission')
+            ON CONFLICT (daily_run_id, provider) DO NOTHING
+            RETURNING provider, external_id, status
+            """,
+            (daily_run_id, provider, estimated_cost_usd),
+        )
+        row = inserted.fetchone()
+        if row is None:
+            row = connection.execute(
+            """
+            SELECT provider, external_id, status FROM discovery_provider_runs
+            WHERE daily_run_id = %s AND provider = %s
+            """,
+            (daily_run_id, provider),
+            ).fetchone()
+    if row is None:
+        raise RuntimeError("provider submission reservation was not persisted")
+    return row[0], row[1], row[2], bool(inserted.rowcount)
+
+
+def complete_discovery_provider_submission(
+    daily_run_id: str, provider: str, external_id: str
+) -> tuple[str, str, str]:
+    """Attach the returned provider ID to its existing reservation once."""
+
+    with connect() as connection:
+        connection.execute(
+            """
+            UPDATE discovery_provider_runs
+            SET external_id = %s, status = 'submitted', updated_at = NOW()
+            WHERE daily_run_id = %s AND provider = %s
+              AND status = 'pending_submission' AND external_id = ''
+            """,
+            (external_id, daily_run_id, provider),
+        )
+        row = connection.execute(
+            """
+            SELECT provider, external_id, status FROM discovery_provider_runs
+            WHERE daily_run_id = %s AND provider = %s
+            """,
+            (daily_run_id, provider),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("provider submission completion was not persisted")
+    return row[0], row[1], row[2]

@@ -92,6 +92,17 @@ class System1CoreTests(unittest.TestCase):
 
         self.assertNotIn("secret", output)
         self.assertIn("Apify configured: yes", output)
+
+    def test_enabled_discovery_requires_a_callback_base_url(self) -> None:
+        environment = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "APIFY_API_TOKEN": "apify-token",
+            "OUTSCRAPER_API_KEY": "outscraper-token",
+            "OUTSCRAPER_WEBHOOK_TOKEN": "12345678901234567890123456789012",
+        }
+
+        with self.assertRaisesRegex(RuntimeError, "CALLBACK_BASE_URL"):
+            validate_scheduler_environment(environment)
     def test_daily_status_is_degraded_when_one_provider_fails(self) -> None:
         self.assertEqual(
             final_daily_status({"apify": "succeeded", "outscraper": "needs_attention"}),
@@ -205,6 +216,19 @@ class System1CoreTests(unittest.TestCase):
         )
 
         self.assertEqual(first, second)
+
+    def test_reserved_provider_submission_is_not_resubmitted_after_timeout(self) -> None:
+        store = InMemoryDiscoveryStore()
+
+        first = store.reserve_submission(
+            "discovery:trial-v1:2026-09-17", "outscraper", Decimal("0.60")
+        )
+        second = store.reserve_submission(
+            "discovery:trial-v1:2026-09-17", "outscraper", Decimal("0.60")
+        )
+
+        self.assertEqual(first, second)
+        self.assertEqual(first.status, "pending_submission")
 
     def test_unknown_charge_outcome_requires_reconciliation(self) -> None:
         decision = retry_decision(status_code=None, outcome_known=False, attempt_number=1)
