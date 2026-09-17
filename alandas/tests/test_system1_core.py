@@ -42,7 +42,7 @@ from system_1.discovery_runs import InMemoryDiscoveryStore, retry_decision
 from system_1.apify_provider import ApifyProvider, CostLimitExceeded
 from system_1.outscraper_provider import OutscraperProvider
 from system_1.provider_http import HttpResponse
-from system_1.discovery_scheduler import schedule_action
+from system_1.discovery_scheduler import daily_workflow_id, policy_for_trial_start, schedule_action
 from system_1.discovery_workflows import final_daily_status
 
 
@@ -87,6 +87,19 @@ class System1CoreTests(unittest.TestCase):
 
     def test_day_eight_pauses_without_submission(self) -> None:
         policy = TrialPolicy.default(date(2026, 9, 17))
+
+        self.assertEqual(schedule_action(policy, date(2026, 9, 24)), "pause")
+
+    def test_daily_workflow_id_is_stable_for_retries(self) -> None:
+        policy = TrialPolicy.default(date(2026, 9, 17))
+
+        self.assertEqual(
+            daily_workflow_id(policy, date(2026, 9, 17)),
+            "alandas-discovery-trial-v1-2026-09-17",
+        )
+
+    def test_trial_start_date_controls_the_day_eight_stop(self) -> None:
+        policy = policy_for_trial_start("2026-09-17")
 
         self.assertEqual(schedule_action(policy, date(2026, 9, 24)), "pause")
 
