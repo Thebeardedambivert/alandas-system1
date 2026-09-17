@@ -1,6 +1,6 @@
 # Alandas System 1 — Current Project State
 
-**Last updated:** 2026-09-17  
+**Last updated:** 2026-09-17 (discovery-trial deployment and SDK validation)
 **Use this file first when resuming work in a new session.**
 
 ## One-sentence purpose
@@ -87,6 +87,68 @@ The retry-safe audit rule uses the stable key:
 
 System 1 does not currently write to Dolibarr, Hermes, Shopify, Meta,
 WhatsApp, or Instagram. It must not claim those connections are live.
+
+## Discovery trial — current verified state
+
+The seven-day Germany-wide raw-lead discovery trial is now implemented and
+deployed, but remains **disabled**. It is a discovery and qualification input,
+not an outreach or CRM automation.
+
+Trial design:
+
+- Apify: 50 raw Google Maps candidates/day: cafes (20), brunch venues (10),
+  specialty coffee venues (10), and boutique hotels (10).
+- Outscraper: 50 raw Google Maps cafe candidates/day.
+- Maximum raw intake: 100 candidates/day, 700 over seven days.
+- No paid enrichment, reviews, email validation, or phone lookups during this
+  trial.
+- The existing public-site/Impressum research remains the next enrichment
+  step after raw intake.
+- No outreach, CRM write, Hermes delivery, or Instagram message can occur in
+  this trial.
+
+Safety controls already implemented:
+
+- `SYSTEM1_DISCOVERY_ENABLED=false` is the default and blocks provider calls.
+- Apify and Outscraper have separate daily cost caps: USD 1.40 and USD 0.60.
+- A provider submission is reserved before the request. A network timeout with
+  an unknown result must be reconciled, not resubmitted.
+- Daily workflow IDs and audit event keys are stable, preventing duplicates.
+- The intended schedule is 09:00 Europe/Berlin and ends before day eight.
+
+### Latest deployment and live checks
+
+- GitHub/Coolify deployment `83f2ae5` succeeded on 2026-09-17.
+- In the deployed worker, `python -m system_1.discovery_status today` showed:
+  `not_started`, discovery disabled, and neither provider configured.
+- The deployed Temporal SDK accepted `ScheduleSpec` with
+  `time_zone_name='Europe/Berlin'` and the intended end date.
+
+### Current blocker — do not enable discovery yet
+
+The next no-spend, in-memory schedule-object test exposed one remaining SDK
+compatibility mismatch:
+
+```text
+ScheduleActionStartWorkflow.__init__() takes one workflow argument payload,
+not two separate positional workflow arguments.
+```
+
+No Temporal schedule, lead-provider request, or paid action was created by that
+test. A local regression test has been added but the correction is not yet
+committed or deployed. The next session must inspect the deployed signature
+before changing the schedule action. Use this safe command in the
+`system1-worker` Coolify terminal:
+
+```sh
+python -c "from temporalio.client import ScheduleActionStartWorkflow; import inspect; print(inspect.signature(ScheduleActionStartWorkflow))"
+```
+
+Then update `system_1/discovery_scheduler.py`, add/adjust a regression test,
+run the full test suite, commit, push only with Cyril's approval, redeploy
+while disabled, and repeat the full in-memory schedule-object check.
+
+For the detailed resume sequence, read `SESSION_HANDOFF_2026-09-17.md`.
 
 ## Agreed lead generation and qualification waterfall
 
