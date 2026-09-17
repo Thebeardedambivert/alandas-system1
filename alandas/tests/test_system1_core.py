@@ -42,6 +42,8 @@ from system_1.discovery_runs import InMemoryDiscoveryStore, retry_decision
 from system_1.apify_provider import ApifyProvider, CostLimitExceeded
 from system_1.outscraper_provider import OutscraperProvider
 from system_1.provider_http import HttpResponse
+from system_1.discovery_scheduler import schedule_action
+from system_1.discovery_workflows import final_daily_status
 
 
 class FakeTransport:
@@ -77,6 +79,17 @@ class FakeUrlResponse:
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_daily_status_is_degraded_when_one_provider_fails(self) -> None:
+        self.assertEqual(
+            final_daily_status({"apify": "succeeded", "outscraper": "needs_attention"}),
+            "degraded",
+        )
+
+    def test_day_eight_pauses_without_submission(self) -> None:
+        policy = TrialPolicy.default(date(2026, 9, 17))
+
+        self.assertEqual(schedule_action(policy, date(2026, 9, 24)), "pause")
+
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
 
