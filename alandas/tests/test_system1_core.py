@@ -19,6 +19,12 @@ from system_1.core import (
     website_domain,
 )
 from system_1.models import LeadInput, LeadWorkflowState, ResearchEvidence
+from system_1.apify_google_maps import (
+    candidate_to_lead,
+    map_apify_dataset,
+    map_apify_place,
+    validate_discovery_request,
+)
 from system_1.public_research import (
     candidate_urls,
     research_public_pages,
@@ -27,6 +33,54 @@ from system_1.public_research import (
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_apify_place_maps_to_a_raw_lead_without_paid_enrichment_fields(self) -> None:
+        candidate = map_apify_place(
+            {
+                "placeId": "place-123",
+                "url": "https://www.google.com/maps/place/example",
+                "title": "Example Cafe",
+                "city": "Berlin",
+                "categoryName": "Cafe",
+                "countryCode": "DE",
+                "website": "https://www.example.de/",
+                "phoneUnformatted": "+4930123456",
+                "address": "Example Street 1",
+                "email": "do-not-import@example.de",
+            }
+        )
+
+        self.assertIsNotNone(candidate)
+        lead = candidate_to_lead(candidate)
+        self.assertEqual(lead.website, "https://www.example.de")
+        self.assertEqual(lead.phone, "+4930123456")
+        self.assertEqual(lead.email, "")
+
+    def test_apify_dataset_skips_closed_and_duplicate_places(self) -> None:
+        record = {
+            "placeId": "place-123",
+            "url": "https://www.google.com/maps/place/example",
+            "title": "Example Cafe",
+            "city": "Berlin",
+            "categoryName": "Cafe",
+            "countryCode": "DE",
+        }
+        closed = {**record, "placeId": "place-closed", "permanentlyClosed": True}
+
+        candidates, notes = map_apify_dataset([record, record, closed])
+
+        self.assertEqual(len(candidates), 1)
+        self.assertEqual(len(notes), 2)
+
+    def test_discovery_request_is_bounded_to_target_cities(self) -> None:
+        self.assertEqual(validate_discovery_request("Berlin", ["specialty cafe"], 10), [])
+        self.assertIn(
+            "city must be one of Berlin, Hamburg, or Munich",
+            validate_discovery_request("Paris", ["cafe"], 10),
+        )
+        self.assertIn(
+            "limit must be between 1 and 50",
+            validate_discovery_request("Berlin", ["cafe"], 51),
+        )
     def test_valid_lead_passes(self) -> None:
         lead = LeadInput(
             venue_name="Example Cafe",

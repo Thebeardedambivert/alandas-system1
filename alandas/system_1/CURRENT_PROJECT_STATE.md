@@ -156,8 +156,9 @@ or passwords. He should enter sensitive credentials himself if needed.
 
 ## Priority order from here
 
-1. Implement the free stages of the waterfall engine: intake, normalization,
-   internal deduplication, and public website/Impressum research with evidence.
+1. Implement and test the Apify Google Maps discovery adapter using an exported,
+   small, paid run only after a cost estimate and approval. The offline mapping
+   contract is in `APIFY_DISCOVERY_CONTRACT.md`; no Apify token or run is live.
 2. Confirm current commercial facts with Sidy before real outreach: discovery-box
    price, credit policy, available stock, and shipping threshold.
 3. Inspect Sidy's normal Dolibarr and Hermes screens; build a read-only Dolibarr
@@ -188,6 +189,7 @@ current offer directly with Sidy first.
 - `LEAD_SCHEMA.md` — lead fields and validation.
 - `TEMPORAL_WORKFLOW.md` — deployed state machine and operator commands.
 - `HERMES_DOLIBARR_HANDOFF_CONTRACT.md` — future integration boundaries.
+- `APIFY_DISCOVERY_CONTRACT.md` — proposed raw-candidate contract; no live Apify connection.
 - `ACCESS_CHECKLIST.md` — access discovery requirements.
 - `GO_LIVE_CHECKLIST.md` — deployment reference; some entries are now historical
   because the live checks above are complete.

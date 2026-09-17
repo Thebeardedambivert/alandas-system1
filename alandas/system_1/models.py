@@ -44,6 +44,22 @@ class ResearchEvidence:
     method: str
 
 
+@dataclass(frozen=True)
+class DiscoveryCandidate:
+    """A raw business candidate before the enrichment waterfall begins."""
+
+    source: str
+    source_record_id: str
+    source_url: str
+    venue_name: str
+    city: str
+    venue_type: str
+    country_code: str
+    website: str = ""
+    phone: str = ""
+    address: str = ""
+
+
 @dataclass
 class LeadWorkflowState:
     """Current state for one cafe lead."""
