@@ -44,6 +44,7 @@ from system_1.outscraper_provider import OutscraperProvider
 from system_1.provider_http import HttpResponse
 from system_1.discovery_scheduler import daily_workflow_id, policy_for_trial_start, schedule_action
 from system_1.discovery_workflows import final_daily_status
+from system_1.discovery_controls import format_daily_status, validate_scheduler_environment
 
 
 class FakeTransport:
@@ -79,6 +80,18 @@ class FakeUrlResponse:
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_start_refuses_when_feature_flag_is_off(self) -> None:
+        with self.assertRaisesRegex(RuntimeError, "SYSTEM1_DISCOVERY_ENABLED"):
+            validate_scheduler_environment({"SYSTEM1_DISCOVERY_ENABLED": "false"})
+
+    def test_status_output_redacts_tokens(self) -> None:
+        output = format_daily_status(
+            {"daily_run_id": "discovery:trial-v1:2026-09-17", "status": "not_started"},
+            {"APIFY_API_TOKEN": "secret", "OUTSCRAPER_API_KEY": "another-secret"},
+        )
+
+        self.assertNotIn("secret", output)
+        self.assertIn("Apify configured: yes", output)
     def test_daily_status_is_degraded_when_one_provider_fails(self) -> None:
         self.assertEqual(
             final_daily_status({"apify": "succeeded", "outscraper": "needs_attention"}),
