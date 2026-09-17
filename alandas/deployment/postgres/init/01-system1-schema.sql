@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS leads (
 
 CREATE TABLE IF NOT EXISTS audit_events (
     id BIGSERIAL PRIMARY KEY,
+    event_key TEXT UNIQUE,
     workflow_id TEXT NOT NULL,
     event_name TEXT NOT NULL,
     status TEXT NOT NULL,

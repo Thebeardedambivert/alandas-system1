@@ -85,6 +85,13 @@ An approval signal received before a draft exists, or a send record received bef
 the lead reaches `approved`, is ignored. This prevents an early or duplicated
 operator action from unlocking a later send.
 
+## Retry and duplicate rule
+
+Each audit transition has the stable key `<workflow_id>:<event_name>`. Postgres
+accepts that key once. If Temporal retries the same activity after a timeout or
+restart, the duplicate audit write is ignored. Future Hermes-to-Dolibarr handoffs
+must use the same transition key as their idempotency key.
+
 ## Current boundary
 
 This first setup does not write to Shopify, Meta, WhatsApp, or Dolibarr.

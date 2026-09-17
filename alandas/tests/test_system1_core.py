@@ -5,6 +5,7 @@ from __future__ import annotations
 import unittest
 
 from system_1.core import (
+    audit_event_key,
     can_approve_outreach,
     can_record_send,
     draft_outreach,
@@ -92,6 +93,22 @@ class System1CoreTests(unittest.TestCase):
 
     def test_slug_handles_empty_values(self) -> None:
         self.assertEqual(slug("   "), "lead")
+
+    def test_audit_event_key_is_stable_for_retries(self) -> None:
+        first_attempt = audit_event_key("alandas-lead-123", "outreach_approved")
+        retry_attempt = audit_event_key("alandas-lead-123", "outreach_approved")
+
+        self.assertEqual(first_attempt, retry_attempt)
+        self.assertNotEqual(
+            first_attempt,
+            audit_event_key("alandas-lead-123", "send_recorded"),
+        )
+
+    def test_audit_event_key_requires_both_parts(self) -> None:
+        with self.assertRaises(ValueError):
+            audit_event_key("", "send_recorded")
+        with self.assertRaises(ValueError):
+            audit_event_key("alandas-lead-123", "")
 
     def test_send_record_is_rejected_before_approval(self) -> None:
         lead = LeadInput(

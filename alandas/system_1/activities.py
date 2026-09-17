@@ -12,7 +12,7 @@ from datetime import datetime, timezone
 
 from temporalio import activity
 
-from system_1.core import draft_outreach, enrich_lead, validate_lead
+from system_1.core import audit_event_key, draft_outreach, enrich_lead, validate_lead
 from system_1 import db
 from system_1.models import LeadInput, OutreachDraft
 
@@ -44,7 +44,7 @@ def draft_outreach_activity(lead: LeadInput) -> OutreachDraft:
 
 @activity.defn
 def append_audit_event_activity(event: dict) -> None:
-    """Append one audit event to Postgres and disk."""
+    """Append one transition audit event once, even when Temporal retries it."""
 
     path = _audit_path()
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -52,12 +52,17 @@ def append_audit_event_activity(event: dict) -> None:
         "created_at": datetime.now(timezone.utc).isoformat(),
         **event,
     }
-    db.insert_audit_event(
+    inserted = db.insert_audit_event(
         workflow_id=str(payload["workflow_id"]),
+        event_key=audit_event_key(
+            str(payload["workflow_id"]), str(payload["event"])
+        ),
         event_name=str(payload["event"]),
         status=str(payload["status"]),
         details=dict(payload.get("details") or {}),
     )
+    if not inserted:
+        return
     with open(path, "a", encoding="utf-8") as audit_file:
         audit_file.write(json.dumps(payload, ensure_ascii=True) + "\n")
 

@@ -12,6 +12,14 @@ from system_1.models import LeadInput, LeadWorkflowState, OutreachDraft
 SAFE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789")
 
 
+def audit_event_key(workflow_id: str, event_name: str) -> str:
+    """Return the stable key for one workflow transition audit event."""
+
+    if not workflow_id.strip() or not event_name.strip():
+        raise ValueError("workflow_id and event_name are required for an audit event")
+    return f"{workflow_id}:{event_name}"
+
+
 def slug(value: str) -> str:
     """Return a stable lowercase slug."""
 

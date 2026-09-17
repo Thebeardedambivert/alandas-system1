@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from temporalio import workflow
 
-from system_1.core import can_approve_outreach, can_record_send
+from system_1.core import audit_event_key, can_approve_outreach, can_record_send
 from system_1.models import LeadInput, LeadWorkflowState
 
 with workflow.unsafe.imports_passed_through():
@@ -117,6 +117,7 @@ class CafeLeadWorkflow:
             append_audit_event_activity,
             {
                 "event": name,
+                "event_key": audit_event_key(workflow.info().workflow_id, name),
                 "workflow_id": workflow.info().workflow_id,
                 "status": self.state.status,
                 "details": details,

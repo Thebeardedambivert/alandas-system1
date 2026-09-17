@@ -61,12 +61,22 @@ def ensure_schema() -> None:
             """
             CREATE TABLE IF NOT EXISTS audit_events (
                 id BIGSERIAL PRIMARY KEY,
+                event_key TEXT UNIQUE,
                 workflow_id TEXT NOT NULL,
                 event_name TEXT NOT NULL,
                 status TEXT NOT NULL,
                 details JSONB NOT NULL DEFAULT '{}'::JSONB,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
+            """
+        )
+        connection.execute(
+            "ALTER TABLE audit_events ADD COLUMN IF NOT EXISTS event_key TEXT"
+        )
+        connection.execute(
+            """
+            CREATE UNIQUE INDEX IF NOT EXISTS audit_events_event_key_unique
+            ON audit_events (event_key)
             """
         )
 
@@ -138,17 +148,27 @@ def update_lead_status(workflow_id: str, status: str) -> None:
 
 def insert_audit_event(
     workflow_id: str,
+    event_key: str,
     event_name: str,
     status: str,
     details: dict[str, object],
-) -> None:
-    """Insert one audit event."""
+) -> bool:
+    """Insert one audit event, returning false when its transition is already stored."""
 
     with connect() as connection:
-        connection.execute(
+        cursor = connection.execute(
             """
-            INSERT INTO audit_events (workflow_id, event_name, status, details)
-            VALUES (%s, %s, %s, %s::jsonb)
+            INSERT INTO audit_events (event_key, workflow_id, event_name, status, details)
+            VALUES (%s, %s, %s, %s, %s::jsonb)
+            ON CONFLICT DO NOTHING
+            RETURNING id
             """,
-            (workflow_id, event_name, status, json.dumps(details, ensure_ascii=True)),
+            (
+                event_key,
+                workflow_id,
+                event_name,
+                status,
+                json.dumps(details, ensure_ascii=True),
+            ),
         )
+        return cursor.fetchone() is not None
