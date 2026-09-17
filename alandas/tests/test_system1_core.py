@@ -7,6 +7,7 @@ import unittest
 from datetime import date, datetime, timezone
 import json
 from decimal import Decimal
+from pathlib import Path
 
 from system_1.core import (
     apply_research_evidence,
@@ -145,6 +146,13 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(definition["cron"], "0 9 * * *")
         self.assertEqual(definition["timezone"], "Europe/Berlin")
         self.assertEqual(definition["ends_on"], "2026-09-24")
+
+    def test_trial_schedule_uses_the_deployed_temporal_timezone_keyword(self) -> None:
+        scheduler_source = Path("system_1/discovery_scheduler.py").read_text(
+            encoding="utf-8"
+        )
+
+        self.assertIn("time_zone_name=definition[\"timezone\"]", scheduler_source)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

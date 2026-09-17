@@ -79,7 +79,7 @@ async def start_trial_schedule(client: object, policy: TrialPolicy, task_queue: 
             ),
             spec=ScheduleSpec(
                 cron_expressions=[definition["cron"]],
-                timezone=definition["timezone"],
+                time_zone_name=definition["timezone"],
                 end_at=end_at,
             ),
             state=ScheduleState(
