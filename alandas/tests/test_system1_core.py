@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import unittest
+from datetime import date
 
 from system_1.core import (
     apply_research_evidence,
@@ -34,9 +35,26 @@ from system_1.public_research import (
 from system_1.outscraper_google_maps import candidate_to_lead as outscraper_candidate_to_lead
 from system_1.outscraper_google_maps import map_outscraper_callback
 from system_1.outscraper_webhook import receive_outscraper_callback, validate_webhook_token
+from system_1.discovery_policy import TrialPolicy
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_trial_policy_has_approved_allocations(self) -> None:
+        policy = TrialPolicy.default(date(2026, 9, 17))
+
+        self.assertEqual(
+            policy.apify_allocations,
+            {
+                "cafe": 20,
+                "brunch venue": 10,
+                "specialty coffee venue": 10,
+                "boutique hotel": 10,
+            },
+        )
+        self.assertEqual(policy.outscraper_limit, 50)
+        self.assertTrue(policy.for_date(date(2026, 9, 23)))
+        self.assertFalse(policy.for_date(date(2026, 9, 24)))
+
     def test_outscraper_callback_maps_only_basic_business_fields(self) -> None:
         candidates, notes = map_outscraper_callback(
             {
@@ -159,15 +177,15 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(len(candidates), 1)
         self.assertEqual(len(notes), 2)
 
-    def test_discovery_request_is_bounded_to_target_cities(self) -> None:
-        self.assertEqual(validate_discovery_request("Berlin", ["specialty cafe"], 10), [])
+    def test_discovery_request_is_bounded_to_germany_wide_scope(self) -> None:
+        self.assertEqual(validate_discovery_request("Germany", ["specialty cafe"], 10), [])
         self.assertIn(
-            "city must be one of Berlin, Hamburg, or Munich",
-            validate_discovery_request("Paris", ["cafe"], 10),
+            "search scope is required",
+            validate_discovery_request(" ", ["cafe"], 10),
         )
         self.assertIn(
             "limit must be between 1 and 50",
-            validate_discovery_request("Berlin", ["cafe"], 51),
+            validate_discovery_request("Germany", ["cafe"], 51),
         )
     def test_valid_lead_passes(self) -> None:
         lead = LeadInput(

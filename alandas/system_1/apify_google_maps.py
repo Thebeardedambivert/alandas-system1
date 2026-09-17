@@ -15,16 +15,17 @@ from system_1.models import DiscoveryCandidate, LeadInput
 
 
 SOURCE_NAME = "apify_google_maps"
-ALLOWED_CITIES = frozenset({"berlin", "hamburg", "munich"})
 MAX_RESULTS_PER_RUN = 50
 
 
-def validate_discovery_request(city: str, search_terms: Sequence[str], limit: int) -> list[str]:
+def validate_discovery_request(
+    search_scope: str, search_terms: Sequence[str], limit: int
+) -> list[str]:
     """Validate the small, approved shape of a future discovery run."""
 
     errors: list[str] = []
-    if city.strip().lower() not in ALLOWED_CITIES:
-        errors.append("city must be one of Berlin, Hamburg, or Munich")
+    if not search_scope.strip():
+        errors.append("search scope is required")
     if not search_terms or any(not term.strip() for term in search_terms):
         errors.append("at least one non-blank search term is required")
     if not 1 <= limit <= MAX_RESULTS_PER_RUN:

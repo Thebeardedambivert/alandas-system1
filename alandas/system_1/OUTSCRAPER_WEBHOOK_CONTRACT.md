@@ -16,7 +16,10 @@ Apify dataset OR Outscraper callback
 ```
 
 The public callback is deliberately disabled by default. It cannot spend money,
-send a message, write to Dolibarr, or call Hermes.
+send a message, write to Dolibarr, or call Hermes. During the seven-day
+source-quality trial it accepts only a raw 50-cafe-per-day lane with no paid
+enrichments; this is a temporary policy, not removal of the enrichment
+waterfall.
 
 ## Receiver
 

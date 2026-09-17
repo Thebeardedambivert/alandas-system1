@@ -13,14 +13,17 @@ schedule is configured in System 1 yet.
 
 A future run must be deliberately created with:
 
-- one approved city: Berlin, Hamburg, or Munich;
-- one or more distinct café-focused search terms;
-- a maximum of 50 results;
+- Germany-wide search scope;
+- four category allocations that total 50 results: 20 cafes, 10 brunch venues,
+  10 specialty coffee venues, and 10 boutique hotels;
 - no reviews, reviewer data, images, business-lead enrichment, social-profile
   enrichment, competitor-analysis add-on, or email-verification add-on.
 
 The actor advertises usage pricing. A run is a paid external action. The operator
 must state the current estimated cost and obtain Cyril's approval before it runs.
+For the seven-day source-quality trial, paid enrichment is disabled. This is a
+temporary policy: later approved enrichment remains part of Alandas' waterfall,
+not an actor-side shortcut.
 
 ## Accepted actor fields
 
@@ -31,7 +34,7 @@ The mapper accepts only the documented standard place fields:
 | `placeId` | `source_record_id` | Stable source-level duplicate key |
 | `url` | `source_url` | Evidence of where the candidate came from |
 | `title` | `venue_name` | Candidate name |
-| `city` | `city` | Target-city check |
+| `city` | `city` | German-market context; country code is the deterministic guard |
 | `categoryName` | `venue_type` | Initial category; final fit is decided later |
 | `countryCode` | `country_code` | Germany-only guard |
 | `website` | `website` | Starts the public website/Impressum waterfall |
