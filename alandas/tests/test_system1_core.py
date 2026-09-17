@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import unittest
 from datetime import date
+import json
 from decimal import Decimal
 
 from system_1.core import (
@@ -38,9 +39,122 @@ from system_1.outscraper_google_maps import map_outscraper_callback
 from system_1.outscraper_webhook import receive_outscraper_callback, validate_webhook_token
 from system_1.discovery_policy import TrialPolicy
 from system_1.discovery_runs import InMemoryDiscoveryStore, retry_decision
+from system_1.apify_provider import ApifyProvider, CostLimitExceeded
+from system_1.outscraper_provider import OutscraperProvider
+from system_1.provider_http import HttpResponse
+
+
+class FakeTransport:
+    def __init__(self, response_json: dict[str, object], status_code: int = 201) -> None:
+        self.response_json = response_json
+        self.status_code = status_code
+        self.requests: list[object] = []
+
+    def request(self, method: str, url: str, headers: dict[str, str], body: bytes | None, timeout_seconds: int) -> HttpResponse:
+        self.requests.append(
+            type(
+                "Request",
+                (),
+                {"method": method, "url": url, "headers": headers, "body": body},
+            )()
+        )
+        return HttpResponse(self.status_code, self.response_json)
+
+
+class FakeUrlResponse:
+    def __init__(self, status_code: int, payload: bytes) -> None:
+        self.status = status_code
+        self._payload = payload
+
+    def read(self) -> bytes:
+        return self._payload
+
+    def __enter__(self) -> "FakeUrlResponse":
+        return self
+
+    def __exit__(self, exc_type: object, exc_value: object, traceback: object) -> bool:
+        return False
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_apify_refuses_cost_above_policy_cap(self) -> None:
+        provider = ApifyProvider(token="secret", transport=FakeTransport({}))
+
+        with self.assertRaises(CostLimitExceeded):
+            provider.submit(
+                TrialPolicy.default(date(2026, 9, 17)),
+                "discovery:trial-v1:2026-09-17",
+                Decimal("1.41"),
+            )
+
+    def test_outscraper_request_has_no_paid_enrichment_parameters(self) -> None:
+        transport = FakeTransport({"id": "request-123", "status": "Pending"})
+        provider = OutscraperProvider(token="secret", transport=transport)
+
+        provider.submit(
+            TrialPolicy.default(date(2026, 9, 17)),
+            "discovery:trial-v1:2026-09-17",
+            "https://receiver.example/callback?token=hidden",
+            Decimal("0.60"),
+        )
+
+        request = transport.requests[0]
+        self.assertIn("limit=50", request.url)
+        self.assertNotIn("contacts_n_leads", request.url)
+        self.assertNotIn("emails_validator_service", request.url)
+        self.assertNotIn("secret", request.url)
+
+    def test_apify_allocation_has_its_own_result_and_cost_cap(self) -> None:
+        transport = FakeTransport({"data": {"id": "run-cafe"}})
+        provider = ApifyProvider(token="secret", transport=transport)
+
+        provider.submit_allocation(
+            TrialPolicy.default(date(2026, 9, 17)),
+            "discovery:trial-v1:2026-09-17",
+            "cafe",
+            20,
+            Decimal("0.56"),
+        )
+
+        request = transport.requests[0]
+        payload = json.loads(request.body)
+        self.assertEqual(payload["searchStringsArray"], ["cafe"])
+        self.assertEqual(payload["locationQuery"], "Germany")
+        self.assertEqual(payload["maxCrawledPlacesPerSearch"], 20)
+        self.assertIn("maxTotalChargeUsd=0.56", request.url)
+
+    def test_outscraper_reconciliation_uses_saved_request_id(self) -> None:
+        transport = FakeTransport({"status": "Success", "data": []}, status_code=200)
+        provider = OutscraperProvider(token="secret", transport=transport)
+
+        provider.reconcile("request-123")
+
+        request = transport.requests[0]
+        self.assertEqual(request.method, "GET")
+        self.assertEqual(request.url, "https://api.outscraper.com/requests/request-123")
+        self.assertNotIn("secret", request.url)
+
+    def test_http_transport_decodes_provider_json_without_logging_credentials(self) -> None:
+        from system_1.provider_http import UrllibHttpTransport
+
+        captured: list[object] = []
+
+        def fake_open(request: object, timeout: int) -> FakeUrlResponse:
+            captured.append(request)
+            self.assertEqual(timeout, 30)
+            return FakeUrlResponse(202, b'{"id":"request-123"}')
+
+        response = UrllibHttpTransport(open_request=fake_open).request(
+            "GET",
+            "https://api.example/requests",
+            {"X-API-KEY": "secret"},
+            None,
+            30,
+        )
+
+        self.assertEqual(response.status_code, 202)
+        self.assertEqual(response.json_body, {"id": "request-123"})
+        self.assertEqual(len(captured), 1)
     def test_provider_submission_is_idempotent(self) -> None:
         store = InMemoryDiscoveryStore()
 
@@ -57,6 +171,18 @@ class System1CoreTests(unittest.TestCase):
         decision = retry_decision(status_code=None, outcome_known=False, attempt_number=1)
 
         self.assertEqual(decision.action, "reconcile")
+
+    def test_first_transient_failure_waits_thirty_seconds(self) -> None:
+        decision = retry_decision(status_code=503, outcome_known=True, attempt_number=1)
+
+        self.assertEqual(decision.action, "retry")
+        self.assertEqual(decision.delay_seconds, 30)
+
+    def test_third_transient_failure_waits_ten_minutes(self) -> None:
+        decision = retry_decision(status_code=503, outcome_known=True, attempt_number=3)
+
+        self.assertEqual(decision.action, "retry")
+        self.assertEqual(decision.delay_seconds, 600)
     def test_trial_policy_has_approved_allocations(self) -> None:
         policy = TrialPolicy.default(date(2026, 9, 17))
 

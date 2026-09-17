@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from datetime import date, timedelta
+from decimal import Decimal
 from types import MappingProxyType
 from typing import Mapping
 
@@ -20,6 +21,8 @@ class TrialPolicy:
     timezone: str = "Europe/Berlin"
     daily_total_limit: int = 100
     paid_enrichment_enabled: bool = False
+    apify_max_cost_usd: Decimal = Decimal("1.40")
+    outscraper_max_cost_usd: Decimal = Decimal("0.60")
 
     @classmethod
     def default(cls, starts_on: date) -> "TrialPolicy":

@@ -28,8 +28,8 @@ def retry_decision(
 
     if not outcome_known:
         return RetryDecision("reconcile", None)
-    if status_code in {429, 500, 502, 503, 504} and attempt_number < 3:
-        return RetryDecision("retry", (30, 120, 600)[attempt_number])
+    if status_code in {429, 500, 502, 503, 504} and 1 <= attempt_number <= 3:
+        return RetryDecision("retry", (30, 120, 600)[attempt_number - 1])
     return RetryDecision("needs_attention", None)
 
 
