@@ -6,7 +6,10 @@ before the server exists.
 
 from __future__ import annotations
 
-from system_1.models import LeadInput, LeadWorkflowState, OutreachDraft
+from dataclasses import replace
+from urllib.parse import urlparse
+
+from system_1.models import LeadInput, LeadWorkflowState, OutreachDraft, ResearchEvidence
 
 
 SAFE_ID_CHARS = set("abcdefghijklmnopqrstuvwxyz0123456789")
@@ -41,8 +44,54 @@ def lead_workflow_id(lead: LeadInput) -> str:
     return f"alandas-lead-{slug(lead.city)}-{slug(lead.venue_name)}"
 
 
-def validate_lead(lead: LeadInput) -> list[str]:
-    """Check the minimum lead fields before drafting starts."""
+def website_domain(value: str) -> str:
+    """Return a normalized website host for deterministic duplicate checks."""
+
+    parsed = urlparse(value.strip())
+    host = (parsed.hostname or "").lower().strip(".")
+    return host.removeprefix("www.")
+
+
+def instagram_handle(value: str) -> str:
+    """Return a normalized Instagram handle without making a network request."""
+
+    candidate = value.strip().lower()
+    if not candidate:
+        return ""
+    if "://" in candidate:
+        parsed = urlparse(candidate)
+        if parsed.hostname and parsed.hostname.lower().removeprefix("www.") == "instagram.com":
+            candidate = parsed.path.strip("/").split("/", 1)[0]
+    return candidate.lstrip("@").strip("/")
+
+
+def venue_city_key(lead: LeadInput) -> str:
+    """Return the fallback identity used when no stronger public identifier exists."""
+
+    return f"{slug(lead.venue_name)}:{slug(lead.city)}"
+
+
+def normalize_lead(lead: LeadInput) -> LeadInput:
+    """Normalize stable identifiers before persistence and duplicate checks."""
+
+    return replace(
+        lead,
+        venue_name=lead.venue_name.strip(),
+        city=lead.city.strip(),
+        venue_type=lead.venue_type.strip().lower(),
+        source_url=lead.source_url.strip(),
+        website=lead.website.strip().rstrip("/"),
+        instagram=instagram_handle(lead.instagram),
+        email=lead.email.strip().lower(),
+        phone=lead.phone.strip(),
+        impressum_url=lead.impressum_url.strip().rstrip("/"),
+        decision_maker=lead.decision_maker.strip(),
+        fit_reason=lead.fit_reason.strip(),
+    )
+
+
+def validate_intake(lead: LeadInput) -> list[str]:
+    """Check the minimum fields needed to accept a raw research candidate."""
 
     errors: list[str] = []
     if not lead.venue_name.strip():
@@ -55,9 +104,31 @@ def validate_lead(lead: LeadInput) -> list[str]:
         errors.append("source_url is required")
     if lead.fit_score is not None and not 1 <= lead.fit_score <= 5:
         errors.append("fit_score must be between 1 and 5")
+    return errors
+
+
+def validate_lead(lead: LeadInput) -> list[str]:
+    """Check whether an enriched lead is ready for outreach drafting."""
+
+    errors = validate_intake(lead)
     if not any([lead.website, lead.instagram, lead.email, lead.phone]):
         errors.append("at least one contact route is required")
     return errors
+
+
+def apply_research_evidence(
+    lead: LeadInput, evidence: list[ResearchEvidence]
+) -> LeadInput:
+    """Fill only blank public contact fields; existing operator data wins."""
+
+    values = {item.field: item.value for item in evidence if item.value.strip()}
+    return replace(
+        lead,
+        email=lead.email or values.get("email", ""),
+        phone=lead.phone or values.get("phone", ""),
+        instagram=lead.instagram or values.get("instagram", ""),
+        impressum_url=lead.impressum_url or values.get("impressum_url", ""),
+    )
 
 
 def enrich_lead(lead: LeadInput) -> list[str]:

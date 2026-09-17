@@ -10,7 +10,8 @@ from typing import Iterator
 import psycopg
 from psycopg import Connection
 
-from system_1.models import LeadInput
+from system_1.core import instagram_handle, venue_city_key, website_domain
+from system_1.models import LeadInput, ResearchEvidence
 
 
 def database_url() -> str:
@@ -51,6 +52,9 @@ def ensure_schema() -> None:
                 seat_estimate INTEGER,
                 fit_score INTEGER,
                 fit_reason TEXT NOT NULL DEFAULT '',
+                website_domain TEXT NOT NULL DEFAULT '',
+                instagram_handle TEXT NOT NULL DEFAULT '',
+                venue_city_key TEXT NOT NULL DEFAULT '',
                 status TEXT NOT NULL DEFAULT 'new',
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -66,6 +70,37 @@ def ensure_schema() -> None:
                 event_name TEXT NOT NULL,
                 status TEXT NOT NULL,
                 details JSONB NOT NULL DEFAULT '{}'::JSONB,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS website_domain TEXT NOT NULL DEFAULT ''"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS instagram_handle TEXT NOT NULL DEFAULT ''"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS venue_city_key TEXT NOT NULL DEFAULT ''"
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS leads_website_domain_idx ON leads (website_domain)"
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS leads_instagram_handle_idx ON leads (instagram_handle)"
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS leads_venue_city_key_idx ON leads (venue_city_key)"
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS lead_research_evidence (
+                evidence_key TEXT PRIMARY KEY,
+                workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
+                field TEXT NOT NULL,
+                value TEXT NOT NULL,
+                source_url TEXT NOT NULL,
+                method TEXT NOT NULL,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             )
             """
@@ -90,13 +125,15 @@ def upsert_lead(workflow_id: str, lead: LeadInput, status: str) -> None:
             INSERT INTO leads (
                 workflow_id, venue_name, city, venue_type, source_url, website,
                 instagram, email, phone, impressum_url, decision_maker,
-                seat_estimate, fit_score, fit_reason, status, updated_at
+                seat_estimate, fit_score, fit_reason, website_domain,
+                instagram_handle, venue_city_key, status, updated_at
             )
             VALUES (
                 %(workflow_id)s, %(venue_name)s, %(city)s, %(venue_type)s,
                 %(source_url)s, %(website)s, %(instagram)s, %(email)s,
                 %(phone)s, %(impressum_url)s, %(decision_maker)s,
                 %(seat_estimate)s, %(fit_score)s, %(fit_reason)s,
+                %(website_domain)s, %(instagram_handle)s, %(venue_city_key)s,
                 %(status)s, NOW()
             )
             ON CONFLICT (workflow_id) DO UPDATE SET
@@ -113,6 +150,9 @@ def upsert_lead(workflow_id: str, lead: LeadInput, status: str) -> None:
                 seat_estimate = EXCLUDED.seat_estimate,
                 fit_score = EXCLUDED.fit_score,
                 fit_reason = EXCLUDED.fit_reason,
+                website_domain = EXCLUDED.website_domain,
+                instagram_handle = EXCLUDED.instagram_handle,
+                venue_city_key = EXCLUDED.venue_city_key,
                 status = EXCLUDED.status,
                 updated_at = NOW()
             """,
@@ -131,9 +171,79 @@ def upsert_lead(workflow_id: str, lead: LeadInput, status: str) -> None:
                 "seat_estimate": lead.seat_estimate,
                 "fit_score": lead.fit_score,
                 "fit_reason": lead.fit_reason,
+                "website_domain": website_domain(lead.website),
+                "instagram_handle": instagram_handle(lead.instagram),
+                "venue_city_key": venue_city_key(lead),
                 "status": status,
             },
         )
+
+
+def find_internal_duplicates(workflow_id: str, lead: LeadInput) -> list[dict[str, str]]:
+    """Find other local workflow rows with a strong deterministic identity match."""
+
+    identities = {
+        "website_domain": website_domain(lead.website),
+        "instagram_handle": instagram_handle(lead.instagram),
+        "venue_city_key": venue_city_key(lead),
+    }
+    clauses: list[str] = []
+    values: list[str] = [workflow_id]
+    for column, value in identities.items():
+        if value:
+            clauses.append(f"{column} = %s")
+            values.append(value)
+    if not clauses:
+        return []
+    with connect() as connection:
+        rows = connection.execute(
+            f"""
+            SELECT workflow_id, website_domain, instagram_handle, venue_city_key
+            FROM leads
+            WHERE workflow_id <> %s AND ({' OR '.join(clauses)})
+            ORDER BY created_at ASC
+            """,
+            values,
+        ).fetchall()
+    matches: list[dict[str, str]] = []
+    for row in rows:
+        row_workflow_id, row_domain, row_instagram, row_venue_city = row
+        row_values = {
+            "website_domain": row_domain,
+            "instagram_handle": row_instagram,
+            "venue_city_key": row_venue_city,
+        }
+        for field, value in identities.items():
+            if value and row_values[field] == value:
+                matches.append({"workflow_id": row_workflow_id, "match_field": field})
+    return matches
+
+
+def insert_research_evidence(workflow_id: str, evidence: ResearchEvidence) -> bool:
+    """Store one evidence finding once even if its research activity retries."""
+
+    key = ":".join(
+        [workflow_id, "research", evidence.field, evidence.value, evidence.source_url]
+    )
+    with connect() as connection:
+        cursor = connection.execute(
+            """
+            INSERT INTO lead_research_evidence
+                (evidence_key, workflow_id, field, value, source_url, method)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            ON CONFLICT DO NOTHING
+            RETURNING evidence_key
+            """,
+            (
+                key,
+                workflow_id,
+                evidence.field,
+                evidence.value,
+                evidence.source_url,
+                evidence.method,
+            ),
+        )
+        return cursor.fetchone() is not None
 
 
 def update_lead_status(workflow_id: str, status: str) -> None:

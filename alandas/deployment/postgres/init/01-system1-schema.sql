@@ -13,9 +13,26 @@ CREATE TABLE IF NOT EXISTS leads (
     seat_estimate INTEGER,
     fit_score INTEGER,
     fit_reason TEXT NOT NULL DEFAULT '',
+    website_domain TEXT NOT NULL DEFAULT '',
+    instagram_handle TEXT NOT NULL DEFAULT '',
+    venue_city_key TEXT NOT NULL DEFAULT '',
     status TEXT NOT NULL DEFAULT 'new',
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS leads_website_domain_idx ON leads (website_domain);
+CREATE INDEX IF NOT EXISTS leads_instagram_handle_idx ON leads (instagram_handle);
+CREATE INDEX IF NOT EXISTS leads_venue_city_key_idx ON leads (venue_city_key);
+
+CREATE TABLE IF NOT EXISTS lead_research_evidence (
+    evidence_key TEXT PRIMARY KEY,
+    workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
+    field TEXT NOT NULL,
+    value TEXT NOT NULL,
+    source_url TEXT NOT NULL,
+    method TEXT NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS audit_events (

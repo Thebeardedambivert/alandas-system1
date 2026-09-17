@@ -1,8 +1,9 @@
 # System 1 Lead Schema
 
-Every lead must fit this schema before outreach.
+Every raw candidate must fit the intake schema. It needs a fuller record before
+outreach can be drafted.
 
-## Required fields
+## Fields
 
 | Field | Meaning | Example |
 | --- | --- | --- |
@@ -27,6 +28,8 @@ Every lead must fit this schema before outreach.
 Use one of these:
 
 - `new`
+- `researching`
+- `duplicate_review`
 - `needs_research`
 - `qualified`
 - `drafted`
@@ -37,11 +40,24 @@ Use one of these:
 
 ## Validation rules
 
-- `venue_name`, `city`, `venue_type`, `fit_score`, `fit_reason`, `source_url`, `status`, and `next_action` cannot be blank.
+- Intake requires `venue_name`, `city`, `venue_type`, and `source_url`. This is
+  enough to accept a raw Google Maps or Instagram candidate.
+- Outreach requires the intake fields plus one contact route: `email`, `phone`,
+  `instagram`, or `website`.
 - `fit_score` must be a number from 1 to 5.
-- at least one contact route must exist: `email`, `phone`, `instagram`, or `website`.
 - `status` must match the allowed list.
 - URLs should start with `http://` or `https://` when present.
+
+## Research and duplicate rules
+
+- The system normalizes website domains, Instagram handles, and venue-plus-city
+  names before comparing leads.
+- A possible existing match becomes `duplicate_review`. It never overwrites the
+  existing record automatically.
+- Public-site research can fill blank contact fields only. Each value keeps the
+  source page where it was found.
+- Public fetching is disabled by default. It is read-only when enabled: no login,
+  form submission, direct message, or paid enrichment tool is part of this slice.
 
 ## Human approval rule
 

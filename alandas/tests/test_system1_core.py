@@ -5,16 +5,25 @@ from __future__ import annotations
 import unittest
 
 from system_1.core import (
+    apply_research_evidence,
     audit_event_key,
     can_approve_outreach,
     can_record_send,
     draft_outreach,
     enrich_lead,
     lead_workflow_id,
+    normalize_lead,
     slug,
+    validate_intake,
     validate_lead,
+    website_domain,
 )
-from system_1.models import LeadInput, LeadWorkflowState
+from system_1.models import LeadInput, LeadWorkflowState, ResearchEvidence
+from system_1.public_research import (
+    candidate_urls,
+    research_public_pages,
+    validate_public_url,
+)
 
 
 class System1CoreTests(unittest.TestCase):
@@ -39,6 +48,72 @@ class System1CoreTests(unittest.TestCase):
         )
 
         self.assertIn("at least one contact route is required", validate_lead(lead))
+        self.assertEqual(validate_intake(lead), [])
+
+    def test_normalization_makes_stable_identity_values(self) -> None:
+        lead = LeadInput(
+            venue_name="  Example Cafe ",
+            city=" Berlin ",
+            venue_type=" cafe ",
+            source_url="https://maps.example/cafe",
+            website="https://www.example.de/menu?day=today",
+            instagram="https://instagram.com/example_cafe/",
+        )
+
+        normalized = normalize_lead(lead)
+
+        self.assertEqual(normalized.venue_name, "Example Cafe")
+        self.assertEqual(normalized.website, "https://www.example.de/menu?day=today")
+        self.assertEqual(website_domain(normalized.website), "example.de")
+
+    def test_research_evidence_fills_only_empty_contact_fields(self) -> None:
+        lead = LeadInput(
+            venue_name="Example Cafe",
+            city="Berlin",
+            venue_type="cafe",
+            source_url="https://maps.example/cafe",
+            email="owner@example.de",
+        )
+        evidence = [
+            ResearchEvidence("email", "new@example.de", "https://example.de/impressum", "email"),
+            ResearchEvidence("phone", "+49 30 123456", "https://example.de/impressum", "tel"),
+        ]
+
+        enriched = apply_research_evidence(lead, evidence)
+
+        self.assertEqual(enriched.email, "owner@example.de")
+        self.assertEqual(enriched.phone, "+49 30 123456")
+
+    def test_public_research_uses_bounded_candidate_pages_and_extracts_evidence(self) -> None:
+        lead = LeadInput(
+            venue_name="Example Cafe",
+            city="Berlin",
+            venue_type="cafe",
+            source_url="https://maps.example/cafe",
+            website="https://example.de",
+        )
+
+        def fake_fetch(url: str) -> str:
+            if url.endswith("/impressum"):
+                return (
+                    '<a href="mailto:hello@example.de">Email</a>'
+                    '<a href="tel:+4930123456">Call</a>'
+                    '<a href="https://instagram.com/example_cafe/">Instagram</a>'
+                )
+            return "<html><body>No contact yet</body></html>"
+
+        evidence, notes = research_public_pages(lead, fetcher=fake_fetch)
+
+        self.assertLessEqual(len(candidate_urls(lead)), 6)
+        self.assertEqual({item.field for item in evidence}, {"email", "phone", "instagram", "impressum_url"})
+        self.assertFalse(notes)
+
+    def test_public_research_rejects_private_network_targets(self) -> None:
+        def private_resolver(*_args: object, **_kwargs: object) -> list[tuple]:
+            return [(2, 1, 6, "", ("127.0.0.1", 0))]
+
+        with self.assertRaises(ValueError):
+            validate_public_url("http://internal.example", resolver=private_resolver)
 
     def test_fit_score_range_is_checked(self) -> None:
         lead = LeadInput(

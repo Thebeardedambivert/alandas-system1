@@ -34,6 +34,16 @@ class OutreachDraft:
     allowed_to_send: bool = False
 
 
+@dataclass(frozen=True)
+class ResearchEvidence:
+    """One public business-data finding and the page that supports it."""
+
+    field: str
+    value: str
+    source_url: str
+    method: str
+
+
 @dataclass
 class LeadWorkflowState:
     """Current state for one cafe lead."""
@@ -41,6 +51,7 @@ class LeadWorkflowState:
     lead: LeadInput
     status: str = "new"
     enrichment_notes: list[str] = field(default_factory=list)
+    research_evidence: list[ResearchEvidence] = field(default_factory=list)
     outreach_draft: OutreachDraft | None = None
     sidy_approved: bool = False
     sent_recorded: bool = False

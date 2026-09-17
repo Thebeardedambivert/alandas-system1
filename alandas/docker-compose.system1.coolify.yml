@@ -100,6 +100,7 @@ services:
       DATABASE_URL: postgresql://${POSTGRES_USER:-alandas}:${POSTGRES_PASSWORD:?}@postgres:5432/${POSTGRES_DB:-alandas_system1}
       SYSTEM1_AUDIT_PATH: /app/runtime/audit/system1_audit.jsonl
       SYSTEM1_LEADS_PATH: /app/runtime/leads
+      SYSTEM1_PUBLIC_RESEARCH_ENABLED: ${SYSTEM1_PUBLIC_RESEARCH_ENABLED:-false}
       LOG_LEVEL: ${LOG_LEVEL:-info}
     volumes:
       - system1-runtime:/app/runtime

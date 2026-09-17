@@ -24,7 +24,11 @@ One workflow tracks one cafe lead.
 
 ```text
 lead_started
--> validate_lead
+-> normalize_lead
+-> validate_intake
+-> internal_duplicate_check
+-> bounded_public_research (off by default)
+-> validate_lead_for_outreach
 -> enrich_lead
 -> draft_outreach
 -> wait for Sidy approval
@@ -66,6 +70,10 @@ Activities do the work that may touch files, APIs, or services.
 | Activity | Job |
 | --- | --- |
 | `validate_lead_activity` | Checks required lead fields |
+| `validate_intake_activity` | Accepts a raw candidate before a contact route exists |
+| `normalize_lead_activity` | Trims values and creates stable comparison keys |
+| `find_internal_duplicates_activity` | Holds possible matching records for human review |
+| `research_public_lead_activity` | Optionally reads a small set of public website pages and saves source evidence |
 | `enrich_lead_activity` | Records missing research steps |
 | `draft_outreach_activity` | Creates the first Sidy-approved draft |
 | `append_audit_event_activity` | Writes an audit event |
@@ -97,3 +105,8 @@ must use the same transition key as their idempotency key.
 This first setup does not write to Shopify, Meta, WhatsApp, or Dolibarr.
 
 Those are host side effects. They need credentials, backup checks, and a separate approved action before production writes.
+
+Public website research is also disabled by default through
+`SYSTEM1_PUBLIC_RESEARCH_ENABLED=false`. When enabled, it reads at most six
+public pages for one website, rejects private-network targets and redirects, and
+does not log in, submit a form, or send a message.

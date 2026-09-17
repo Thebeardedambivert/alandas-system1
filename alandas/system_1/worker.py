@@ -15,8 +15,12 @@ from system_1.activities import (
     append_audit_event_activity,
     draft_outreach_activity,
     enrich_lead_activity,
+    find_internal_duplicates_activity,
+    normalize_lead_activity,
+    research_public_lead_activity,
     update_lead_status_activity,
     upsert_lead_activity,
+    validate_intake_activity,
     validate_lead_activity,
 )
 from system_1.workflows import CafeLeadWorkflow
@@ -76,6 +80,10 @@ async def main() -> None:
             workflows=[CafeLeadWorkflow],
             activities=[
                 validate_lead_activity,
+                validate_intake_activity,
+                normalize_lead_activity,
+                find_internal_duplicates_activity,
+                research_public_lead_activity,
                 enrich_lead_activity,
                 draft_outreach_activity,
                 append_audit_event_activity,

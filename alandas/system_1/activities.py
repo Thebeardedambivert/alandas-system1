@@ -12,9 +12,18 @@ from datetime import datetime, timezone
 
 from temporalio import activity
 
-from system_1.core import audit_event_key, draft_outreach, enrich_lead, validate_lead
+from system_1.core import (
+    apply_research_evidence,
+    audit_event_key,
+    draft_outreach,
+    enrich_lead,
+    normalize_lead,
+    validate_intake,
+    validate_lead,
+)
 from system_1 import db
-from system_1.models import LeadInput, OutreachDraft
+from system_1.models import LeadInput, OutreachDraft, ResearchEvidence
+from system_1.public_research import research_public_pages
 
 
 def _audit_path() -> str:
@@ -26,6 +35,64 @@ def validate_lead_activity(lead: LeadInput) -> list[str]:
     """Check the minimum lead fields before drafting starts."""
 
     return validate_lead(lead)
+
+
+@activity.defn
+def normalize_lead_activity(lead: LeadInput) -> LeadInput:
+    """Make stable comparison keys from a raw lead before it is stored."""
+
+    return normalize_lead(lead)
+
+
+@activity.defn
+def validate_intake_activity(lead: LeadInput) -> list[str]:
+    """Check fields needed to accept a raw candidate into the waterfall."""
+
+    return validate_intake(lead)
+
+
+@activity.defn
+def find_internal_duplicates_activity(input_data: dict) -> list[dict[str, str]]:
+    """Return possible existing records without changing either record."""
+
+    lead = input_data["lead"]
+    if isinstance(lead, dict):
+        lead = LeadInput(**lead)
+    elif not isinstance(lead, LeadInput):
+        raise TypeError("lead must be a LeadInput or lead dict")
+    return db.find_internal_duplicates(str(input_data["workflow_id"]), lead)
+
+
+@activity.defn
+def research_public_lead_activity(input_data: dict) -> dict:
+    """Optionally read bounded public pages and persist source evidence.
+
+    Public fetching is deliberately off unless the deployment explicitly enables
+    it. This lets the workflow structure ship and be tested without silently
+    starting web traffic from production.
+    """
+
+    lead = input_data["lead"]
+    if isinstance(lead, dict):
+        lead = LeadInput(**lead)
+    elif not isinstance(lead, LeadInput):
+        raise TypeError("lead must be a LeadInput or lead dict")
+
+    if os.environ.get("SYSTEM1_PUBLIC_RESEARCH_ENABLED", "false").lower() != "true":
+        return {
+            "lead": lead,
+            "evidence": [],
+            "notes": ["Public research disabled; no external pages were fetched"],
+        }
+
+    evidence, notes = research_public_pages(lead)
+    for item in evidence:
+        db.insert_research_evidence(str(input_data["workflow_id"]), item)
+    return {
+        "lead": apply_research_evidence(lead, evidence),
+        "evidence": evidence,
+        "notes": notes,
+    }
 
 
 @activity.defn

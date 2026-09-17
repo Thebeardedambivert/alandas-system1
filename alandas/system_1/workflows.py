@@ -7,15 +7,19 @@ from datetime import timedelta
 from temporalio import workflow
 
 from system_1.core import audit_event_key, can_approve_outreach, can_record_send
-from system_1.models import LeadInput, LeadWorkflowState
+from system_1.models import LeadInput, LeadWorkflowState, ResearchEvidence
 
 with workflow.unsafe.imports_passed_through():
     from system_1.activities import (
         append_audit_event_activity,
         draft_outreach_activity,
         enrich_lead_activity,
+        find_internal_duplicates_activity,
+        normalize_lead_activity,
+        research_public_lead_activity,
         update_lead_status_activity,
         upsert_lead_activity,
+        validate_intake_activity,
         validate_lead_activity,
     )
 
@@ -30,12 +34,17 @@ class CafeLeadWorkflow:
     @workflow.run
     async def run(self, lead: LeadInput) -> LeadWorkflowState:
         self.state = LeadWorkflowState(lead=lead)
+        self.state.lead = await workflow.execute_activity(
+            normalize_lead_activity,
+            lead,
+            start_to_close_timeout=timedelta(seconds=30),
+        )
         await self._persist_lead()
-        await self._audit("lead_started", {"venue_name": lead.venue_name})
+        await self._audit("lead_started", {"venue_name": self.state.lead.venue_name})
 
         errors = await workflow.execute_activity(
-            validate_lead_activity,
-            lead,
+            validate_intake_activity,
+            self.state.lead,
             start_to_close_timeout=timedelta(seconds=30),
         )
         if errors:
@@ -44,18 +53,65 @@ class CafeLeadWorkflow:
             await self._audit("lead_validation_failed", {"errors": errors})
             return self.state
 
+        duplicates = await workflow.execute_activity(
+            find_internal_duplicates_activity,
+            {"workflow_id": workflow.info().workflow_id, "lead": self.state.lead},
+            start_to_close_timeout=timedelta(seconds=30),
+        )
+        if duplicates:
+            self.state.status = "duplicate_review"
+            await self._persist_status()
+            await self._audit("internal_duplicate_found", {"matches": duplicates})
+            return self.state
+
+        self.state.status = "researching"
+        await self._persist_status()
+        research_result = await workflow.execute_activity(
+            research_public_lead_activity,
+            {"workflow_id": workflow.info().workflow_id, "lead": self.state.lead},
+            start_to_close_timeout=timedelta(minutes=3),
+        )
+        researched_lead = research_result["lead"]
+        self.state.lead = (
+            LeadInput(**researched_lead)
+            if isinstance(researched_lead, dict)
+            else researched_lead
+        )
+        self.state.research_evidence = [
+            item if isinstance(item, ResearchEvidence) else ResearchEvidence(**item)
+            for item in research_result["evidence"]
+        ]
+        public_notes = list(research_result["notes"])
+        await self._persist_lead()
+        await self._audit(
+            "lead_public_researched",
+            {"notes": public_notes, "evidence_count": len(self.state.research_evidence)},
+        )
+
+        errors = await workflow.execute_activity(
+            validate_lead_activity,
+            self.state.lead,
+            start_to_close_timeout=timedelta(seconds=30),
+        )
+        if errors:
+            self.state.status = "needs_research"
+            self.state.enrichment_notes = public_notes
+            await self._persist_status()
+            await self._audit("lead_research_incomplete", {"errors": errors})
+            return self.state
+
         self.state.status = "qualified"
         await self._persist_status()
-        self.state.enrichment_notes = await workflow.execute_activity(
+        self.state.enrichment_notes = public_notes + await workflow.execute_activity(
             enrich_lead_activity,
-            lead,
+            self.state.lead,
             start_to_close_timeout=timedelta(minutes=2),
         )
         await self._audit("lead_enriched", {"notes": self.state.enrichment_notes})
 
         self.state.outreach_draft = await workflow.execute_activity(
             draft_outreach_activity,
-            lead,
+            self.state.lead,
             start_to_close_timeout=timedelta(minutes=2),
         )
         self.state.status = "drafted"
@@ -75,18 +131,18 @@ class CafeLeadWorkflow:
 
         self.state.status = "approved"
         await self._persist_status()
-        await self._audit("outreach_approved", {"venue_name": lead.venue_name})
+        await self._audit("outreach_approved", {"venue_name": self.state.lead.venue_name})
 
         await workflow.wait_condition(lambda: self.state is not None and self.state.sent_recorded)
         self.state.status = "contacted"
         await self._persist_status()
-        await self._audit("send_recorded", {"venue_name": lead.venue_name})
+        await self._audit("send_recorded", {"venue_name": self.state.lead.venue_name})
 
         await workflow.sleep(timedelta(days=4))
         self.state.follow_up_due = True
         self.state.status = "follow_up_due"
         await self._persist_status()
-        await self._audit("follow_up_due", {"venue_name": lead.venue_name})
+        await self._audit("follow_up_due", {"venue_name": self.state.lead.venue_name})
         return self.state
 
     @workflow.signal

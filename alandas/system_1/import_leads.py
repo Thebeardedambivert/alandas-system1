@@ -10,7 +10,7 @@ from pathlib import Path
 
 from temporalio.client import Client
 
-from system_1.core import lead_workflow_id, validate_lead
+from system_1.core import lead_workflow_id, validate_intake
 from system_1.models import LeadInput
 from system_1.workflows import CafeLeadWorkflow
 
@@ -61,7 +61,7 @@ async def import_csv(path: Path) -> int:
                 failed += 1
                 continue
 
-            errors = validate_lead(lead)
+            errors = validate_intake(lead)
             if errors:
                 print(f"row {row_number}: skipped: {'; '.join(errors)}")
                 failed += 1
