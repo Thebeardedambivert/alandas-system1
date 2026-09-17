@@ -36,6 +36,7 @@ Not locked yet:
 
 ## Files
 
+- `CURRENT_PROJECT_STATE.md`: latest verified handover; read this first when resuming work
 - `LOCKED_SCOPE.md`: what System 1 includes and excludes
 - `ACCESS_CHECKLIST.md`: what Sidy needs to send
 - `LEAD_SCHEMA.md`: required fields for the first lead batch
