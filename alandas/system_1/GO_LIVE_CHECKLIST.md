@@ -29,6 +29,8 @@ TEMPORAL_ADDRESS=temporal:7233
 TEMPORAL_NAMESPACE=default
 TEMPORAL_TASK_QUEUE=alandas-system1
 TEMPORAL_CORS_ORIGINS=http://localhost:8080
+TEMPORAL_UI_AUTH_USER=<dedicated-ui-username>
+TEMPORAL_UI_AUTH_PASSWORD_HASH=<bcrypt-hash-only>
 LOG_LEVEL=info
 ```
 
@@ -69,13 +71,17 @@ After deployment, Coolify should show:
 - `temporal`
 - `temporal-admin-tools`
 - `temporal-ui`
+- `temporal-ui-gateway`
 - `system1-worker`
 
 ## Security checks
 
 - Do not publish Postgres port `5432`.
 - Do not publish Temporal port `7233`.
-- Keep Temporal UI private unless protected.
+- Do not assign public domains to `postgres`, `temporal-postgres`, `temporal`, `temporal-admin-tools`, `temporal-ui`, or `system1-worker`.
+- Assign the public UI domain only to `temporal-ui-gateway`.
+- Enable **Force HTTPS** in Coolify Advanced settings before redeploying.
+- In a private/incognito browser, confirm that the UI domain prompts for credentials. Confirm that a wrong password does not reveal workflow data.
 - Do not paste secrets into screenshots.
 - Do not connect Shopify, Meta, WhatsApp, or Dolibarr production writes yet.
 
@@ -131,7 +137,7 @@ python -m system_1.workflow_cli record-sent <workflow-id>
 
 System 1 setup is live when:
 
-- all six services are running
+- all seven services are running
 - worker logs show a Temporal connection
 - sample workflow starts
 - CSV import script starts workflows
@@ -139,7 +145,7 @@ System 1 setup is live when:
 - send-record signal works
 - audit event is written to file
 - lead row is written to Postgres
-- Temporal UI is private or protected
+- Temporal UI is private behind `temporal-ui-gateway`, and its domain has a verified authentication prompt
 
 ## If something fails
 

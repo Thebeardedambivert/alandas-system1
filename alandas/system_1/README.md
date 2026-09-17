@@ -69,3 +69,7 @@ Not locked yet:
 System 1 can suggest. Sidy sends.
 
 That one rule protects the brand, the relationship with cafe owners, and the legal risk around product claims.
+
+## Operations security rule
+
+Temporal UI shows workflow and lead-operation metadata. Only `temporal-ui-gateway` may have a public domain. It requires a username and bcrypt password hash from Coolify environment variables before it forwards traffic to the private `temporal-ui` service. Verify the login prompt in a private browser before using it.

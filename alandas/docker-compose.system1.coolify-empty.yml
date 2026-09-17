@@ -107,6 +107,33 @@ services:
       TEMPORAL_CORS_ORIGINS: ${TEMPORAL_CORS_ORIGINS:-http://localhost:8080}
     restart: unless-stopped
 
+  temporal-ui-gateway:
+    image: caddy:2.8.4-alpine
+    depends_on:
+      - temporal-ui
+    environment:
+      TEMPORAL_UI_AUTH_USER: ${TEMPORAL_UI_AUTH_USER:?}
+      TEMPORAL_UI_AUTH_PASSWORD_HASH: ${TEMPORAL_UI_AUTH_PASSWORD_HASH:?}
+    volumes:
+      - type: bind
+        source: ./deployment/temporal-ui-gateway/Caddyfile
+        target: /etc/caddy/Caddyfile
+        read_only: true
+        content: |
+          {
+              auto_https off
+              admin off
+          }
+
+          :80 {
+              basic_auth {
+                  {$TEMPORAL_UI_AUTH_USER} {$TEMPORAL_UI_AUTH_PASSWORD_HASH}
+              }
+
+              reverse_proxy temporal-ui:8080
+          }
+    restart: unless-stopped
+
   system1-worker:
     build:
       context: .

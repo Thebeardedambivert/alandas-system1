@@ -71,6 +71,17 @@ services:
       TEMPORAL_CORS_ORIGINS: ${TEMPORAL_CORS_ORIGINS:-http://localhost:8080}
     restart: unless-stopped
 
+  temporal-ui-gateway:
+    image: caddy:2.8.4-alpine
+    depends_on:
+      - temporal-ui
+    environment:
+      TEMPORAL_UI_AUTH_USER: ${TEMPORAL_UI_AUTH_USER:?}
+      TEMPORAL_UI_AUTH_PASSWORD_HASH: ${TEMPORAL_UI_AUTH_PASSWORD_HASH:?}
+    volumes:
+      - ./alandas/deployment/temporal-ui-gateway/Caddyfile:/etc/caddy/Caddyfile:ro
+    restart: unless-stopped
+
   system1-worker:
     build:
       context: ./alandas

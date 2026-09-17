@@ -24,7 +24,8 @@ System 1 deploys as a separate Coolify Docker Compose service:
 - `temporal-postgres`: Temporal state database
 - `temporal`: Temporal server
 - `temporal-admin-tools`: Temporal CLI tools
-- `temporal-ui`: Temporal web UI, private first
+- `temporal-ui`: Temporal web UI, private behind the gateway
+- `temporal-ui-gateway`: password gate for the Temporal web UI
 - `system1-worker`: Python worker for lead workflows
 
 ## Coolify steps
@@ -62,7 +63,39 @@ Do not expose:
 - Postgres port `5432`
 - Temporal port `7233`
 
-Expose Temporal UI only if needed, and protect it behind Coolify authentication or a private domain.
+Do not assign a public domain to `postgres`, `temporal-postgres`, `temporal`, `temporal-admin-tools`, `temporal-ui`, or `system1-worker`.
+
+`temporal-ui-gateway` is the only service that may have a public domain. It requires credentials before it forwards requests to the private Temporal UI.
+
+## Protect Temporal UI before use
+
+This gateway is necessary because the current Coolify version does not show its built-in authentication control for this Compose application.
+
+1. Update Coolify from the Git revision that contains `temporal-ui-gateway` (or reload the changed Compose file).
+2. Choose a dedicated UI username and a long unique password. Store the password in Sidy's approved password manager, not in chat, screenshots, or Git.
+3. Generate a bcrypt password hash locally. This command prompts for the password without echoing it, so the plaintext does not enter shell history:
+
+```bash
+docker run --rm -it caddy:2.8.4-alpine caddy hash-password
+```
+
+4. In Coolify **Environment Variables**, set:
+
+```text
+TEMPORAL_UI_AUTH_USER=<dedicated-ui-username>
+TEMPORAL_UI_AUTH_PASSWORD_HASH=<the-command-output>
+```
+
+Only the bcrypt hash goes into Coolify. Do not store the plaintext password in the repository.
+
+5. In **Configuration** > **General**, remove every existing service domain.
+6. Assign the Temporal UI URL only to `temporal-ui-gateway`.
+7. In **Advanced**, enable **Force HTTPS** and save it.
+8. Redeploy the Compose application.
+9. In a private/incognito browser window, open the gateway URL. The browser must ask for the new credentials before the Temporal page appears.
+10. Test once with an incorrect password. It must return an authentication failure and must not show workflow data.
+
+If the gateway does not start, inspect its logs and the two authentication environment variables. Do not restore a direct public `temporal-ui` domain as a troubleshooting shortcut.
 
 ## First verification
 
@@ -131,3 +164,4 @@ Setup is done when:
 - audit log is written
 - lead row is written to Postgres
 - no public database or Temporal port is exposed
+- Temporal UI asks for credentials before it exposes workflow metadata

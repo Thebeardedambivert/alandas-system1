@@ -1,0 +1,14 @@
+{
+    # Coolify terminates public HTTPS. The gateway only serves the private
+    # Docker hop and must not create a second certificate or admin endpoint.
+    auto_https off
+    admin off
+}
+
+:80 {
+    basic_auth {
+        {$TEMPORAL_UI_AUTH_USER} {$TEMPORAL_UI_AUTH_PASSWORD_HASH}
+    }
+
+    reverse_proxy temporal-ui:8080
+}
