@@ -74,6 +74,7 @@ async def start_trial_schedule(client: object, policy: TrialPolicy, task_queue: 
             action=ScheduleActionStartWorkflow(
                 DailyDiscoveryWorkflow.run,
                 args=[policy.policy_version, policy.starts_on.isoformat()],
+                id=definition["schedule_id"],
                 task_queue=task_queue,
             ),
             spec=ScheduleSpec(

@@ -170,11 +170,13 @@ class System1CoreTests(unittest.TestCase):
                 arg: object = unset,
                 *,
                 args: list[object] | None = None,
+                id: str | None = None,
                 task_queue: str | None = None,
             ) -> None:
                 self.workflow = workflow
                 self.arg = arg
                 self.args = args
+                self.id = id
                 self.task_queue = task_queue
 
         class FakeSchedule:
@@ -239,6 +241,7 @@ class System1CoreTests(unittest.TestCase):
             created_schedule.action.args,
             ["trial-v1", "2026-09-17"],
         )
+        self.assertEqual(created_schedule.action.id, "alandas-discovery-trial-v1")
         self.assertEqual(created_schedule.action.task_queue, "alandas-system1")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
