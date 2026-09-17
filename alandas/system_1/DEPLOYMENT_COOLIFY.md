@@ -73,20 +73,20 @@ This gateway is necessary because the current Coolify version does not show its 
 
 1. Update Coolify from the Git revision that contains `temporal-ui-gateway` (or reload the changed Compose file).
 2. Choose a dedicated UI username and a long unique password. Store the password in Sidy's approved password manager, not in chat, screenshots, or Git.
-3. Generate a bcrypt password hash locally. This command prompts for the password without echoing it, so the plaintext does not enter shell history:
+3. Generate a Base64-encoded bcrypt password hash locally. This command prompts for the password without echoing it, then prints only the encoded hash. It avoids Coolify expanding the `$` characters inside bcrypt values:
 
 ```bash
-docker run --rm -it caddy:2.8.4-alpine caddy hash-password
+docker run --rm -it caddy:2.8.4-alpine sh -c 'caddy hash-password --algorithm bcrypt | base64 | tr -d "\\r\\n"; echo'
 ```
 
 4. In Coolify **Environment Variables**, set:
 
 ```text
 TEMPORAL_UI_AUTH_USER=<dedicated-ui-username>
-TEMPORAL_UI_AUTH_PASSWORD_HASH=<the-command-output>
+TEMPORAL_UI_AUTH_PASSWORD_HASH_B64=<the-command-output>
 ```
 
-Only the bcrypt hash goes into Coolify. Do not store the plaintext password in the repository.
+Only the Base64-encoded bcrypt hash goes into Coolify. Do not store the plaintext password in the repository.
 
 5. In **Configuration** > **General**, remove every existing service domain.
 6. Assign the Temporal UI URL only to `temporal-ui-gateway`.

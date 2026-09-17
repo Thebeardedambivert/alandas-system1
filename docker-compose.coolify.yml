@@ -79,7 +79,7 @@ services:
       - temporal-ui
     environment:
       TEMPORAL_UI_AUTH_USER: ${TEMPORAL_UI_AUTH_USER:?}
-      TEMPORAL_UI_AUTH_PASSWORD_HASH: ${TEMPORAL_UI_AUTH_PASSWORD_HASH:?}
+      TEMPORAL_UI_AUTH_PASSWORD_HASH_B64: ${TEMPORAL_UI_AUTH_PASSWORD_HASH_B64:?}
     restart: unless-stopped
 
   system1-worker:

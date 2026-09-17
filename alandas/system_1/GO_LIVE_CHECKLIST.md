@@ -30,7 +30,7 @@ TEMPORAL_NAMESPACE=default
 TEMPORAL_TASK_QUEUE=alandas-system1
 TEMPORAL_CORS_ORIGINS=http://localhost:8080
 TEMPORAL_UI_AUTH_USER=<dedicated-ui-username>
-TEMPORAL_UI_AUTH_PASSWORD_HASH=<bcrypt-hash-only>
+TEMPORAL_UI_AUTH_PASSWORD_HASH_B64=<base64-encoded-bcrypt-hash>
 LOG_LEVEL=info
 ```
 
