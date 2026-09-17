@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import unittest
 
 from system_1.core import (
@@ -30,9 +31,96 @@ from system_1.public_research import (
     research_public_pages,
     validate_public_url,
 )
+from system_1.outscraper_google_maps import candidate_to_lead as outscraper_candidate_to_lead
+from system_1.outscraper_google_maps import map_outscraper_callback
+from system_1.outscraper_webhook import receive_outscraper_callback, validate_webhook_token
 
 
 class System1CoreTests(unittest.TestCase):
+    def test_outscraper_callback_maps_only_basic_business_fields(self) -> None:
+        candidates, notes = map_outscraper_callback(
+            {
+                "id": "request-123",
+                "status": "Success",
+                "data": [[{
+                    "place_id": "place-123",
+                    "name": "Example Cafe",
+                    "city": "Cologne",
+                    "type": "Cafe",
+                    "country_code": "DE",
+                    "site": "https://example.de",
+                    "phone": "+4930123456",
+                    "full_address": "Example Street 1, Cologne",
+                    "location_link": "https://www.google.com/maps/place/example",
+                    "email": "ignore@example.de",
+                    "reviews_data": [{"text": "ignore"}],
+                }]],
+            }
+        )
+
+        self.assertEqual(notes, [])
+        self.assertEqual(len(candidates), 1)
+        lead = outscraper_candidate_to_lead(candidates[0])
+        self.assertEqual(lead.website, "https://example.de")
+        self.assertEqual(lead.email, "")
+
+    def test_outscraper_callback_rejects_more_than_fifty_rows(self) -> None:
+        record = {
+            "place_id": "place-123",
+            "name": "Example Cafe",
+            "city": "Berlin",
+            "type": "Cafe",
+            "country_code": "DE",
+            "location_link": "https://www.google.com/maps/place/example",
+        }
+        with self.assertRaises(ValueError):
+            map_outscraper_callback({"status": "Success", "data": [[record] * 51]})
+
+    def test_outscraper_webhook_token_requires_long_exact_value(self) -> None:
+        with self.assertRaises(RuntimeError):
+            validate_webhook_token("anything", "too-short")
+        with self.assertRaises(PermissionError):
+            validate_webhook_token("wrong", "x" * 32)
+        validate_webhook_token("x" * 32, "x" * 32)
+
+    def test_outscraper_callback_starts_once_and_audits_summary(self) -> None:
+        payload = {
+            "id": "request-123",
+            "status": "Success",
+            "data": [[{
+                "place_id": "place-123",
+                "name": "Example Cafe",
+                "city": "Berlin",
+                "type": "Cafe",
+                "country_code": "DE",
+                "location_link": "https://www.google.com/maps/place/example",
+            }]],
+        }
+        started: list[LeadInput] = []
+
+        async def fake_start(lead: LeadInput) -> str:
+            started.append(lead)
+            return "started"
+
+        audit_calls: list[dict[str, object]] = []
+
+        def fake_audit(**kwargs: object) -> bool:
+            audit_calls.append(kwargs)
+            return True
+
+        result = asyncio.run(
+            receive_outscraper_callback(
+                payload,
+                provided_token="x" * 32,
+                expected_token="x" * 32,
+                start_workflow=fake_start,
+                audit_writer=fake_audit,
+            )
+        )
+
+        self.assertEqual(result["started"], 1)
+        self.assertEqual(len(started), 1)
+        self.assertEqual(len(audit_calls), 1)
     def test_apify_place_maps_to_a_raw_lead_without_paid_enrichment_fields(self) -> None:
         candidate = map_apify_place(
             {

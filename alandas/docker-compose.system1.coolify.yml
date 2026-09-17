@@ -106,6 +106,26 @@ services:
       - system1-runtime:/app/runtime
     restart: unless-stopped
 
+  system1-webhook:
+    build:
+      context: .
+      dockerfile: system_1/Dockerfile.webhook
+    depends_on:
+      postgres:
+        condition: service_healthy
+      temporal:
+        condition: service_started
+    environment:
+      TEMPORAL_ADDRESS: ${TEMPORAL_ADDRESS:-temporal:7233}
+      TEMPORAL_NAMESPACE: ${TEMPORAL_NAMESPACE:-default}
+      TEMPORAL_TASK_QUEUE: ${TEMPORAL_TASK_QUEUE:-alandas-system1}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-alandas}:${POSTGRES_PASSWORD:?}@postgres:5432/${POSTGRES_DB:-alandas_system1}
+      SYSTEM1_OUTSCRAPER_WEBHOOK_ENABLED: ${SYSTEM1_OUTSCRAPER_WEBHOOK_ENABLED:-false}
+      OUTSCRAPER_WEBHOOK_TOKEN: ${OUTSCRAPER_WEBHOOK_TOKEN:?}
+      SYSTEM1_WEBHOOK_PORT: 8080
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    restart: unless-stopped
+
 volumes:
   system1-postgres-data:
   temporal-postgres-data:

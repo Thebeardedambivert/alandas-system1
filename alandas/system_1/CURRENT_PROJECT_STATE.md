@@ -120,11 +120,11 @@ Google Maps / Instagram raw lead
 
 ### Fit rule
 
-Prioritise cafes, brunch venues, boutique hotels, and specialty coffee venues in
-Berlin, Munich, and Hamburg. Look for likely seating above 30, visible quality in
-food or drinks, and a credible loose-leaf tea fit. Exclude low-margin kiosks and
-random snack shops. The proposed AI qualification threshold is an ICP score of
-70 or more; lower-scoring leads go to low-priority nurture.
+Prioritise cafes, brunch venues, boutique hotels, and specialty coffee venues
+across Germany. Look for likely seating above 30, visible quality in food or
+drinks, and a credible loose-leaf tea fit. Exclude low-margin kiosks and random
+snack shops. The proposed AI qualification threshold is an ICP score of 70 or
+more; lower-scoring leads go to low-priority nurture.
 
 ## Safety rules
 
@@ -156,9 +156,11 @@ or passwords. He should enter sensitive credentials himself if needed.
 
 ## Priority order from here
 
-1. Implement and test the Apify Google Maps discovery adapter using an exported,
-   small, paid run only after a cost estimate and approval. The offline mapping
-   contract is in `APIFY_DISCOVERY_CONTRACT.md`; no Apify token or run is live.
+1. Test one $0 discovery-provider run only after its displayed estimate is
+   reviewed. Apify remains the first available provider because Cyril has free
+   account credit. Outscraper is now an optional webhook intake path; see
+   `OUTSCRAPER_WEBHOOK_CONTRACT.md`. Neither provider is live until its feature
+   flag, secret, domain, and one-run verification are complete.
 2. Confirm current commercial facts with Sidy before real outreach: discovery-box
    price, credit policy, available stock, and shipping threshold.
 3. Inspect Sidy's normal Dolibarr and Hermes screens; build a read-only Dolibarr
@@ -190,6 +192,7 @@ current offer directly with Sidy first.
 - `TEMPORAL_WORKFLOW.md` — deployed state machine and operator commands.
 - `HERMES_DOLIBARR_HANDOFF_CONTRACT.md` — future integration boundaries.
 - `APIFY_DISCOVERY_CONTRACT.md` — proposed raw-candidate contract; no live Apify connection.
+- `OUTSCRAPER_WEBHOOK_CONTRACT.md` — optional callback contract; disabled by default.
 - `ACCESS_CHECKLIST.md` — access discovery requirements.
 - `GO_LIVE_CHECKLIST.md` — deployment reference; some entries are now historical
   because the live checks above are complete.
