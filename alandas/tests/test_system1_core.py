@@ -109,6 +109,13 @@ from system_1.discovery_reconcile import (
     format_reconciliation_report,
     reconcile_daily_discovery_run,
 )
+from system_1.import_apify_dataset import (
+    execute_apify_import,
+    fetch_apify_dataset_items,
+    format_import_summary,
+    get_provider_run_external_id,
+    import_apify_candidates,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -610,6 +617,164 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Actual USD: 0.42", text_report)
         self.assertIn("Provider: apify:brunch", text_report)
         self.assertIn("Reserved but never submitted to provider", text_report)
+
+    def test_apify_dataset_import_end_to_end_and_duplicate_safety(self) -> None:
+        valid_place = {
+            "placeId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+            "url": "https://maps.google.com/?cid=12345",
+            "title": "Cafe Test Berlin",
+            "city": "Berlin",
+            "categoryName": "Cafe",
+            "countryCode": "DE",
+            "website": "https://cafe-test.de",
+            "phone": "+49 30 1234567",
+        }
+        invalid_place = {
+            "placeId": "ChIJ_invalid",
+            "title": "Incomplete Venue",
+            # missing required fields city, countryCode, url
+        }
+        advertisement_place = {
+            **valid_place,
+            "placeId": "ChIJ_ad",
+            "isAdvertisement": True,
+        }
+
+        # Stored state for DB mock
+        inserted_leads = {}
+        audit_events = []
+
+        class FakeImportDbConn:
+            def execute(self, sql: str, params: tuple[object, ...] = ()) -> "FakeImportDbConn":
+                self._last_sql = sql
+                self._last_params = params
+                return self
+
+            def fetchone(self) -> tuple[object, ...] | None:
+                if "SELECT external_id, status FROM discovery_provider_runs" in self._last_sql:
+                    daily_run_id, provider = self._last_params
+                    if daily_run_id == "discovery:trial-v1:2026-09-18" and provider == "apify:cafe":
+                        return ("ZdjGOvrXoAfUYIQZA", "succeeded")
+                    return None
+                if "SELECT workflow_id, status FROM leads" in self._last_sql:
+                    wid = self._last_params[0]
+                    if wid in inserted_leads:
+                        return (wid, "new")
+                    return None
+                return None
+
+            def fetchall(self) -> list[tuple[object, ...]]:
+                return []
+
+            def __enter__(self) -> "FakeImportDbConn":
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        def fake_upsert_lead(wid: str, lead: object, status: str) -> None:
+            inserted_leads[wid] = lead
+
+        def fake_insert_audit_event(workflow_id: str, event_name: str, status: str, details: dict) -> None:
+            audit_events.append({"workflow_id": workflow_id, "event_name": event_name, "status": status, "details": details})
+
+        class MultiUrlFakeTransport:
+            def __init__(self) -> None:
+                self.requests = []
+
+            def request(self, method: str, url: str, headers: dict[str, str], body: bytes | None, timeout_seconds: int) -> HttpResponse:
+                self.requests.append(type("Req", (), {"method": method, "url": url, "headers": headers, "body": body})())
+                if "/actor-runs/ZdjGOvrXoAfUYIQZA" in url:
+                    return HttpResponse(200, {"data": {"id": "ZdjGOvrXoAfUYIQZA", "defaultDatasetId": "dataset-xyz-123"}})
+                if "/datasets/dataset-xyz-123/items" in url:
+                    return HttpResponse(200, [valid_place, invalid_place, advertisement_place])
+                return HttpResponse(404, {"error": "Not Found"})
+
+        transport = MultiUrlFakeTransport()
+
+        with patch("system_1.import_apify_dataset.db.connect", return_value=FakeImportDbConn()), \
+             patch("system_1.import_apify_dataset.db.upsert_lead", side_effect=fake_upsert_lead), \
+             patch("system_1.import_apify_dataset.db.insert_audit_event", side_effect=fake_insert_audit_event), \
+             patch("system_1.import_apify_dataset.db.find_internal_duplicates", return_value=[]):
+            summary = execute_apify_import(
+                "discovery:trial-v1:2026-09-18",
+                "apify:cafe",
+                {"APIFY_API_TOKEN": "secret-token-to-redact"},
+                transport,
+            )
+
+        self.assertEqual(summary.fetched, 3)
+        self.assertEqual(summary.mapped, 1)
+        self.assertEqual(summary.inserted, 1)
+        self.assertEqual(summary.invalid_skipped, 2)
+        self.assertEqual(summary.duplicate_skipped, 0)
+        self.assertEqual(summary.failed, 0)
+        self.assertEqual(len(inserted_leads), 1)
+
+        # Verify all transport calls were GET and token was used in Authorization header
+        for req in transport.requests:
+            self.assertEqual(req.method, "GET")
+            self.assertEqual(req.headers.get("Authorization"), "Bearer secret-token-to-redact")
+
+        # RERUN TEST: Run again with the lead now existing in inserted_leads -> duplicate safe
+        transport_rerun = MultiUrlFakeTransport()
+        with patch("system_1.import_apify_dataset.db.connect", return_value=FakeImportDbConn()), \
+             patch("system_1.import_apify_dataset.db.upsert_lead", side_effect=fake_upsert_lead), \
+             patch("system_1.import_apify_dataset.db.insert_audit_event", side_effect=fake_insert_audit_event), \
+             patch("system_1.import_apify_dataset.db.find_internal_duplicates", return_value=[]):
+
+            rerun_summary = execute_apify_import(
+                "discovery:trial-v1:2026-09-18",
+                "apify:cafe",
+                {"APIFY_API_TOKEN": "secret-token-to-redact"},
+                transport_rerun,
+            )
+
+        self.assertEqual(rerun_summary.fetched, 3)
+        self.assertEqual(rerun_summary.inserted, 0)
+        self.assertEqual(rerun_summary.duplicate_skipped, 1)
+        self.assertEqual(rerun_summary.invalid_skipped, 2)
+
+        # Output formatting test and token redaction check
+        formatted = format_import_summary(summary)
+        self.assertNotIn("secret-token-to-redact", formatted)
+        self.assertIn("Daily Run ID:      discovery:trial-v1:2026-09-18", formatted)
+        self.assertIn("Provider:          apify:cafe", formatted)
+        self.assertIn("Inserted Leads:    1", formatted)
+
+    def test_import_fails_cleanly_on_missing_or_incomplete_provider_row(self) -> None:
+        class EmptyProviderDbConn:
+            def execute(self, sql: str, params: tuple[object, ...] = ()) -> "EmptyProviderDbConn":
+                return self
+            def fetchone(self) -> tuple[object, ...] | None:
+                return None
+            def __enter__(self) -> "EmptyProviderDbConn":
+                return self
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.import_apify_dataset.db.connect", return_value=EmptyProviderDbConn()):
+            with self.assertRaisesRegex(RuntimeError, "no provider run found"):
+                get_provider_run_external_id("discovery:trial-v1:2026-09-18", "apify:unknown")
+
+        class MissingExternalIdDbConn:
+            def execute(self, sql: str, params: tuple[object, ...] = ()) -> "MissingExternalIdDbConn":
+                return self
+            def fetchone(self) -> tuple[object, ...] | None:
+                return ("", "pending_submission")
+            def __enter__(self) -> "MissingExternalIdDbConn":
+                return self
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.import_apify_dataset.db.connect", return_value=MissingExternalIdDbConn()):
+            with self.assertRaisesRegex(RuntimeError, "has no external_id"):
+                get_provider_run_external_id("discovery:trial-v1:2026-09-18", "apify:cafe")
+
+    def test_import_fails_cleanly_on_apify_api_error(self) -> None:
+        transport = FakeTransport({"error": "Unauthorized"}, status_code=401)
+        with self.assertRaisesRegex(RuntimeError, "Apify API returned HTTP 401"):
+            fetch_apify_dataset_items("invalid-token", transport, "some-run-id")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
