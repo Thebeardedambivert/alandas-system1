@@ -104,6 +104,11 @@ from system_1.worker_health import (
     format_worker_health,
     parse_host_port,
 )
+from system_1.discovery_reconcile import (
+    fetch_apify_run_details,
+    format_reconciliation_report,
+    reconcile_daily_discovery_run,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -532,6 +537,79 @@ class System1CoreTests(unittest.TestCase):
         )
         self.assertIn("Database connectivity: failed", degraded_report)
         self.assertIn("Overall status: degraded", degraded_report)
+
+    def test_reconcile_daily_discovery_run_apify_and_unsubmitted_categories(self) -> None:
+        fake_db_rows = [
+            ("apify:cafe", "act-run-123", Decimal("0.56"), None, "submitted", {}),
+            ("apify:brunch", "", Decimal("0.28"), None, "pending_submission", {}),
+            ("apify:specialty_coffee", "", Decimal("0.28"), None, "pending_submission", {}),
+            ("apify:boutique_hotel", "", Decimal("0.28"), None, "pending_submission", {}),
+        ]
+
+        class FakeDbConn:
+            def __init__(self) -> None:
+                self.updated_rows: list[tuple[object, ...]] = []
+
+            def execute(self, sql: str, params: tuple[object, ...] = ()) -> "FakeDbConn":
+                if "UPDATE discovery_provider_runs" in sql:
+                    self.updated_rows.append(params)
+                return self
+
+            def fetchall(self) -> list[tuple[object, ...]]:
+                return fake_db_rows
+
+            def __enter__(self) -> "FakeDbConn":
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        apify_response_payload = {
+            "data": {
+                "id": "act-run-123",
+                "status": "SUCCEEDED",
+                "usageTotalUsd": 0.42,
+            }
+        }
+        transport = FakeTransport(apify_response_payload, status_code=200)
+
+        with patch("system_1.discovery_reconcile.db.connect", return_value=FakeDbConn()):
+            report = reconcile_daily_discovery_run(
+                "discovery:trial-v1:2026-09-17",
+                {"APIFY_API_TOKEN": "valid-apify-token"},
+                transport,
+            )
+
+        self.assertEqual(report["daily_run_id"], "discovery:trial-v1:2026-09-17")
+        self.assertEqual(report["status"], "reconciled")
+        runs = {r["provider"]: r for r in report["provider_runs"]}
+
+        # Submitted Apify run was queried and reconciled
+        self.assertEqual(runs["apify:cafe"]["status"], "succeeded")
+        self.assertEqual(runs["apify:cafe"]["external_id"], "act-run-123")
+        self.assertEqual(runs["apify:cafe"]["actual_cost_usd"], "0.42")
+        self.assertTrue(runs["apify:cafe"]["reconciled"])
+
+        # The other 3 categories were reserved but never submitted
+        for cat in ("apify:brunch", "apify:specialty_coffee", "apify:boutique_hotel"):
+            self.assertEqual(runs[cat]["status"], "reserved_not_submitted")
+            self.assertEqual(runs[cat]["external_id"], "")
+            self.assertEqual(runs[cat]["actual_cost_usd"], "0.00")
+            self.assertFalse(runs[cat]["reconciled"])
+            self.assertIn("Reserved but never submitted", runs[cat]["note"])
+
+        # Verify transport only made GET requests to actor-runs, never POST
+        for req in transport.requests:
+            self.assertEqual(req.method, "GET")
+            self.assertIn("/actor-runs/act-run-123", req.url)
+
+        # Verify report string formatting
+        text_report = format_reconciliation_report(report)
+        self.assertIn("Daily Run ID: discovery:trial-v1:2026-09-17", text_report)
+        self.assertIn("Provider: apify:cafe", text_report)
+        self.assertIn("Actual USD: 0.42", text_report)
+        self.assertIn("Provider: apify:brunch", text_report)
+        self.assertIn("Reserved but never submitted to provider", text_report)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
