@@ -7,18 +7,14 @@ lookups.
 ## Before the first test
 
 1. In Coolify, keep `SYSTEM1_DISCOVERY_ENABLED=false`.
-2. Enter `APIFY_API_TOKEN`, `OUTSCRAPER_API_KEY`, and a random
-   `OUTSCRAPER_WEBHOOK_TOKEN` of at least 32 characters directly in Coolify.
-   Do not place their values in Git, chat, screenshots, or this file.
-3. Keep the two caps at USD 1.40 (Apify) and USD 0.60 (Outscraper).
-4. Deploy while disabled. Confirm existing Temporal, Postgres, worker, and UI
-   services remain healthy.
-5. Run `python -m system_1.discovery_status today`. It must show discovery as
-   `no` and must not print any secret value.
+2. Enter `APIFY_API_TOKEN` directly in Coolify. Outscraper is excluded until separately approved; `OUTSCRAPER_API_KEY`, `OUTSCRAPER_WEBHOOK_TOKEN`, and `SYSTEM1_DISCOVERY_OUTSCRAPER_CALLBACK_BASE_URL` are not required for Apify-only mode. Do not place secret values in Git, chat, screenshots, or this file.
+3. Keep the Apify cap at USD 1.40 (Outscraper cap USD 0.60 applies only if Outscraper is separately approved and configured).
+4. Deploy while disabled. Confirm existing Temporal, Postgres, worker, and UI services remain healthy.
+5. Run `python -m system_1.discovery_status today`. It must show discovery as `no` and must not print any secret value.
 
 ## One manual, capped test
 
-Only after the provider dashboards show estimates at or below the two caps:
+Only after the provider dashboard (Apify) shows an estimate at or below the USD 1.40 cap:
 
 1. State the exact displayed total to Cyril and obtain a separate confirmation.
 2. Enable discovery for that one manual run only.

@@ -12,6 +12,19 @@ import sys
 from types import ModuleType
 from unittest.mock import patch
 
+if "temporalio" not in sys.modules:
+    _temporalio = ModuleType("temporalio")
+    _activity = ModuleType("temporalio.activity")
+    _activity.defn = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
+    _temporalio.activity = _activity
+    sys.modules["temporalio"] = _temporalio
+    sys.modules["temporalio.activity"] = _activity
+
+if "psycopg" not in sys.modules:
+    _psycopg = ModuleType("psycopg")
+    _psycopg.Connection = object
+    sys.modules["psycopg"] = _psycopg
+
 from system_1.core import (
     apply_research_evidence,
     audit_event_key,
@@ -56,6 +69,7 @@ from system_1.discovery_scheduler import (
 )
 from system_1.discovery_workflows import final_daily_status
 from system_1.discovery_controls import format_daily_status, validate_scheduler_environment
+from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
 class FakeTransport:
@@ -114,6 +128,87 @@ class System1CoreTests(unittest.TestCase):
 
         with self.assertRaisesRegex(RuntimeError, "CALLBACK_BASE_URL"):
             validate_scheduler_environment(environment)
+
+    def test_apify_only_environment_validates_without_outscraper(self) -> None:
+        environment = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "APIFY_API_TOKEN": "valid-token",
+            "SYSTEM1_DISCOVERY_MAX_APIFY_USD": "1.40",
+        }
+        # Must validate cleanly without Outscraper credentials or webhook settings
+        validate_scheduler_environment(environment)
+
+    def test_missing_apify_token_fails_in_apify_only_mode(self) -> None:
+        environment = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+        }
+        with self.assertRaisesRegex(RuntimeError, "APIFY_API_TOKEN"):
+            validate_scheduler_environment(environment)
+
+    def test_invalid_or_over_cap_apify_amount_fails(self) -> None:
+        over_cap_env = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "APIFY_API_TOKEN": "valid-token",
+            "SYSTEM1_DISCOVERY_MAX_APIFY_USD": "1.50",
+        }
+        with self.assertRaisesRegex(RuntimeError, "SYSTEM1_DISCOVERY_MAX_APIFY_USD"):
+            validate_scheduler_environment(over_cap_env)
+
+        invalid_decimal_env = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "APIFY_API_TOKEN": "valid-token",
+            "SYSTEM1_DISCOVERY_MAX_APIFY_USD": "not-a-number",
+        }
+        with self.assertRaisesRegex(RuntimeError, "must be a decimal amount"):
+            validate_scheduler_environment(invalid_decimal_env)
+
+    def test_safe_status_output_apify_only_redacts_and_shows_configured(self) -> None:
+        output = format_daily_status(
+            {"daily_run_id": "discovery:trial-v1:2026-09-17", "status": "not_started"},
+            {"APIFY_API_TOKEN": "super-secret-token"},
+        )
+        self.assertNotIn("super-secret-token", output)
+        self.assertIn("Apify configured: yes", output)
+        self.assertIn("Outscraper configured: no", output)
+
+    @patch("system_1.discovery_activities.OutscraperProvider")
+    @patch("system_1.discovery_activities.ApifyProvider")
+    @patch("system_1.discovery_activities.db")
+    @patch.dict(
+        "os.environ",
+        {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "APIFY_API_TOKEN": "test-apify-token",
+            "SYSTEM1_DISCOVERY_MAX_APIFY_USD": "1.40",
+        },
+        clear=True,
+    )
+    def test_provider_submission_skips_outscraper_when_not_configured(
+        self, mock_db, mock_apify, mock_outscraper
+    ) -> None:
+        mock_db.reserve_discovery_provider_submission.return_value = (1, "ext-1", "reserved", True)
+        mock_apify_instance = mock_apify.return_value
+        mock_apify_instance.submit_allocation.return_value = type("Sub", (), {"external_id": "ext-1"})()
+
+        statuses = submit_daily_discovery_providers_activity(
+            {"daily_run_id": "test-run", "trial_starts_on": "2026-09-17"}
+        )
+
+        self.assertNotIn("outscraper", statuses)
+        mock_outscraper.assert_not_called()
+        reserved_providers = [call.args[1] for call in mock_db.reserve_discovery_provider_submission.call_args_list]
+        self.assertNotIn("outscraper", reserved_providers)
+
+    @patch.dict(
+        "os.environ",
+        {"SYSTEM1_DISCOVERY_ENABLED": "false", "APIFY_API_TOKEN": "test-apify-token"},
+        clear=True,
+    )
+    def test_provider_submission_returns_disabled_when_flag_is_off(self) -> None:
+        statuses = submit_daily_discovery_providers_activity(
+            {"daily_run_id": "test-run", "trial_starts_on": "2026-09-17"}
+        )
+        self.assertEqual(statuses, {"status": "disabled"})
     def test_daily_status_is_degraded_when_one_provider_fails(self) -> None:
         self.assertEqual(
             final_daily_status({"apify": "succeeded", "outscraper": "needs_attention"}),
