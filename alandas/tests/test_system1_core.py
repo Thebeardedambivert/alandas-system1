@@ -14,12 +14,25 @@ from unittest.mock import patch
 
 if "temporalio" not in sys.modules:
     _temporalio = ModuleType("temporalio")
+    _temporalio.__path__ = []
+    _client = ModuleType("temporalio.client")
+    class _ClientStub:
+        @classmethod
+        async def connect(cls, *args, **kwargs):
+            return cls()
+    _client.Client = _ClientStub
+    _temporalio.client = _client
+    _worker = ModuleType("temporalio.worker")
+    _worker.Worker = type("Worker", (), {})
+    _temporalio.worker = _worker
     _activity = ModuleType("temporalio.activity")
     _activity.defn = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
     _temporalio.activity = _activity
     _workflow = ModuleType("temporalio.workflow")
     _workflow.defn = lambda cls=None, **kwargs: (lambda c: c) if cls is None else cls
     _workflow.run = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
+    _workflow.signal = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
+    _workflow.query = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
     _workflow.now = lambda: datetime.now(timezone.utc)
     _workflow.execute_activity = lambda *args, **kwargs: None
     _unsafe = ModuleType("temporalio.workflow.unsafe")
@@ -31,6 +44,8 @@ if "temporalio" not in sys.modules:
     _workflow.unsafe = _unsafe
     _temporalio.workflow = _workflow
     sys.modules["temporalio"] = _temporalio
+    sys.modules["temporalio.client"] = _client
+    sys.modules["temporalio.worker"] = _worker
     sys.modules["temporalio.activity"] = _activity
     sys.modules["temporalio.workflow"] = _workflow
     sys.modules["temporalio.workflow.unsafe"] = _unsafe
@@ -85,6 +100,10 @@ from system_1.discovery_scheduler import (
 )
 from system_1.discovery_workflows import final_daily_status
 from system_1.discovery_controls import format_daily_status, validate_scheduler_environment
+from system_1.worker_health import (
+    format_worker_health,
+    parse_host_port,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -460,6 +479,59 @@ class System1CoreTests(unittest.TestCase):
 
         self.assertEqual(result["status"], "disabled")
         self.assertEqual(result["daily_run_id"], "discovery:trial-v1:2026-09-17")
+
+    def test_worker_connect_logs_success_and_run_logs_start(self) -> None:
+        from system_1.worker import connect_temporal_with_retry
+
+        class FakeTemporalClient:
+            @classmethod
+            async def connect(cls, address: str, namespace: str = "default") -> "FakeTemporalClient":
+                return cls()
+
+        with patch("system_1.worker.Client.connect", side_effect=FakeTemporalClient.connect):
+            with self.assertLogs("system_1.worker", level="INFO") as log_cm:
+                client = asyncio.run(connect_temporal_with_retry("temporal:7233", "default", attempts=1))
+                self.assertIsNotNone(client)
+                self.assertTrue(
+                    any("Successfully connected to Temporal" in message for message in log_cm.output)
+                )
+
+    def test_worker_health_formatting_and_host_port_parsing(self) -> None:
+        self.assertEqual(parse_host_port("temporal:7233"), ("temporal", 7233))
+        self.assertEqual(parse_host_port("localhost"), ("localhost", 7233))
+        self.assertEqual(parse_host_port("myhost:notaport"), ("myhost", 7233))
+
+        env = {
+            "TEMPORAL_ADDRESS": "temporal:7233",
+            "TEMPORAL_NAMESPACE": "default",
+            "TEMPORAL_TASK_QUEUE": "alandas-system1",
+            "SYSTEM1_DISCOVERY_ENABLED": "false",
+            "APIFY_API_TOKEN": "secret-token-value",
+        }
+        report = format_worker_health(
+            env,
+            db_status=(True, "connected"),
+            temporal_socket_status=(True, "connected"),
+            temporal_client_status=(True, "connected"),
+        )
+        self.assertNotIn("secret-token-value", report)
+        self.assertIn("Database connectivity: ok", report)
+        self.assertIn("Temporal address: temporal:7233", report)
+        self.assertIn("Temporal socket connectivity: ok", report)
+        self.assertIn("Temporal client connectivity: ok", report)
+        self.assertIn("Discovery enabled: no", report)
+        self.assertIn("Apify configured: yes", report)
+        self.assertIn("Outscraper configured: no", report)
+        self.assertIn("Overall status: healthy", report)
+
+        degraded_report = format_worker_health(
+            env,
+            db_status=(False, "connection refused"),
+            temporal_socket_status=(True, "connected"),
+            temporal_client_status=(False, "connection refused"),
+        )
+        self.assertIn("Database connectivity: failed", degraded_report)
+        self.assertIn("Overall status: degraded", degraded_report)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

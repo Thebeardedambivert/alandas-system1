@@ -53,7 +53,13 @@ async def connect_temporal_with_retry(
                 attempt,
                 attempts,
             )
-            return await Client.connect(address, namespace=namespace)
+            client = await Client.connect(address, namespace=namespace)
+            logger.info(
+                "Successfully connected to Temporal at %s (namespace: %s)",
+                address,
+                namespace,
+            )
+            return client
         except Exception as error:
             last_error = error
             logger.warning(
@@ -63,6 +69,7 @@ async def connect_temporal_with_retry(
             )
             await asyncio.sleep(delay_seconds)
 
+    logger.error("Failed to connect to Temporal at %s after %s attempts", address, attempts)
     raise RuntimeError("Temporal connection failed after retries") from last_error
 
 
@@ -76,30 +83,46 @@ async def main() -> None:
     namespace = os.environ.get("TEMPORAL_NAMESPACE", "default")
     task_queue = os.environ.get("TEMPORAL_TASK_QUEUE", "alandas-system1")
 
-    ensure_schema()
+    logger.info("Initializing System 1 worker database schema...")
+    try:
+        ensure_schema()
+        logger.info("Database schema verified.")
+    except Exception as error:
+        logger.error("Failed to verify database schema: %s", error, exc_info=True)
+        raise
+
     client = await connect_temporal_with_retry(address, namespace)
-    with ThreadPoolExecutor(max_workers=8) as activity_executor:
-        worker = Worker(
-            client,
-            task_queue=task_queue,
-            workflows=[CafeLeadWorkflow, DailyDiscoveryWorkflow],
-            activities=[
-                create_daily_discovery_run_activity,
-                submit_daily_discovery_providers_activity,
-                validate_lead_activity,
-                validate_intake_activity,
-                normalize_lead_activity,
-                find_internal_duplicates_activity,
-                research_public_lead_activity,
-                enrich_lead_activity,
-                draft_outreach_activity,
-                append_audit_event_activity,
-                upsert_lead_activity,
-                update_lead_status_activity,
-            ],
-            activity_executor=activity_executor,
-        )
-        await worker.run()
+    logger.info("Building Temporal worker for task queue '%s'...", task_queue)
+    try:
+        with ThreadPoolExecutor(max_workers=8) as activity_executor:
+            worker = Worker(
+                client,
+                task_queue=task_queue,
+                workflows=[CafeLeadWorkflow, DailyDiscoveryWorkflow],
+                activities=[
+                    create_daily_discovery_run_activity,
+                    submit_daily_discovery_providers_activity,
+                    validate_lead_activity,
+                    validate_intake_activity,
+                    normalize_lead_activity,
+                    find_internal_duplicates_activity,
+                    research_public_lead_activity,
+                    enrich_lead_activity,
+                    draft_outreach_activity,
+                    append_audit_event_activity,
+                    upsert_lead_activity,
+                    update_lead_status_activity,
+                ],
+                activity_executor=activity_executor,
+            )
+            logger.info(
+                "Worker successfully built. Starting polling on task queue '%s'...",
+                task_queue,
+            )
+            await worker.run()
+    except Exception as error:
+        logger.error("Temporal worker encountered an unhandled error: %s", error, exc_info=True)
+        raise
 
 
 if __name__ == "__main__":
