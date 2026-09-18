@@ -17,8 +17,23 @@ if "temporalio" not in sys.modules:
     _activity = ModuleType("temporalio.activity")
     _activity.defn = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
     _temporalio.activity = _activity
+    _workflow = ModuleType("temporalio.workflow")
+    _workflow.defn = lambda cls=None, **kwargs: (lambda c: c) if cls is None else cls
+    _workflow.run = lambda fn=None, **kwargs: (lambda f: f) if fn is None else fn
+    _workflow.now = lambda: datetime.now(timezone.utc)
+    _workflow.execute_activity = lambda *args, **kwargs: None
+    _unsafe = ModuleType("temporalio.workflow.unsafe")
+    from contextlib import contextmanager
+    @contextmanager
+    def _imports_passed_through():
+        yield
+    _unsafe.imports_passed_through = _imports_passed_through
+    _workflow.unsafe = _unsafe
+    _temporalio.workflow = _workflow
     sys.modules["temporalio"] = _temporalio
     sys.modules["temporalio.activity"] = _activity
+    sys.modules["temporalio.workflow"] = _workflow
+    sys.modules["temporalio.workflow.unsafe"] = _unsafe
 
 if "psycopg" not in sys.modules:
     _psycopg = ModuleType("psycopg")
@@ -392,7 +407,7 @@ class System1CoreTests(unittest.TestCase):
         with patch.dict(
             sys.modules,
             {"system_1.discovery_temporal_workflow": workflow_module},
-        ), patch("system_1.discovery_scheduler.ZoneInfo", return_value=timezone.utc):
+        ), patch("system_1.discovery_scheduler.scheduled_day_in_berlin", return_value=date(2026, 9, 17)):
             workflow_id = asyncio.run(
                 start_manual_daily_run(
                     fake_client,
@@ -405,9 +420,46 @@ class System1CoreTests(unittest.TestCase):
         call = fake_client.calls[0]
         self.assertEqual(call["workflow"], workflow_run)
         self.assertEqual(call["pos_args"], ())
-        self.assertEqual(call["args"], ["trial-v1", "2026-09-17"])
+        self.assertEqual(call["args"], ["trial-v1", "2026-09-17", "2026-09-17"])
         self.assertEqual(call["id"], workflow_id)
         self.assertEqual(call["task_queue"], "alandas-system1")
+
+    def test_daily_discovery_workflow_runs_with_restricted_proxy_datetime(self) -> None:
+        from system_1.discovery_temporal_workflow import DailyDiscoveryWorkflow
+
+        class FakeRestrictedProxyDatetime:
+            def __init__(self, dt: datetime) -> None:
+                self._dt = dt
+
+            def __getattr__(self, name: str) -> object:
+                return getattr(self._dt, name)
+
+            def astimezone(self, tz: object = None) -> object:
+                # Simulates Temporal sandbox TypeError: tzinfo argument must be None or of a tzinfo subclass, not type '_RestrictedProxy'
+                raise TypeError("tzinfo argument must be None or of a tzinfo subclass, not type '_RestrictedProxy'")
+
+        class FakeWorkflowRuntime:
+            def __init__(self, now_dt: datetime) -> None:
+                self._now = FakeRestrictedProxyDatetime(now_dt)
+
+            def now(self) -> object:
+                return self._now
+
+            async def execute_activity(self, activity_fn: object, args: dict[str, object], **kwargs: object) -> dict[str, object]:
+                if "daily_run_id" in args and "scheduled_for" in args:
+                    return {"daily_run_id": args["daily_run_id"], "status": "created"}
+                return {"status": "disabled"}
+
+        wf = DailyDiscoveryWorkflow()
+        now_dt = datetime(2026, 9, 17, 9, 0, tzinfo=timezone.utc)
+        fake_runtime = FakeWorkflowRuntime(now_dt)
+
+        with patch("system_1.discovery_temporal_workflow.workflow.now", side_effect=fake_runtime.now), \
+             patch("system_1.discovery_temporal_workflow.workflow.execute_activity", side_effect=fake_runtime.execute_activity):
+            result = asyncio.run(wf.run("trial-v1", "2026-09-17"))
+
+        self.assertEqual(result["status"], "disabled")
+        self.assertEqual(result["daily_run_id"], "discovery:trial-v1:2026-09-17")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

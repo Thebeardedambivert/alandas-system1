@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import timedelta
+from datetime import date, timedelta
 
 from temporalio import workflow
 
@@ -10,7 +10,6 @@ from system_1.discovery_scheduler import (
     daily_workflow_id,
     policy_for_trial_start,
     schedule_action,
-    scheduled_day_in_berlin,
 )
 
 with workflow.unsafe.imports_passed_through():
@@ -26,8 +25,21 @@ class DailyDiscoveryWorkflow:
     """Create one durable daily trial record before provider work is enabled."""
 
     @workflow.run
-    async def run(self, policy_version: str, trial_starts_on: str) -> dict[str, str]:
-        day = scheduled_day_in_berlin(workflow.now())
+    async def run(
+        self,
+        policy_version: str,
+        trial_starts_on: str,
+        target_day: str | None = None,
+    ) -> dict[str, str]:
+        if target_day:
+            day = date.fromisoformat(target_day)
+        else:
+            now_dt = workflow.now()
+            # In Temporal sandbox, now_dt is UTC. Extract UTC calendar components
+            # deterministically without calling astimezone(ZoneInfo(...)).
+            # When scheduled via cron in Europe/Berlin, workflow runs at 09:00 Berlin (07:00 or 08:00 UTC),
+            # where the UTC calendar date is identical to the Berlin calendar date.
+            day = date(now_dt.year, now_dt.month, now_dt.day)
         scheduled_for = day.isoformat()
         policy = policy_for_trial_start(trial_starts_on)
         if policy.policy_version != policy_version:

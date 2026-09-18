@@ -107,7 +107,7 @@ async def start_manual_daily_run(client: object, policy: TrialPolicy, task_queue
     workflow_id = daily_workflow_id(policy, day)
     await client.start_workflow(
         DailyDiscoveryWorkflow.run,
-        args=[policy.policy_version, policy.starts_on.isoformat()],
+        args=[policy.policy_version, policy.starts_on.isoformat(), day.isoformat()],
         id=workflow_id,
         task_queue=task_queue,
     )
