@@ -13,7 +13,7 @@ from typing import Any, Sequence
 
 from system_1 import db
 from system_1.apify_google_maps import candidate_to_lead, map_apify_dataset, map_apify_place
-from system_1.core import lead_workflow_id, normalize_lead, validate_intake
+from system_1.core import audit_event_key, lead_workflow_id, normalize_lead, validate_intake
 from system_1.models import DiscoveryCandidate, LeadInput
 from system_1.provider_http import HttpTransport, UrllibHttpTransport
 
@@ -155,6 +155,7 @@ def import_apify_candidates(
             # Record audit event indicating duplicate skipped (idempotent ON CONFLICT)
             db.insert_audit_event(
                 workflow_id=workflow_id,
+                event_key=audit_event_key(workflow_id, "discovery_import_duplicate_skipped"),
                 event_name="discovery_import_duplicate_skipped",
                 status="skipped",
                 details={
@@ -175,6 +176,7 @@ def import_apify_candidates(
             # Log audit event for insertion
             db.insert_audit_event(
                 workflow_id=workflow_id,
+                event_key=audit_event_key(workflow_id, "discovery_lead_imported"),
                 event_name="discovery_lead_imported",
                 status="new",
                 details={

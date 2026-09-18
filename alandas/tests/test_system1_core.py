@@ -675,8 +675,21 @@ class System1CoreTests(unittest.TestCase):
         def fake_upsert_lead(wid: str, lead: object, status: str) -> None:
             inserted_leads[wid] = lead
 
-        def fake_insert_audit_event(workflow_id: str, event_name: str, status: str, details: dict) -> None:
-            audit_events.append({"workflow_id": workflow_id, "event_name": event_name, "status": status, "details": details})
+        def fake_insert_audit_event(
+            workflow_id: str,
+            event_key: str,
+            event_name: str,
+            status: str,
+            details: dict,
+        ) -> bool:
+            audit_events.append({
+                "workflow_id": workflow_id,
+                "event_key": event_key,
+                "event_name": event_name,
+                "status": status,
+                "details": details,
+            })
+            return True
 
         class MultiUrlFakeTransport:
             def __init__(self) -> None:
@@ -710,6 +723,12 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(summary.duplicate_skipped, 0)
         self.assertEqual(summary.failed, 0)
         self.assertEqual(len(inserted_leads), 1)
+        self.assertEqual(len(audit_events), 1)
+        self.assertEqual(audit_events[0]["event_name"], "discovery_lead_imported")
+        self.assertEqual(
+            audit_events[0]["event_key"],
+            audit_event_key(audit_events[0]["workflow_id"], "discovery_lead_imported"),
+        )
 
         # Verify all transport calls were GET and token was used in Authorization header
         for req in transport.requests:
@@ -734,6 +753,13 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(rerun_summary.inserted, 0)
         self.assertEqual(rerun_summary.duplicate_skipped, 1)
         self.assertEqual(rerun_summary.invalid_skipped, 2)
+        self.assertEqual(len(audit_events), 2)
+        duplicate_event = audit_events[1]
+        self.assertEqual(duplicate_event["event_name"], "discovery_import_duplicate_skipped")
+        self.assertEqual(
+            duplicate_event["event_key"],
+            audit_event_key(duplicate_event["workflow_id"], "discovery_import_duplicate_skipped"),
+        )
 
         # Output formatting test and token redaction check
         formatted = format_import_summary(summary)
