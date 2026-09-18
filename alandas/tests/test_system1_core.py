@@ -940,6 +940,24 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(response.status_code, 202)
         self.assertEqual(response.json_body, {"id": "request-123"})
         self.assertEqual(len(captured), 1)
+
+    def test_http_transport_allows_provider_json_arrays(self) -> None:
+        from system_1.provider_http import UrllibHttpTransport
+
+        def fake_open(request: object, timeout: int) -> FakeUrlResponse:
+            return FakeUrlResponse(200, b'[{"title":"Cafe One"}]')
+
+        response = UrllibHttpTransport(open_request=fake_open).request(
+            "GET",
+            "https://api.example/datasets/dataset-123/items?clean=true",
+            {"Authorization": "Bearer secret"},
+            None,
+            60,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json_body, [{"title": "Cafe One"}])
+
     def test_provider_submission_is_idempotent(self) -> None:
         store = InMemoryDiscoveryStore()
 

@@ -4,14 +4,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
-from typing import Protocol
+from typing import Any, Protocol
 from urllib.request import Request, urlopen
 
 
 @dataclass(frozen=True)
 class HttpResponse:
     status_code: int
-    json_body: dict[str, object]
+    json_body: Any
 
 
 class HttpTransport(Protocol):
@@ -42,6 +42,4 @@ class UrllibHttpTransport:
         with self._open_request(request, timeout=timeout_seconds) as response:
             payload = response.read()
             decoded = json.loads(payload.decode("utf-8")) if payload else {}
-            if not isinstance(decoded, dict):
-                raise ValueError("provider response must be a JSON object")
             return HttpResponse(response.status, decoded)
