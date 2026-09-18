@@ -145,6 +145,17 @@ class System1CoreTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError, "APIFY_API_TOKEN"):
             validate_scheduler_environment(environment)
 
+    def test_outscraper_only_mode_rejected_and_requires_apify_token(self) -> None:
+        environment = {
+            "SYSTEM1_DISCOVERY_ENABLED": "true",
+            "SYSTEM1_DISCOVERY_PROVIDERS": "outscraper",
+            "OUTSCRAPER_API_KEY": "outscraper-test-key",
+            "OUTSCRAPER_WEBHOOK_TOKEN": "12345678901234567890123456789012",
+            "SYSTEM1_DISCOVERY_OUTSCRAPER_CALLBACK_BASE_URL": "https://callback.example.com",
+        }
+        with self.assertRaisesRegex(RuntimeError, "APIFY_API_TOKEN|Apify is required"):
+            validate_scheduler_environment(environment)
+
     def test_invalid_or_over_cap_apify_amount_fails(self) -> None:
         over_cap_env = {
             "SYSTEM1_DISCOVERY_ENABLED": "true",

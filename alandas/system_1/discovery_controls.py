@@ -37,6 +37,7 @@ def discovery_providers(environment: Mapping[str, str]) -> tuple[str, ...]:
     """Return the selected discovery providers.
 
     Defaults to ('apify',) when Outscraper is absent/unconfigured.
+    Outscraper-only discovery mode is strictly rejected; Apify is required.
     """
 
     raw = environment.get("SYSTEM1_DISCOVERY_PROVIDERS", "").strip()
@@ -46,6 +47,8 @@ def discovery_providers(environment: Mapping[str, str]) -> tuple[str, ...]:
         unknown = [p for p in providers if p not in valid]
         if unknown:
             raise RuntimeError(f"unknown discovery provider(s): {', '.join(unknown)}")
+        if "apify" not in providers:
+            raise RuntimeError("Apify is required for discovery; outscraper-only mode is not supported")
         return providers
 
     if outscraper_configured(environment):
@@ -60,13 +63,9 @@ def validate_scheduler_environment(environment: Mapping[str, str]) -> None:
         raise RuntimeError("SYSTEM1_DISCOVERY_ENABLED must be true before discovery can start")
 
     providers = discovery_providers(environment)
-    if not providers:
-        raise RuntimeError("at least one discovery provider must be configured")
-
-    if "apify" in providers:
-        if not apify_configured(environment):
-            raise RuntimeError("missing discovery configuration: APIFY_API_TOKEN")
-        _validated_cap(environment, "SYSTEM1_DISCOVERY_MAX_APIFY_USD", Decimal("1.40"))
+    if "apify" not in providers or not apify_configured(environment):
+        raise RuntimeError("missing discovery configuration: APIFY_API_TOKEN")
+    _validated_cap(environment, "SYSTEM1_DISCOVERY_MAX_APIFY_USD", Decimal("1.40"))
 
     if "outscraper" in providers:
         required = (
