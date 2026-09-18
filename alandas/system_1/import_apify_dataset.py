@@ -4,17 +4,14 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 from dataclasses import dataclass
-from decimal import Decimal
-import json
 import logging
 import os
 import sys
 from typing import Any, Sequence
 
 from system_1 import db
-from system_1.apify_google_maps import candidate_to_lead, map_apify_dataset, map_apify_place
-from system_1.core import audit_event_key, lead_workflow_id, normalize_lead, validate_intake
-from system_1.models import DiscoveryCandidate, LeadInput
+from system_1.apify_google_maps import candidate_to_lead, map_apify_dataset
+from system_1.core import audit_event_key, lead_workflow_id, validate_intake
 from system_1.provider_http import HttpTransport, UrllibHttpTransport
 
 logger = logging.getLogger(__name__)
@@ -95,43 +92,36 @@ def import_apify_candidates(
 ) -> ApifyImportSummary:
     """Map and import Apify candidate items into System 1 with duplicate checks and audit logging."""
     fetched = len(items)
-    mapped = 0
     inserted = 0
     duplicate_skipped = 0
     invalid_skipped = 0
     failed = 0
 
+    # Delegate mapping to canonical map_apify_dataset to enforce MAX_RESULTS_PER_RUN,
+    # placeId deduplication, and filtering of closed/ad/invalid records.
+    candidates, mapper_notes = map_apify_dataset(items)
+    mapped = len(candidates)
+
+    # Classify mapper notes into duplicate_skipped (duplicate Google Place ID) and invalid_skipped
+    for note in mapper_notes:
+        if "duplicate Google Place ID" in note:
+            duplicate_skipped += 1
+        else:
+            invalid_skipped += 1
+
     seen_in_batch: set[str] = set()
 
-    for idx, raw_record in enumerate(items, start=1):
-        try:
-            candidate = map_apify_place(raw_record)
-        except ValueError as err:
-            logger.info("Row %s invalid: %s", idx, err)
-            invalid_skipped += 1
-            continue
-        except Exception as err:
-            logger.warning("Row %s mapping error: %s", idx, err)
-            failed += 1
-            continue
-
-        if candidate is None:
-            # advertisement or closed business
-            invalid_skipped += 1
-            continue
-
-        mapped += 1
-
+    for idx, candidate in enumerate(candidates, start=1):
         try:
             lead = candidate_to_lead(candidate)
         except Exception as err:
-            logger.warning("Row %s candidate conversion error: %s", idx, err)
+            logger.warning("Candidate %s conversion error: %s", idx, err)
             invalid_skipped += 1
             continue
 
         intake_errors = validate_intake(lead)
         if intake_errors:
-            logger.info("Row %s failed intake validation: %s", idx, intake_errors)
+            logger.info("Candidate %s failed intake validation: %s", idx, intake_errors)
             invalid_skipped += 1
             continue
 

@@ -768,6 +768,66 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Provider:          apify:cafe", formatted)
         self.assertIn("Inserted Leads:    1", formatted)
 
+    def test_import_skips_duplicate_place_id_and_rejects_dataset_over_max_limit(self) -> None:
+        base_place = {
+            "placeId": "ChIJ_dup_place",
+            "url": "https://maps.google.com/?cid=111",
+            "title": "Dup Cafe Berlin",
+            "city": "Berlin",
+            "categoryName": "Cafe",
+            "countryCode": "DE",
+            "website": "https://dup-cafe.de",
+        }
+        duplicate_place = {
+            **base_place,
+            "url": "https://maps.google.com/?cid=222",
+            "title": "Dup Cafe Berlin Duplicate Row",
+        }
+        items = [base_place, duplicate_place]
+
+        class SimpleDbConn:
+            def execute(self, sql: str, params: tuple[object, ...] = ()) -> "SimpleDbConn":
+                return self
+            def fetchone(self) -> tuple[object, ...] | None:
+                return None
+            def fetchall(self) -> list[tuple[object, ...]]:
+                return []
+            def __enter__(self) -> "SimpleDbConn":
+                return self
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.import_apify_dataset.db.connect", return_value=SimpleDbConn()), \
+             patch("system_1.import_apify_dataset.db.upsert_lead") as mock_upsert, \
+             patch("system_1.import_apify_dataset.db.insert_audit_event") as mock_audit, \
+             patch("system_1.import_apify_dataset.db.find_internal_duplicates", return_value=[]):
+
+            summary = import_apify_candidates(
+                "discovery:trial-v1:2026-09-18",
+                "apify:cafe",
+                items,
+                dataset_id="ds-dup",
+                run_id="run-dup",
+            )
+
+        self.assertEqual(summary.fetched, 2)
+        self.assertEqual(summary.mapped, 1)
+        self.assertEqual(summary.inserted, 1)
+        self.assertEqual(summary.duplicate_skipped, 1)
+        self.assertEqual(summary.invalid_skipped, 0)
+        self.assertEqual(mock_upsert.call_count, 1)
+
+        # Datasets exceeding MAX_RESULTS_PER_RUN (50) must fail cleanly via map_apify_dataset
+        oversized_items = [base_place] * 51
+        with self.assertRaisesRegex(ValueError, "review limit"):
+            import_apify_candidates(
+                "discovery:trial-v1:2026-09-18",
+                "apify:cafe",
+                oversized_items,
+                dataset_id="ds-oversized",
+                run_id="run-oversized",
+            )
+
     def test_import_fails_cleanly_on_missing_or_incomplete_provider_row(self) -> None:
         class EmptyProviderDbConn:
             def execute(self, sql: str, params: tuple[object, ...] = ()) -> "EmptyProviderDbConn":
