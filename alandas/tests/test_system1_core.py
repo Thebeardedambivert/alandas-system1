@@ -64,6 +64,7 @@ from system_1.discovery_scheduler import (
     policy_for_trial_start,
     schedule_action,
     scheduled_day_in_berlin,
+    start_manual_daily_run,
     start_trial_schedule,
     trial_schedule_definition,
 )
@@ -349,6 +350,64 @@ class System1CoreTests(unittest.TestCase):
         )
         self.assertEqual(created_schedule.action.id, "alandas-discovery-trial-v1")
         self.assertEqual(created_schedule.action.task_queue, "alandas-system1")
+
+    def test_start_manual_daily_run_passes_inputs_via_args(self) -> None:
+        class FakeTemporalClient:
+            def __init__(self) -> None:
+                self.calls: list[dict[str, object]] = []
+
+            async def start_workflow(
+                self,
+                workflow: object,
+                *pos_args: object,
+                id: str | None = None,
+                task_queue: str | None = None,
+                args: list[object] | None = None,
+                **kwargs: object,
+            ) -> object:
+                if len(pos_args) > 1:
+                    raise TypeError(
+                        f"Client.start_workflow() takes from 2 to 3 positional arguments but {len(pos_args) + 1} positional arguments were given"
+                    )
+                self.calls.append(
+                    {
+                        "workflow": workflow,
+                        "pos_args": pos_args,
+                        "id": id,
+                        "task_queue": task_queue,
+                        "args": args,
+                    }
+                )
+                return type("Handle", (), {"id": id})()
+
+        async def workflow_run(*_args: object) -> None:
+            return None
+
+        workflow_module = ModuleType("system_1.discovery_temporal_workflow")
+        workflow_module.DailyDiscoveryWorkflow = type(
+            "DailyDiscoveryWorkflow", (), {"run": workflow_run}
+        )
+        fake_client = FakeTemporalClient()
+
+        with patch.dict(
+            sys.modules,
+            {"system_1.discovery_temporal_workflow": workflow_module},
+        ), patch("system_1.discovery_scheduler.ZoneInfo", return_value=timezone.utc):
+            workflow_id = asyncio.run(
+                start_manual_daily_run(
+                    fake_client,
+                    TrialPolicy.default(date(2026, 9, 17)),
+                    "alandas-system1",
+                )
+            )
+
+        self.assertEqual(len(fake_client.calls), 1)
+        call = fake_client.calls[0]
+        self.assertEqual(call["workflow"], workflow_run)
+        self.assertEqual(call["pos_args"], ())
+        self.assertEqual(call["args"], ["trial-v1", "2026-09-17"])
+        self.assertEqual(call["id"], workflow_id)
+        self.assertEqual(call["task_queue"], "alandas-system1")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
