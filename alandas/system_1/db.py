@@ -93,6 +93,24 @@ def ensure_schema() -> None:
             "CREATE INDEX IF NOT EXISTS leads_venue_city_key_idx ON leads (venue_city_key)"
         )
         connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_status TEXT NOT NULL DEFAULT ''"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_score INTEGER"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_reasons JSONB NOT NULL DEFAULT '[]'::JSONB"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualification_evidence JSONB NOT NULL DEFAULT '{}'::JSONB"
+        )
+        connection.execute(
+            "ALTER TABLE leads ADD COLUMN IF NOT EXISTS qualified_at TIMESTAMPTZ"
+        )
+        connection.execute(
+            "CREATE INDEX IF NOT EXISTS leads_qualification_status_idx ON leads (qualification_status)"
+        )
+        connection.execute(
             """
             CREATE TABLE IF NOT EXISTS lead_research_evidence (
                 evidence_key TEXT PRIMARY KEY,
@@ -433,3 +451,68 @@ def complete_discovery_provider_submission(
     if row is None:
         raise RuntimeError("provider submission completion was not persisted")
     return row[0], row[1], row[2]
+
+
+def fetch_leads_by_status(status: str, limit: int = 50) -> list[dict[str, object]]:
+    """Query leads by current status for qualification or review."""
+    with connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT workflow_id, venue_name, city, venue_type, source_url,
+                   website, instagram, email, phone, website_domain,
+                   qualification_status, qualification_score, status
+            FROM leads
+            WHERE status = %s
+            ORDER BY created_at ASC
+            LIMIT %s
+            """,
+            (status, limit),
+        ).fetchall()
+    leads = []
+    for r in rows:
+        leads.append({
+            "workflow_id": r[0],
+            "venue_name": r[1],
+            "city": r[2],
+            "venue_type": r[3],
+            "source_url": r[4],
+            "website": r[5],
+            "instagram": r[6],
+            "email": r[7],
+            "phone": r[8],
+            "website_domain": r[9],
+            "qualification_status": r[10],
+            "qualification_score": r[11],
+            "status": r[12],
+        })
+    return leads
+
+
+def update_lead_qualification(
+    workflow_id: str,
+    qualification_status: str,
+    qualification_score: int,
+    qualification_reasons: list[str],
+    qualification_evidence: dict[str, object],
+) -> None:
+    """Persist qualification result and timestamp for one lead."""
+    with connect() as connection:
+        connection.execute(
+            """
+            UPDATE leads
+            SET qualification_status = %s,
+                qualification_score = %s,
+                qualification_reasons = %s::jsonb,
+                qualification_evidence = %s::jsonb,
+                qualified_at = NOW(),
+                updated_at = NOW()
+            WHERE workflow_id = %s
+            """,
+            (
+                qualification_status,
+                qualification_score,
+                json.dumps(qualification_reasons, ensure_ascii=True),
+                json.dumps(qualification_evidence, ensure_ascii=True),
+                workflow_id,
+            ),
+        )

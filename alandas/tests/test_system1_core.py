@@ -116,6 +116,11 @@ from system_1.import_apify_dataset import (
     get_provider_run_external_id,
     import_apify_candidates,
 )
+from system_1.qualify_discovery_leads import (
+    evaluate_lead_qualification,
+    format_qualification_summary,
+    qualify_leads_batch,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -861,6 +866,164 @@ class System1CoreTests(unittest.TestCase):
         transport = FakeTransport({"error": "Unauthorized"}, status_code=401)
         with self.assertRaisesRegex(RuntimeError, "Apify API returned HTTP 401"):
             fetch_apify_dataset_items("invalid-token", transport, "some-run-id")
+
+    def test_qualify_obvious_cafe_with_website_and_phone(self) -> None:
+        lead = {
+            "workflow_id": "lead-1",
+            "venue_name": "Kaffeehaus Mitte",
+            "venue_type": "Cafe",
+            "city": "Berlin",
+            "website": "https://kaffeehaus-mitte.de",
+            "website_domain": "kaffeehaus-mitte.de",
+            "phone": "+49 30 12345678",
+        }
+        res = evaluate_lead_qualification(lead)
+        self.assertEqual(res.status, "qualified")
+        self.assertEqual(res.score, 82)
+        self.assertIn("category_hospitality", res.reasons)
+        self.assertIn("custom_domain_website", res.reasons)
+        self.assertIn("phone_present", res.reasons)
+        self.assertTrue(res.evidence["has_website"])
+        self.assertTrue(res.evidence["has_phone"])
+        self.assertFalse(res.evidence["is_hosted_or_social_domain"])
+
+    def test_qualify_electrical_repair_shop_with_cafe_name_needs_review(self) -> None:
+        lead = {
+            "workflow_id": "lead-2",
+            "venue_name": "Cafe Espresso Electro Reparatur",
+            "venue_type": "Electrical repair shop",
+            "city": "Berlin",
+            "website": "https://electro-reparatur.de",
+            "website_domain": "electro-reparatur.de",
+            "phone": "+49 30 87654321",
+        }
+        res = evaluate_lead_qualification(lead)
+        self.assertEqual(res.status, "needs_review")
+        self.assertEqual(res.score, 55)
+        self.assertTrue(any("conflicting_signal" in r for r in res.reasons))
+
+    def test_qualify_wholesaler_rejected(self) -> None:
+        lead = {
+            "workflow_id": "lead-3",
+            "venue_name": "Gastro Großhandel Süd",
+            "venue_type": "Wholesaler",
+            "city": "Munich",
+            "website": "https://gastro-grosshandel.de",
+            "phone": "+49 89 11223344",
+        }
+        res = evaluate_lead_qualification(lead)
+        self.assertEqual(res.status, "rejected")
+        self.assertEqual(res.score, 12)
+        self.assertTrue(any("non_target_category" in r for r in res.reasons))
+
+    def test_qualify_cafe_with_hosted_or_social_domain_needs_review(self) -> None:
+        domains = [
+            "https://mycafe.canva.site",
+            "https://mycafe.sumup.link",
+            "https://mycafe.metro.rest",
+            "https://instagram.com/mycafe",
+            "https://facebook.com/mycafe",
+        ]
+        for url in domains:
+            lead = {
+                "workflow_id": f"lead-social-{url}",
+                "venue_name": "Sunshine Cafe",
+                "venue_type": "Cafe",
+                "city": "Hamburg",
+                "website": url,
+                "phone": "+49 40 998877",
+            }
+            res = evaluate_lead_qualification(lead)
+            self.assertEqual(res.status, "needs_review", f"Failed for domain {url}")
+            self.assertEqual(res.score, 65)
+            self.assertTrue(any("hosted_or_social_domain" in r for r in res.reasons))
+            self.assertTrue(res.evidence["is_hosted_or_social_domain"])
+
+    def test_qualify_batch_idempotency_and_summary_output(self) -> None:
+        leads_fixture = [
+            {
+                "workflow_id": "lead-101",
+                "venue_name": "Artisan Coffee Roasters",
+                "venue_type": "Coffee roastery",
+                "city": "Frankfurt",
+                "website": "https://artisan-coffee.de",
+                "phone": "+49 69 12345",
+            },
+            {
+                "workflow_id": "lead-102",
+                "venue_name": "Auto & Cafe Repair",
+                "venue_type": "Car repair",
+                "city": "Frankfurt",
+                "website": "https://autorepair.de",
+                "phone": "+49 69 54321",
+            },
+            {
+                "workflow_id": "lead-103",
+                "venue_name": "Elektro Handel GmbH",
+                "venue_type": "Wholesaler",
+                "city": "Frankfurt",
+                "website": "https://elektro-handel.de",
+                "phone": "+49 69 99999",
+            },
+            {
+                "workflow_id": "lead-104",
+                "venue_name": "Little Bakery Cafe",
+                "venue_type": "Bakery",
+                "city": "Frankfurt",
+                "website": "https://littlebakery.sumup.store",
+                "phone": "",
+            },
+        ]
+
+        updated_leads: dict[str, dict] = {}
+
+        def fake_update(
+            workflow_id: str,
+            qualification_status: str,
+            qualification_score: int,
+            qualification_reasons: list,
+            qualification_evidence: dict,
+        ) -> None:
+            updated_leads[workflow_id] = {
+                "status": qualification_status,
+                "score": qualification_score,
+                "reasons": qualification_reasons,
+                "evidence": qualification_evidence,
+            }
+
+        with patch("system_1.qualify_discovery_leads.db.ensure_schema"), \
+             patch("system_1.qualify_discovery_leads.db.fetch_leads_by_status", return_value=leads_fixture), \
+             patch("system_1.qualify_discovery_leads.db.update_lead_qualification", side_effect=fake_update):
+
+            summary1 = qualify_leads_batch(status="new", limit=50)
+
+        self.assertEqual(summary1.total_inspected, 4)
+        self.assertEqual(summary1.qualified, 1)
+        self.assertEqual(summary1.rejected, 1)
+        self.assertEqual(summary1.needs_review, 2)
+        self.assertEqual(summary1.failed, 0)
+        self.assertEqual(len(updated_leads), 4)
+
+        # Verify idempotency: running again on same records updates same keys in place
+        with patch("system_1.qualify_discovery_leads.db.ensure_schema"), \
+             patch("system_1.qualify_discovery_leads.db.fetch_leads_by_status", return_value=leads_fixture), \
+             patch("system_1.qualify_discovery_leads.db.update_lead_qualification", side_effect=fake_update):
+
+            summary2 = qualify_leads_batch(status="new", limit=50)
+
+        self.assertEqual(summary2.total_inspected, 4)
+        self.assertEqual(summary2.qualified, 1)
+        self.assertEqual(summary2.rejected, 1)
+        self.assertEqual(summary2.needs_review, 2)
+        self.assertEqual(len(updated_leads), 4)
+
+        # Verify summary formatting
+        summary_text = format_qualification_summary(summary1)
+        self.assertIn("Total Inspected: 4", summary_text)
+        self.assertIn("Qualified:       1", summary_text)
+        self.assertIn("Rejected:        1", summary_text)
+        self.assertIn("Needs Review:    2", summary_text)
+        self.assertIn("Failed:          0", summary_text)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
