@@ -121,6 +121,11 @@ from system_1.qualify_discovery_leads import (
     format_qualification_summary,
     qualify_leads_batch,
 )
+from system_1.plan_discovery_enrichment import (
+    format_plan_summary,
+    plan_enrichment_batch,
+    plan_lead_enrichment_steps,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -1024,6 +1029,133 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Rejected:        1", summary_text)
         self.assertIn("Needs Review:    2", summary_text)
         self.assertIn("Failed:          0", summary_text)
+
+    def test_plan_discovery_enrichment_steps_and_attributes(self) -> None:
+        # 1. Qualified lead with custom website
+        lead_custom = {
+            "workflow_id": "lead-custom",
+            "qualification_status": "qualified",
+            "venue_name": "Specialty Coffee Berlin",
+            "website": "https://specialty-coffee.de",
+            "website_domain": "specialty-coffee.de",
+            "phone": "+49 30 11111",
+            "email": "",
+        }
+        steps_custom = plan_lead_enrichment_steps(lead_custom)
+        step_names = [s.name for s in steps_custom]
+        self.assertIn("website_review", step_names)
+        self.assertIn("email_lookup", step_names)
+        self.assertIn("phone_validation", step_names)
+        self.assertIn("dolibarr_duplicate_check", step_names)
+        self.assertIn("menu_or_product_signal_check", step_names)
+
+        # email_lookup requires external call, may cost money, and requires human approval
+        email_step = next(s for s in steps_custom if s.name == "email_lookup")
+        self.assertTrue(email_step.requires_external_call)
+        self.assertTrue(email_step.may_cost_money)
+        self.assertTrue(email_step.requires_human_approval)
+
+        # 2. Needs_review social-only lead (e.g. Canva / Instagram)
+        lead_social = {
+            "workflow_id": "lead-social",
+            "qualification_status": "needs_review",
+            "venue_name": "Social Cafe",
+            "website": "https://socialcafe.canva.site",
+            "website_domain": "socialcafe.canva.site",
+            "phone": "",
+            "email": "",
+        }
+        steps_social = plan_lead_enrichment_steps(lead_social)
+        social_step_names = [s.name for s in steps_social]
+        self.assertIn("instagram_review", social_step_names)
+        self.assertNotIn("website_review", social_step_names)
+
+        # 3. Missing website + phone
+        lead_no_web = {
+            "workflow_id": "lead-no-web",
+            "qualification_status": "needs_review",
+            "venue_name": "Phone Only Cafe",
+            "website": "",
+            "phone": "+49 30 22222",
+            "email": "",
+        }
+        steps_no_web = plan_lead_enrichment_steps(lead_no_web)
+        no_web_step_names = [s.name for s in steps_no_web]
+        self.assertIn("phone_validation", no_web_step_names)
+        self.assertIn("website_discovery", no_web_step_names)
+
+    def test_plan_enrichment_batch_skips_rejected_and_is_idempotent(self) -> None:
+        leads_fixture = [
+            {
+                "workflow_id": "lead-q1",
+                "qualification_status": "qualified",
+                "venue_name": "Cafe Alpha",
+                "website": "https://cafe-alpha.de",
+                "phone": "+49 30 11",
+                "email": "",
+            },
+            {
+                "workflow_id": "lead-r1",
+                "qualification_status": "rejected",
+                "venue_name": "Wholesale Beta",
+                "website": "https://beta-wholesale.de",
+                "phone": "+49 30 22",
+                "email": "",
+            },
+            {
+                "workflow_id": "lead-nr1",
+                "qualification_status": "needs_review",
+                "venue_name": "Instagram Cafe",
+                "website": "https://instagram.com/instacafe",
+                "phone": "+49 30 33",
+                "email": "",
+            },
+        ]
+
+        plans_store: dict[str, dict] = {}
+
+        def fake_upsert(workflow_id: str, qualification_status: str, steps: list) -> bool:
+            is_new = workflow_id not in plans_store
+            plans_store[workflow_id] = {
+                "qualification_status": qualification_status,
+                "steps": steps,
+            }
+            return is_new
+
+        with patch("system_1.plan_discovery_enrichment.db.ensure_schema"), \
+             patch("system_1.plan_discovery_enrichment.db.fetch_leads_for_enrichment_planning", return_value=leads_fixture), \
+             patch("system_1.plan_discovery_enrichment.db.upsert_enrichment_plan", side_effect=fake_upsert):
+
+            summary1 = plan_enrichment_batch(statuses=("qualified", "needs_review"), limit=50)
+
+        self.assertEqual(summary1.leads_inspected, 2)
+        self.assertEqual(summary1.plans_created, 2)
+        self.assertEqual(summary1.plans_updated, 0)
+        self.assertEqual(summary1.rejected_skipped, 1)
+        self.assertEqual(summary1.paid_steps_pending_approval, 1)  # lead-q1 email_lookup
+        self.assertEqual(summary1.external_steps_pending_approval, 1)
+        self.assertEqual(summary1.failed, 0)
+        self.assertIn("lead-q1", plans_store)
+        self.assertIn("lead-nr1", plans_store)
+        self.assertNotIn("lead-r1", plans_store)
+
+        # Rerun to test idempotency
+        with patch("system_1.plan_discovery_enrichment.db.ensure_schema"), \
+             patch("system_1.plan_discovery_enrichment.db.fetch_leads_for_enrichment_planning", return_value=leads_fixture), \
+             patch("system_1.plan_discovery_enrichment.db.upsert_enrichment_plan", side_effect=fake_upsert):
+
+            summary2 = plan_enrichment_batch(statuses=("qualified", "needs_review"), limit=50)
+
+        self.assertEqual(summary2.leads_inspected, 2)
+        self.assertEqual(summary2.plans_created, 0)
+        self.assertEqual(summary2.plans_updated, 2)
+        self.assertEqual(summary2.rejected_skipped, 1)
+
+        summary_text = format_plan_summary(summary1)
+        self.assertIn("Leads Inspected:                 2", summary_text)
+        self.assertIn("Plans Created:                   2", summary_text)
+        self.assertIn("Rejected Skipped:                1", summary_text)
+        self.assertIn("Paid Steps Pending Approval:     1", summary_text)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

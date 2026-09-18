@@ -112,6 +112,17 @@ def ensure_schema() -> None:
         )
         connection.execute(
             """
+            CREATE TABLE IF NOT EXISTS lead_enrichment_plans (
+                workflow_id TEXT PRIMARY KEY REFERENCES leads(workflow_id),
+                qualification_status TEXT NOT NULL,
+                steps JSONB NOT NULL DEFAULT '[]'::JSONB,
+                created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+        connection.execute(
+            """
             CREATE TABLE IF NOT EXISTS lead_research_evidence (
                 evidence_key TEXT PRIMARY KEY,
                 workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
@@ -516,3 +527,74 @@ def update_lead_qualification(
                 workflow_id,
             ),
         )
+
+
+def fetch_leads_for_enrichment_planning(
+    statuses: Sequence[str], limit: int = 50
+) -> list[dict[str, object]]:
+    """Query leads by qualification status for enrichment planning."""
+    with connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT workflow_id, venue_name, city, venue_type, source_url,
+                   website, instagram, email, phone, website_domain,
+                   qualification_status, qualification_score, status
+            FROM leads
+            WHERE qualification_status = ANY(%s)
+            ORDER BY created_at ASC
+            LIMIT %s
+            """,
+            (list(statuses), limit),
+        ).fetchall()
+    leads = []
+    for r in rows:
+        leads.append({
+            "workflow_id": r[0],
+            "venue_name": r[1],
+            "city": r[2],
+            "venue_type": r[3],
+            "source_url": r[4],
+            "website": r[5],
+            "instagram": r[6],
+            "email": r[7],
+            "phone": r[8],
+            "website_domain": r[9],
+            "qualification_status": r[10],
+            "qualification_score": r[11],
+            "status": r[12],
+        })
+    return leads
+
+
+def upsert_enrichment_plan(
+    workflow_id: str,
+    qualification_status: str,
+    steps: list[dict[str, object]],
+) -> bool:
+    """Insert or update lead enrichment plan. Returns True if created, False if updated."""
+    with connect() as connection:
+        existing = connection.execute(
+            "SELECT workflow_id FROM lead_enrichment_plans WHERE workflow_id = %s",
+            (workflow_id,),
+        ).fetchone()
+        if existing is None:
+            connection.execute(
+                """
+                INSERT INTO lead_enrichment_plans
+                    (workflow_id, qualification_status, steps)
+                VALUES (%s, %s, %s::jsonb)
+                """,
+                (workflow_id, qualification_status, json.dumps(steps, ensure_ascii=True)),
+            )
+            return True
+        connection.execute(
+            """
+            UPDATE lead_enrichment_plans
+            SET qualification_status = %s,
+                steps = %s::jsonb,
+                updated_at = NOW()
+            WHERE workflow_id = %s
+            """,
+            (qualification_status, json.dumps(steps, ensure_ascii=True), workflow_id),
+        )
+        return False
