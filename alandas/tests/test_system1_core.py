@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import asyncio
+import json
+import os
 import unittest
 from datetime import date, datetime, timezone
-import json
 from decimal import Decimal
 from pathlib import Path
 import sys
@@ -151,6 +152,18 @@ from system_1.record_manual_enrichment_evidence import (
     ManualEvidenceSummary,
     format_manual_evidence_summary,
     record_manual_enrichment_evidence,
+)
+from system_1.social_enrichment_provider import (
+    ApifyEnrichmentAdapter,
+    ApifyEnrichmentConfig,
+    FirecrawlAdapter,
+    FirecrawlConfig,
+    PlannedEnrichmentAction,
+    ProviderPlanningSummary,
+    format_provider_planning_summary,
+    plan_lead_provider_routing,
+    plan_provider_enrichment,
+    render_provider_planning_report,
 )
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
@@ -1990,6 +2003,210 @@ class System1CoreTests(unittest.TestCase):
             # 6. Verify single record per workflow_id + step_name + field in DB store
             self.assertEqual(len(db_store), 1)
             self.assertIn(("lead-1", "website_review", "owner_name"), db_store)
+
+    def test_social_enrichment_provider_configs_and_actor_registry(self) -> None:
+        # 1. Defaults are disabled
+        with patch.dict(os.environ, {}, clear=True):
+            fc = FirecrawlConfig.from_env()
+            self.assertFalse(fc.enabled)
+            self.assertEqual(fc.api_key, "")
+            self.assertEqual(fc.max_credits_per_run, 50)
+            self.assertEqual(fc.max_pages_per_lead, 5)
+
+            ap = ApifyEnrichmentConfig.from_env()
+            self.assertFalse(ap.enabled)
+            self.assertEqual(ap.api_token, "")
+            self.assertEqual(ap.max_cost_usd, Decimal("1.00"))
+            self.assertEqual(ap.max_results_per_actor, 10)
+            self.assertEqual(ap.instagram_profile_actors, ())
+            self.assertEqual(ap.facebook_page_actors, ())
+            self.assertEqual(ap.people_fallback_actors, ())
+
+        # 2. Actor registry parsing and grouping
+        custom_env = {
+            "SYSTEM1_FIRECRAWL_ENABLED": "true",
+            "FIRECRAWL_API_KEY": "fc-test-key",
+            "SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN": "100",
+            "SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD": "10",
+            "SYSTEM1_APIFY_ENRICHMENT_ENABLED": "1",
+            "APIFY_API_TOKEN": "apify-test-token",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_COST_USD": "2.50",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_RESULTS_PER_ACTOR": "20",
+            "SYSTEM1_APIFY_INSTAGRAM_PROFILE_ACTORS": "apify/instagram-profile-scraper, user/insta-tool",
+            "SYSTEM1_APIFY_FACEBOOK_PAGE_ACTORS": "apify/facebook-pages-scraper",
+            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "actor/people-finder, actor/phone-finder",
+        }
+        with patch.dict(os.environ, custom_env, clear=True):
+            fc2 = FirecrawlConfig.from_env()
+            self.assertTrue(fc2.enabled)
+            self.assertEqual(fc2.api_key, "fc-test-key")
+            self.assertEqual(fc2.max_credits_per_run, 100)
+            self.assertEqual(fc2.max_pages_per_lead, 10)
+
+            ap2 = ApifyEnrichmentConfig.from_env()
+            self.assertTrue(ap2.enabled)
+            self.assertEqual(ap2.api_token, "apify-test-token")
+            self.assertEqual(ap2.max_cost_usd, Decimal("2.50"))
+            self.assertEqual(ap2.max_results_per_actor, 20)
+            self.assertEqual(
+                ap2.instagram_profile_actors,
+                ("apify/instagram-profile-scraper", "user/insta-tool"),
+            )
+            self.assertEqual(ap2.facebook_page_actors, ("apify/facebook-pages-scraper",))
+            self.assertEqual(
+                ap2.people_fallback_actors,
+                ("actor/people-finder", "actor/phone-finder"),
+            )
+
+    def test_social_enrichment_adapters_fail_closed_and_enforce_caps(self) -> None:
+        transport = FakeTransport({"success": True})
+
+        # 1. Disabled Firecrawl makes zero network calls and raises
+        disabled_fc = FirecrawlConfig(api_key="key", enabled=False)
+        fc_adapter = FirecrawlAdapter(disabled_fc, transport=transport)
+        with self.assertRaisesRegex(RuntimeError, "Firecrawl enrichment is disabled"):
+            fc_adapter.scrape_url("https://example.com")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 2. Enabled Firecrawl missing key fails closed
+        missing_key_fc = FirecrawlConfig(api_key="", enabled=True)
+        fc_adapter_no_key = FirecrawlAdapter(missing_key_fc, transport=transport)
+        with self.assertRaisesRegex(ValueError, "FIRECRAWL_API_KEY is missing"):
+            fc_adapter_no_key.scrape_url("https://example.com")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 3. Firecrawl caps enforced before network call
+        enabled_fc = FirecrawlConfig(api_key="key", enabled=True, max_pages_per_lead=3)
+        fc_adapter_valid = FirecrawlAdapter(enabled_fc, transport=transport)
+        with self.assertRaisesRegex(ValueError, "exceeds configured max pages"):
+            fc_adapter_valid.scrape_url("https://example.com", pages_limit=5)
+        self.assertEqual(len(transport.requests), 0)
+
+        # Valid call executes with auth header
+        res_fc = fc_adapter_valid.scrape_url("https://example.com", pages_limit=2)
+        self.assertEqual(res_fc.status_code, 201)
+        self.assertEqual(len(transport.requests), 1)
+
+        # 4. Disabled Apify makes zero network calls and raises
+        disabled_ap = ApifyEnrichmentConfig(api_token="token", enabled=False)
+        ap_adapter = ApifyEnrichmentAdapter(disabled_ap, transport=transport)
+        with self.assertRaisesRegex(RuntimeError, "Apify enrichment is disabled"):
+            ap_adapter.run_actor("actor-1", "instagram", {}, Decimal("0.50"))
+        self.assertEqual(len(transport.requests), 1)  # unchanged from previous call
+
+        # 5. Enabled Apify missing key fails closed
+        no_key_ap = ApifyEnrichmentConfig(api_token="", enabled=True)
+        ap_adapter_no_key = ApifyEnrichmentAdapter(no_key_ap, transport=transport)
+        with self.assertRaisesRegex(ValueError, "APIFY_API_TOKEN is missing"):
+            ap_adapter_no_key.run_actor("actor-1", "instagram", {}, Decimal("0.50"))
+        self.assertEqual(len(transport.requests), 1)
+
+        # 6. Apify cost cap enforced before network call
+        enabled_ap = ApifyEnrichmentConfig(api_token="token", enabled=True, max_cost_usd=Decimal("0.80"))
+        ap_adapter_valid = ApifyEnrichmentAdapter(enabled_ap, transport=transport)
+        with self.assertRaisesRegex(ValueError, "exceeds configured max cost"):
+            ap_adapter_valid.run_actor("actor-1", "instagram", {}, Decimal("1.20"))
+        self.assertEqual(len(transport.requests), 1)
+
+        # 7. People fallback actors blocked by default unless explicitly approved
+        with self.assertRaisesRegex(ValueError, "People fallback actors are blocked by default"):
+            ap_adapter_valid.run_actor("actor-people", "people_fallback", {}, Decimal("0.50"))
+        self.assertEqual(len(transport.requests), 1)
+
+        # Approved people fallback executes
+        res_ap = ap_adapter_valid.run_actor("actor-people", "people_fallback", {}, Decimal("0.50"), approved_by="Cyril")
+        self.assertEqual(res_ap.status_code, 201)
+        self.assertEqual(len(transport.requests), 2)
+
+    def test_provider_enrichment_dry_run_routing_logic(self) -> None:
+        fc_cfg = FirecrawlConfig(api_key="", enabled=False)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="",
+            enabled=False,
+            instagram_profile_actors=("apify/instagram-profile-scraper",),
+            facebook_page_actors=("apify/facebook-pages-scraper",),
+            people_fallback_actors=("apify/people-finder",),
+        )
+
+        # Lead 1: Custom website -> Firecrawl step
+        lead_web = {
+            "workflow_id": "lead-web-1",
+            "venue_name": "Specialty Coffee",
+            "city": "Berlin",
+            "website": "https://specialtycoffee.de",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=1",
+        }
+        routes_web = plan_lead_provider_routing(lead_web, fc_cfg, ap_cfg)
+        fc_routes = [r for r in routes_web if r.provider == "firecrawl"]
+        self.assertEqual(len(fc_routes), 1)
+        self.assertEqual(fc_routes[0].target_type, "website_pages")
+        self.assertEqual(fc_routes[0].target_value, "https://specialtycoffee.de")
+
+        # Lead 2: Instagram URL -> Instagram actor group
+        lead_insta = {
+            "workflow_id": "lead-insta-2",
+            "venue_name": "Insta Brunch",
+            "city": "Berlin",
+            "website": "",
+            "instagram": "https://instagram.com/instabrunch",
+            "source_url": "https://maps.google.com/?cid=2",
+        }
+        routes_insta = plan_lead_provider_routing(lead_insta, fc_cfg, ap_cfg)
+        ig_routes = [r for r in routes_insta if r.provider == "apify_instagram"]
+        self.assertEqual(len(ig_routes), 1)
+        self.assertEqual(ig_routes[0].actor_id, "apify/instagram-profile-scraper")
+        self.assertEqual(ig_routes[0].target_value, "https://instagram.com/instabrunch")
+
+        # Lead 3: Facebook URL -> Facebook actor group
+        lead_fb = {
+            "workflow_id": "lead-fb-3",
+            "venue_name": "Facebook Cafe",
+            "city": "Berlin",
+            "website": "https://facebook.com/fbcafeberlin",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=3",
+        }
+        routes_fb = plan_lead_provider_routing(lead_fb, fc_cfg, ap_cfg)
+        fb_routes = [r for r in routes_fb if r.provider == "apify_facebook"]
+        self.assertEqual(len(fb_routes), 1)
+        self.assertEqual(fb_routes[0].actor_id, "apify/facebook-pages-scraper")
+        self.assertEqual(fb_routes[0].target_value, "https://facebook.com/fbcafeberlin")
+
+        # Lead 4: No custom website, no social URL -> needs_operator_review
+        lead_none = {
+            "workflow_id": "lead-none-4",
+            "venue_name": "Offline Corner",
+            "city": "Berlin",
+            "website": "",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=4",
+        }
+        routes_none = plan_lead_provider_routing(lead_none, fc_cfg, ap_cfg)
+        review_routes = [r for r in routes_none if r.status == "needs_operator_review"]
+        self.assertEqual(len(review_routes), 1)
+        self.assertIn("requires operator review", review_routes[0].reason)
+
+        # People fallback is always tagged blocked_by_default
+        fallback_routes = [r for r in routes_web if r.provider == "apify_people_fallback"]
+        self.assertEqual(len(fallback_routes), 1)
+        self.assertEqual(fallback_routes[0].status, "blocked_by_default")
+
+        # End-to-end dry-run report rendering
+        report_text, summary = render_provider_planning_report([lead_web, lead_insta, lead_fb, lead_none], fc_cfg, ap_cfg)
+        self.assertEqual(summary.leads_inspected, 4)
+        self.assertEqual(summary.firecrawl_routes, 1)
+        self.assertEqual(summary.instagram_routes, 1)
+        self.assertEqual(summary.facebook_routes, 1)
+        self.assertEqual(summary.people_fallback_blocked, 4)
+        self.assertEqual(summary.needs_operator_review, 1)
+
+        self.assertIn("=== Provider Enrichment Planning Summary ===", report_text)
+        self.assertIn("Firecrawl Website Routes:  1", report_text)
+        self.assertIn("Instagram Actor Routes:    1", report_text)
+        self.assertIn("Facebook Actor Routes:     1", report_text)
+        self.assertIn("People Fallback Blocked:   4", report_text)
+        self.assertIn("Needs Operator Review:     1", report_text)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
