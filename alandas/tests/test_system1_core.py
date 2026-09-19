@@ -1833,7 +1833,7 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(res2_duplicate.status, "already_exists")
 
             # 7b. Existing evidence with changed value returns updated
-            res2_updated = record_manual_enrichment_evidence(
+            res2_val_updated = record_manual_enrichment_evidence(
                 workflow_id="lead-mitte-1",
                 step_name="menu_or_product_signal_check",
                 field="matcha_served",
@@ -1841,8 +1841,47 @@ class System1CoreTests(unittest.TestCase):
                 source_url="https://kaffee-mitte.de/menu",
                 recorded_by="Cyril",
             )
-            self.assertEqual(res2_updated.status, "updated")
-            self.assertEqual(res2_updated.value, "yes, ceremonial grade iced matcha latte from Kyoto")
+            self.assertEqual(res2_val_updated.status, "updated")
+            self.assertEqual(res2_val_updated.value, "yes, ceremonial grade iced matcha latte from Kyoto")
+
+            # 7c. Existing evidence with changed source_url returns updated
+            res2_url_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2_url_updated.status, "updated")
+            self.assertEqual(res2_url_updated.source_url, "https://kaffee-mitte.de/drinks-menu-2026")
+
+            # 7d. Existing evidence with changed recorded_by returns updated
+            res2_rec_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(res2_rec_updated.status, "updated")
+            self.assertEqual(res2_rec_updated.recorded_by, "Operator2")
+
+            # 7e. Re-submitting identical values returns already_exists again
+            res2_same_again = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(res2_same_again.status, "already_exists")
+
+            # 7f. Verify store maintains exactly one record per workflow_id + step_name + field
+            target_keys = [k for k in evidence_store if k == ("lead-mitte-1", "menu_or_product_signal_check", "matcha_served")]
+            self.assertEqual(len(target_keys), 1)
 
             # 8. Summary formatting check
             summary_text = format_manual_evidence_summary(res1)
@@ -1886,6 +1925,7 @@ class System1CoreTests(unittest.TestCase):
                 return False
 
         with patch("system_1.db.connect", return_value=FakeEvidenceDbConn()):
+            # 1. New insertion returns created
             rec, status1 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
@@ -1899,7 +1939,7 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(rec["field"], "owner_name")
             self.assertEqual(rec["value"], "John Doe")
 
-            # Duplicate call with identical values
+            # 2. Duplicate call with identical values returns already_exists
             rec2, status2 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
@@ -1911,7 +1951,7 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(status2, "already_exists")
             self.assertEqual(rec2["workflow_id"], "lead-1")
 
-            # Update call with changed value
+            # 3. Update call with changed value returns updated
             rec3, status3 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
@@ -1922,6 +1962,34 @@ class System1CoreTests(unittest.TestCase):
             )
             self.assertEqual(status3, "updated")
             self.assertEqual(rec3["value"], "Jane Doe")
+
+            # 4. Update call with changed source_url returns updated
+            rec4, status4 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com/team",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(status4, "updated")
+            self.assertEqual(rec4["source_url"], "https://example.com/team")
+
+            # 5. Update call with changed recorded_by returns updated
+            rec5, status5 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com/team",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(status5, "updated")
+            self.assertEqual(rec5["recorded_by"], "Operator2")
+
+            # 6. Verify single record per workflow_id + step_name + field in DB store
+            self.assertEqual(len(db_store), 1)
+            self.assertIn(("lead-1", "website_review", "owner_name"), db_store)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
