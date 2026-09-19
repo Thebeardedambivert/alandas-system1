@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from typing import Any, Protocol
+from urllib.error import HTTPError
 from urllib.request import Request, urlopen
 
 
@@ -39,7 +40,20 @@ class UrllibHttpTransport:
         timeout_seconds: int,
     ) -> HttpResponse:
         request = Request(url, data=body, headers=headers, method=method)
-        with self._open_request(request, timeout=timeout_seconds) as response:
-            payload = response.read()
-            decoded = json.loads(payload.decode("utf-8")) if payload else {}
-            return HttpResponse(response.status, decoded)
+        try:
+            with self._open_request(request, timeout=timeout_seconds) as response:
+                payload = response.read()
+                decoded = json.loads(payload.decode("utf-8")) if payload else {}
+                return HttpResponse(response.status, decoded)
+        except HTTPError as error:
+            try:
+                payload = error.read()
+            finally:
+                error.close()
+            decoded = None
+            if payload:
+                try:
+                    decoded = json.loads(payload.decode("utf-8"))
+                except Exception:
+                    decoded = {"error": payload.decode("utf-8", errors="replace")}
+            return HttpResponse(error.code, decoded if decoded is not None else {})
