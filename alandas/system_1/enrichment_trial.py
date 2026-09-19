@@ -26,6 +26,7 @@ from system_1.social_enrichment_provider import (
     ApifyEnrichmentConfig,
     DiscoveredEvidence,
     EnrichmentStatus,
+    EvidenceStorageOutcome,
     FirecrawlAdapter,
     FirecrawlConfig,
     PlannedEnrichmentAction,
@@ -37,6 +38,8 @@ from system_1.social_enrichment_provider import (
     store_discovered_evidence,
     validate_scrape_target_url,
 )
+
+DEFAULT_APIFY_ACTOR_COST_USD = Decimal("0.50")
 
 
 # ---------------------------------------------------------------------------
@@ -160,13 +163,13 @@ def evaluate_lead_trial_steps(
             cost_usd = Decimal("0.00")
         elif provider == "apify_instagram":
             step_name = "instagram_review"
-            cost_usd = step_estimated_cost or Decimal("0.50")
+            cost_usd = step_estimated_cost or DEFAULT_APIFY_ACTOR_COST_USD
         elif provider == "apify_facebook":
             step_name = "facebook_review"
-            cost_usd = step_estimated_cost or Decimal("0.50")
+            cost_usd = step_estimated_cost or DEFAULT_APIFY_ACTOR_COST_USD
         elif provider == "apify_people_fallback":
             step_name = "people_fallback"
-            cost_usd = step_estimated_cost or Decimal("0.50")
+            cost_usd = step_estimated_cost or DEFAULT_APIFY_ACTOR_COST_USD
         else:
             step_name = route.target_type
             cost_usd = Decimal("0.00")
@@ -537,6 +540,10 @@ def run_enrichment_trial(
     executed_failed = 0
     execution_outcomes: list[StepExecutionOutcome] = []
     all_discovered_evidence: list[DiscoveredEvidence] = []
+    dynamic_steps_planned = 0
+    dynamic_steps_skipped_disabled = 0
+    dynamic_steps_blocked_cost = 0
+    dynamic_steps_would_call = 0
 
     # If execute mode requested and dry_run explicitly False
     if execute and not dry_run:
@@ -578,16 +585,31 @@ def run_enrichment_trial(
                                 source_url=step.target_value,
                             )
                             if step.workflow_id and discovered_ev:
-                                store_discovered_evidence(
+                                storage_outcomes = store_discovered_evidence(
                                     workflow_id=step.workflow_id,
                                     evidence=discovered_ev,
                                     store_fn=evidence_store_fn,
                                 )
+                                for so in storage_outcomes:
+                                    if so.status == "evidence_storage_failed":
+                                        execution_outcomes.append(
+                                            StepExecutionOutcome(
+                                                workflow_id=step.workflow_id,
+                                                provider="storage",
+                                                step_name=f"store_{so.field}",
+                                                status="evidence_storage_failed",
+                                                operator_message=so.operator_message,
+                                                next_action="operator_inspect_database",
+                                            )
+                                        )
+                                        executed_failed += 1
                             all_discovered_evidence.extend(discovered_ev)
 
                             for fu_action in follow_ups:
                                 fu_group = fu_action.provider.replace("apify_", "")
+                                dynamic_steps_planned += 1
                                 if not ap_config.enabled:
+                                    dynamic_steps_skipped_disabled += 1
                                     execution_outcomes.append(
                                         StepExecutionOutcome(
                                             workflow_id=step.workflow_id,
@@ -600,6 +622,28 @@ def run_enrichment_trial(
                                     )
                                     continue
 
+                                fu_cost = DEFAULT_APIFY_ACTOR_COST_USD
+                                if current_total_estimated + fu_cost > max_budget:
+                                    dynamic_steps_blocked_cost += 1
+                                    execution_outcomes.append(
+                                        StepExecutionOutcome(
+                                            workflow_id=step.workflow_id,
+                                            provider=fu_action.provider,
+                                            step_name=f"{fu_group}_review",
+                                            status="blocked_cost_cap",
+                                            operator_message=(
+                                                f"Dynamic follow-up {fu_action.provider} blocked: estimated cost "
+                                                f"${fu_cost:.2f} would exceed total budget cap ${max_budget:.2f} "
+                                                f"(current total: ${current_total_estimated:.2f})"
+                                            ),
+                                            next_action="operator_increase_budget_cap",
+                                        )
+                                    )
+                                    continue
+
+                                current_total_estimated += fu_cost
+                                dynamic_steps_would_call += 1
+
                                 fu_input = build_apify_actor_input(
                                     lead=lead_data,
                                     group=fu_group,
@@ -609,7 +653,7 @@ def run_enrichment_trial(
                                     actor_id=fu_action.actor_id,
                                     group=fu_group,
                                     input_data=fu_input,
-                                    estimated_cost_usd=Decimal("0.50"),
+                                    estimated_cost_usd=fu_cost,
                                 )
                                 execution_outcomes.append(
                                     StepExecutionOutcome(
@@ -666,12 +710,12 @@ def run_enrichment_trial(
 
     final_summary = EnrichmentTrialSummary(
         leads_inspected=summary.leads_inspected,
-        provider_steps_planned=summary.provider_steps_planned,
-        steps_skipped_disabled=summary.steps_skipped_disabled,
+        provider_steps_planned=summary.provider_steps_planned + dynamic_steps_planned,
+        steps_skipped_disabled=summary.steps_skipped_disabled + dynamic_steps_skipped_disabled,
         steps_blocked_missing_approval=summary.steps_blocked_missing_approval,
-        steps_blocked_cost_cap=summary.steps_blocked_cost_cap,
-        steps_would_call_provider=summary.steps_would_call_provider,
-        estimated_max_spend_usd=summary.estimated_max_spend_usd,
+        steps_blocked_cost_cap=summary.steps_blocked_cost_cap + dynamic_steps_blocked_cost,
+        steps_would_call_provider=summary.steps_would_call_provider + dynamic_steps_would_call,
+        estimated_max_spend_usd=current_total_estimated,
         executed_steps_succeeded=executed_succeeded,
         executed_steps_failed=executed_failed,
         execution_outcomes=execution_outcomes,

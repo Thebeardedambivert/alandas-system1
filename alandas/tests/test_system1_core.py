@@ -159,6 +159,7 @@ from system_1.social_enrichment_provider import (
     ApifyEnrichmentConfig,
     DiscoveredEvidence,
     EnrichmentStatus,
+    EvidenceStorageOutcome,
     FirecrawlAdapter,
     FirecrawlConfig,
     PlannedEnrichmentAction,
@@ -2615,8 +2616,9 @@ Visit our cafe or connect with us on social media:
             stored_records.append((wf_id, rec))
             return True
 
-        stored_count = store_discovered_evidence("lead-fc-1", evidence, store_fn=mock_store)
-        self.assertEqual(stored_count, len(evidence))
+        storage_outcomes = store_discovered_evidence("lead-fc-1", evidence, store_fn=mock_store)
+        self.assertEqual(len(storage_outcomes), len(evidence))
+        self.assertTrue(all(o.status == "evidence_stored" for o in storage_outcomes))
         self.assertTrue(all(r[1].method == "firecrawl" for r in stored_records))
         self.assertTrue(all(r[1].source_url == "https://matchamitte.de" for r in stored_records))
 
@@ -2692,6 +2694,118 @@ Visit our cafe or connect with us on social media:
             self.assertIn("Discovered Evidence:", report_str)
             self.assertIn("[whatsapp]", report_str)
             self.assertIn("requires approval: yes", report_str)
+
+    def test_dynamic_followup_budget_cap_enforcement_and_storage_failures(self) -> None:
+        fc_payload = {
+            "markdown": """
+# Coffee Roastery Berlin
+Visit our cafe!
+* Instagram: https://instagram.com/coffee_berlin
+* Facebook: https://facebook.com/coffeeberlinpage
+* Contact: info@coffeeberlin.de
+""",
+            "metadata": {"sourceURL": "https://coffeeberlin.de"},
+        }
+
+        class MockCapTransport:
+            def __init__(self) -> None:
+                self.calls: list[str] = []
+            def request(self, method: str, url: str, headers: dict[str, str], body: bytes | None, timeout_seconds: int) -> HttpResponse:
+                self.calls.append(url)
+                if "firecrawl" in url:
+                    return HttpResponse(200, fc_payload)
+                elif "instagram" in url:
+                    return HttpResponse(201, {"data": {"id": "run-ig-1"}})
+                elif "facebook" in url:
+                    return HttpResponse(201, {"data": {"id": "run-fb-1"}})
+                return HttpResponse(200, {})
+
+        test_lead = [{
+            "workflow_id": "lead-budget-cap-1",
+            "venue_name": "Coffee Roastery",
+            "city": "Berlin",
+            "status": "qualified",
+            "website": "https://coffeeberlin.de",
+        }]
+
+        # -------------------------------------------------------------------
+        # PART 1 (REV-01): Budget allows only 1 dynamic follow-up ($0.50)
+        # -------------------------------------------------------------------
+        transport_cap = MockCapTransport()
+        dummy_dns = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            instagram_profile_actors=("apify/instagram-scraper",),
+            facebook_page_actors=("apify/facebook-scraper",),
+        )
+
+        with patch("system_1.db.fetch_leads_for_enrichment_planning", return_value=test_lead), \
+             patch("system_1.db.fetch_enrichment_step_approvals", return_value={}), \
+             patch("system_1.db.ensure_schema"):
+            summary_cap = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                max_total_budget_usd=Decimal("0.50"),  # Only allows 1 follow-up at $0.50
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_cap,
+                resolver=dummy_dns,
+                evidence_store_fn=lambda wf_id, rec: True,
+            )
+
+            # Firecrawl called -> 1 call
+            self.assertEqual(len([c for c in transport_cap.calls if "firecrawl" in c]), 1)
+            # Instagram called -> 1 call ($0.50 budget consumed)
+            self.assertEqual(len([c for c in transport_cap.calls if "instagram" in c]), 1)
+            # Facebook blocked before network -> 0 calls
+            self.assertEqual(len([c for c in transport_cap.calls if "facebook" in c]), 0)
+
+            # Typed outcome blocked_cost_cap recorded for Facebook
+            fb_outcomes = [o for o in summary_cap.execution_outcomes if o.provider == "apify_facebook"]
+            self.assertEqual(len(fb_outcomes), 1)
+            self.assertEqual(fb_outcomes[0].status, "blocked_cost_cap")
+            self.assertIn("would exceed total budget cap", fb_outcomes[0].operator_message)
+
+            # Summary reflects dynamic steps and cost caps
+            self.assertEqual(summary_cap.steps_blocked_cost_cap, 1)
+            self.assertEqual(summary_cap.estimated_max_spend_usd, Decimal("0.50"))
+
+        # -------------------------------------------------------------------
+        # PART 2 (REV-02): Evidence storage failure is graceful, typed, and safe
+        # -------------------------------------------------------------------
+        transport_err = MockCapTransport()
+        def failing_storage(wf_id: str, rec: Any) -> bool:
+            raise RuntimeError("Database connection failure at postgresql://operator:super_secret_db_pass@db.internal:5432/crm")
+
+        with patch("system_1.db.fetch_leads_for_enrichment_planning", return_value=test_lead), \
+             patch("system_1.db.fetch_enrichment_step_approvals", return_value={}), \
+             patch("system_1.db.ensure_schema"):
+            summary_err = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                max_total_budget_usd=Decimal("2.00"),
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_err,
+                resolver=dummy_dns,
+                evidence_store_fn=failing_storage,
+            )
+
+            # Did not crash, executed_steps_failed recorded
+            self.assertGreater(summary_err.executed_steps_failed, 0)
+            storage_fail_outcomes = [
+                o for o in summary_err.execution_outcomes if o.status == "evidence_storage_failed"
+            ]
+            self.assertGreater(len(storage_fail_outcomes), 0)
+            # Diagnostic message present
+            self.assertIn("Failed to store evidence", storage_fail_outcomes[0].operator_message)
+            # Credentials redacted!
+            self.assertNotIn("super_secret_db_pass", storage_fail_outcomes[0].operator_message)
+            self.assertIn("[REDACTED", storage_fail_outcomes[0].operator_message)
 
     def test_provider_enrichment_dry_run_routing_logic(self) -> None:
         fc_cfg = FirecrawlConfig(api_key="", enabled=False)

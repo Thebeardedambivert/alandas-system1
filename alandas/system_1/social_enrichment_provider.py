@@ -206,6 +206,7 @@ def extract_provider_error_message(body: Any) -> str:
         r"\1=[REDACTED]",
         msg,
     )
+    sanitized = re.sub(r"://([^:@\s]+):([^@\s]+)@", r"://\1:[REDACTED]@", sanitized)
     sanitized = re.sub(r"fc-[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
     sanitized = re.sub(r"apify_api_[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
     sanitized = re.sub(r"(?i)bearer\s+[A-Za-z0-9_\-\.]+", "Bearer [REDACTED]", sanitized)
@@ -1013,22 +1014,47 @@ def route_post_firecrawl_discoveries(
     return evidence, follow_up_actions, stop_reason
 
 
+@dataclass(frozen=True)
+class EvidenceStorageOutcome:
+    workflow_id: str
+    field: str
+    value: str
+    status: str  # "evidence_stored", "evidence_duplicate", "evidence_storage_failed"
+    operator_message: str
+
+
 def store_discovered_evidence(
     workflow_id: str,
     evidence: Sequence[DiscoveredEvidence],
     store_fn: Callable[[str, ResearchEvidence], bool] | None = None,
-) -> int:
-    """Store extracted evidence records with source provider = firecrawl and source URL."""
+) -> list[EvidenceStorageOutcome]:
+    """Store extracted evidence records with source provider = firecrawl and source URL.
+
+    Never crashes; returns typed outcomes:
+    - 'evidence_stored': newly inserted record
+    - 'evidence_duplicate': record already exists
+    - 'evidence_storage_failed': database/sink error (with sanitized diagnostic)
+    """
     if not workflow_id or not evidence:
-        return 0
+        return []
 
     if store_fn is None:
         try:
             store_fn = db.insert_research_evidence
-        except Exception:
-            return 0
+        except Exception as err:
+            sanitized_err = extract_provider_error_message(str(err))
+            return [
+                EvidenceStorageOutcome(
+                    workflow_id=workflow_id,
+                    field=item.field,
+                    value=item.value,
+                    status="evidence_storage_failed",
+                    operator_message=f"Database storage unavailable for '{item.field}': {sanitized_err}",
+                )
+                for item in evidence
+            ]
 
-    stored = 0
+    outcomes: list[EvidenceStorageOutcome] = []
     for item in evidence:
         rec = ResearchEvidence(
             field=item.field,
@@ -1037,11 +1063,39 @@ def store_discovered_evidence(
             method=item.source_provider,
         )
         try:
-            if store_fn(workflow_id, rec):
-                stored += 1
-        except Exception:
-            pass
-    return stored
+            inserted = store_fn(workflow_id, rec)
+            if inserted:
+                outcomes.append(
+                    EvidenceStorageOutcome(
+                        workflow_id=workflow_id,
+                        field=item.field,
+                        value=item.value,
+                        status="evidence_stored",
+                        operator_message=f"Stored evidence for '{item.field}': {item.value}",
+                    )
+                )
+            else:
+                outcomes.append(
+                    EvidenceStorageOutcome(
+                        workflow_id=workflow_id,
+                        field=item.field,
+                        value=item.value,
+                        status="evidence_duplicate",
+                        operator_message=f"Duplicate evidence for '{item.field}' already present in database",
+                    )
+                )
+        except Exception as err:
+            sanitized_err = extract_provider_error_message(str(err))
+            outcomes.append(
+                EvidenceStorageOutcome(
+                    workflow_id=workflow_id,
+                    field=item.field,
+                    value=item.value,
+                    status="evidence_storage_failed",
+                    operator_message=f"Failed to store evidence for '{item.field}': {sanitized_err}",
+                )
+            )
+    return outcomes
 
 
 # ---------------------------------------------------------------------------
