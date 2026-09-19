@@ -171,6 +171,15 @@ from system_1.social_enrichment_provider import (
     render_provider_planning_report,
     validate_scrape_target_url,
 )
+from system_1.enrichment_trial import (
+    EnrichmentTrialSummary,
+    LeadTrialResult,
+    StepTrialDecision,
+    evaluate_lead_trial_steps,
+    format_enrichment_trial_summary,
+    render_enrichment_trial_report,
+    run_enrichment_trial,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -2473,6 +2482,184 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Facebook Actor Routes:     1", report_text)
         self.assertIn("People Fallback Blocked:   4", report_text)
         self.assertIn("Needs Operator Review:     1", report_text)
+
+    def test_enrichment_trial_dry_run_zero_network_calls(self) -> None:
+        leads = [
+            {
+                "workflow_id": f"lead-{i}",
+                "venue_name": f"Cafe {i}",
+                "city": "Berlin",
+                "website": f"https://cafe{i}.de",
+                "instagram": f"https://instagram.com/cafe{i}" if i % 2 == 0 else "",
+                "source_url": f"https://maps.google.com/?cid={i}",
+            }
+            for i in range(1, 11)
+        ]
+        transport = FakeTransport({"success": True})
+        # Even with enabled flags and keys, dry_run=True must make 0 network calls
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            instagram_profile_actors=("apify~instagram-profile-scraper",),
+        )
+
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=leads), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary = run_enrichment_trial(
+                statuses=["qualified"],
+                limit=10,
+                dry_run=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport,
+                resolver=dummy_resolver,
+            )
+
+            # Zero network calls in dry-run mode
+            self.assertEqual(len(transport.requests), 0)
+            self.assertEqual(summary.leads_inspected, 10)
+            self.assertGreater(summary.provider_steps_planned, 0)
+            # When dry run is active, would_call_provider reflects steps that passed validation
+            self.assertEqual(summary.steps_skipped_disabled, 0)
+
+    def test_enrichment_trial_failure_modes_and_safety_gates(self) -> None:
+        lead = {
+            "workflow_id": "lead-trial-1",
+            "venue_name": "Test Cafe",
+            "city": "Berlin",
+            "website": "https://testcafe.de",
+            "instagram": "https://instagram.com/testcafe",
+            "source_url": "https://maps.google.com/?cid=1",
+        }
+        # 1. Provider disabled -> steps skipped because disabled
+        fc_dis = FirecrawlConfig(api_key="", enabled=False)
+        ap_dis = ApifyEnrichmentConfig(api_token="", enabled=False)
+        res_dis = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={},
+            firecrawl_config=fc_dis,
+            apify_config=ap_dis,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_dis = {s.provider: s.decision for s in res_dis.step_decisions}
+        self.assertEqual(decisions_dis.get("firecrawl"), "skipped_disabled")
+        self.assertEqual(decisions_dis.get("apify_instagram"), "skipped_disabled")
+
+        # 2. Missing API key -> steps blocked by missing key
+        fc_nokey = FirecrawlConfig(api_key="", enabled=True)
+        ap_nokey = ApifyEnrichmentConfig(api_token="", enabled=True, instagram_profile_actors=("apify~instagram-scraper",))
+        res_nokey = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "website_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_nokey,
+            apify_config=ap_nokey,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_nokey = {s.provider: s.decision for s in res_nokey.step_decisions}
+        self.assertEqual(decisions_nokey.get("firecrawl"), "blocked_missing_key")
+        self.assertEqual(decisions_nokey.get("apify_instagram"), "blocked_missing_key")
+
+        # 3. Cost cap exceeded before network
+        ap_overcost = ApifyEnrichmentConfig(
+            api_token="token",
+            enabled=True,
+            max_cost_usd=Decimal("0.10"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+        res_overcost = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "instagram_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_dis,
+            apify_config=ap_overcost,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+            step_estimated_cost=Decimal("0.50"),
+        )
+        decisions_overcost = {s.provider: s.decision for s in res_overcost.step_decisions}
+        self.assertEqual(decisions_overcost.get("apify_instagram"), "blocked_cost_cap")
+
+        # 4. Total budget cap exceeded across run
+        res_budget_exceeded = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "instagram_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_dis,
+            apify_config=ApifyEnrichmentConfig(
+                api_token="token",
+                enabled=True,
+                max_cost_usd=Decimal("1.00"),
+                instagram_profile_actors=("apify~instagram-scraper",),
+            ),
+            max_total_budget=Decimal("2.00"),
+            current_total_estimated=Decimal("2.00"),
+            step_estimated_cost=Decimal("0.50"),
+        )
+        decisions_budget = {s.provider: s.decision for s in res_budget_exceeded.step_decisions}
+        self.assertEqual(decisions_budget.get("apify_instagram"), "blocked_cost_cap")
+
+        # 5. Invalid URL rejected
+        lead_bad_url = dict(lead, website="http://localhost:8080/admin")
+        fc_valid = FirecrawlConfig(api_key="key", enabled=True)
+        res_bad_url = evaluate_lead_trial_steps(
+            lead=lead_bad_url,
+            approvals={("lead-trial-1", "website_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_valid,
+            apify_config=ap_dis,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_bad_url = {s.provider: s.decision for s in res_bad_url.step_decisions}
+        self.assertEqual(decisions_bad_url.get("firecrawl"), "blocked_invalid_url")
+
+    def test_enrichment_trial_controlled_mode_and_hard_stop(self) -> None:
+        leads_20 = [
+            {
+                "workflow_id": f"lead-{i}",
+                "venue_name": f"Cafe {i}",
+                "city": "Berlin",
+                "website": f"https://cafe{i}.de",
+                "instagram": "",
+                "source_url": f"https://maps.google.com/?cid={i}",
+            }
+            for i in range(1, 21)
+        ]
+        # Controlled trial mode rejects requests with limit > 10
+        with self.assertRaises(ValueError):
+            run_enrichment_trial(limit=15)
+
+        # Hard stop if estimated cost exceeds configured cap during run
+        transport = FakeTransport({"success": True})
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True, max_credits_per_run=10)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.00"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=leads_20[:10]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary = run_enrichment_trial(
+                limit=10,
+                max_total_budget_usd=Decimal("0.00"),  # budget is 0
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport,
+                resolver=dummy_resolver,
+            )
+            # Zero spend and all paid steps blocked by cost cap
+            self.assertEqual(summary.estimated_max_spend_usd, Decimal("0.00"))
+            self.assertIn("=== Enrichment Trial Summary ===", format_enrichment_trial_summary(summary))
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
