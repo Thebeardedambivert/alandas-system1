@@ -48,6 +48,7 @@ class StepTrialDecision:
     reason: str
     estimated_cost_usd: Decimal = Decimal("0.00")
     actor_id: str = ""
+    approved_by: str = ""
 
 
 @dataclass(frozen=True)
@@ -167,6 +168,7 @@ def evaluate_lead_trial_steps(
         # Check approval requirement
         approval = approvals.get((workflow_id, step_name))
         is_approved = approval is not None
+        approved_by = str((approval or {}).get("approved_by") or "") if is_approved else ""
 
         # Route-specific evaluations
         if route.status == "needs_operator_review":
@@ -360,6 +362,7 @@ def evaluate_lead_trial_steps(
                 reason="All provider safety gates passed; ready for trial execution",
                 estimated_cost_usd=cost_usd,
                 actor_id=actor,
+                approved_by=approved_by,
             )
         )
 
@@ -493,6 +496,7 @@ def run_enrichment_trial(
 
     db.ensure_schema()
     leads = db.fetch_leads_for_enrichment_planning(statuses=statuses, limit=limit)
+    leads_by_id = {str(l["workflow_id"]): l for l in leads if l.get("workflow_id")}
     workflow_ids = [str(l["workflow_id"]) for l in leads if l.get("workflow_id")]
     approvals = db.fetch_enrichment_step_approvals(workflow_ids)
 
@@ -531,8 +535,13 @@ def run_enrichment_trial(
                         call_res = fc_adapter.scrape_url(step.target_value, resolver=resolver)
                     elif step.provider.startswith("apify_"):
                         group = step.provider.replace("apify_", "")
+                        lead_data = leads_by_id.get(step.workflow_id) or {
+                            "workflow_id": step.workflow_id,
+                            "venue_name": res.venue_name,
+                            "city": res.city,
+                        }
                         actor_input = build_apify_actor_input(
-                            lead={"workflow_id": step.workflow_id, "venue_name": res.venue_name, "city": res.city},
+                            lead=lead_data,
                             group=group,
                             target=step.target_value,
                         )
@@ -541,6 +550,7 @@ def run_enrichment_trial(
                             group=group,
                             input_data=actor_input,
                             estimated_cost_usd=step.estimated_cost_usd,
+                            approved_by=step.approved_by if group == "people_fallback" else None,
                         )
                     else:
                         continue

@@ -2741,6 +2741,90 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(summary_err.executed_steps_succeeded, 0)
             self.assertIn("Executed Steps Failed:", format_enrichment_trial_summary(summary_err))
 
+    def test_enrichment_trial_people_fallback_safety_and_execution(self) -> None:
+        lead = {
+            "workflow_id": "lead-fallback-1",
+            "venue_name": "Specialty Coffee Berlin",
+            "city": "Berlin",
+            "website": "https://specialty-coffee.de/contact",
+            "instagram": "",
+            "source_url": "",
+        }
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=False)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            people_fallback_actors=("apify~contact-finder",),
+        )
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        # 1. Unapproved people fallback remains blocked and makes zero provider calls
+        transport_unapproved = FakeTransport({"data": {"id": "item-1"}}, status_code=200)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_unapproved = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_unapproved,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_unapproved.steps_blocked_missing_approval, 1)
+            self.assertEqual(len(transport_unapproved.requests), 0)
+            self.assertEqual(summary_unapproved.executed_steps_succeeded, 0)
+
+        # 2. Approved people fallback executes with approved_by and full lead context (company, domain, city)
+        transport_approved = FakeTransport({"data": {"id": "run-fallback-123"}}, status_code=200)
+        approvals = {("lead-fallback-1", "people_fallback"): {"approved_by": "Cyril"}}
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value=approvals):
+
+            summary_approved = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_approved,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_approved.steps_blocked_missing_approval, 0)
+            self.assertEqual(summary_approved.executed_steps_succeeded, 1)
+            self.assertEqual(len(transport_approved.requests), 1)
+
+            # Check Apify payload has extracted company, domain, and city from real lead
+            req = transport_approved.requests[0]
+            self.assertIn("apify~contact-finder", req.url)
+            payload = json.loads(req.body.decode("utf-8"))
+            self.assertEqual(payload["company"], "Specialty Coffee Berlin")
+            self.assertEqual(payload["domain"], "specialty-coffee.de")
+            self.assertEqual(payload["city"], "Berlin")
+
+        # 3. Dry-run with approved people fallback makes zero network calls
+        transport_dry = FakeTransport({"data": {"id": "run-fallback-123"}}, status_code=200)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value=approvals):
+
+            summary_dry = run_enrichment_trial(
+                limit=1,
+                dry_run=True,
+                execute=False,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_dry,
+                resolver=dummy_resolver,
+            )
+            self.assertEqual(len(transport_dry.requests), 0)
+            self.assertEqual(summary_dry.steps_would_call_provider, 1)
+
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
 
