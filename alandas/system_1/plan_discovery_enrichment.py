@@ -93,14 +93,14 @@ def plan_lead_enrichment_steps(lead: dict[str, Any]) -> list[PlannedStep]:
 
     steps: list[PlannedStep] = []
 
-    # 1. CRM internal duplicate check (always performed locally first)
+    # 1. System 1 internal duplicate check (always performed locally first)
     steps.append(
         PlannedStep(
-            name="dolibarr_duplicate_check",
+            name="system1_duplicate_check",
             requires_external_call=False,
             may_cost_money=False,
             requires_human_approval=False,
-            reason="Check Dolibarr CRM for existing customer or proposal records",
+            reason="Check System 1 database for existing lead or duplicate venue records",
         )
     )
 
@@ -111,7 +111,7 @@ def plan_lead_enrichment_steps(lead: dict[str, Any]) -> list[PlannedStep]:
                 name="instagram_review",
                 requires_external_call=True,
                 may_cost_money=False,
-                requires_human_approval=False,
+                requires_human_approval=True,
                 reason="Review social/hosted profile for business details and active presence",
             )
         )
@@ -121,7 +121,7 @@ def plan_lead_enrichment_steps(lead: dict[str, Any]) -> list[PlannedStep]:
                 name="website_review",
                 requires_external_call=True,
                 may_cost_money=False,
-                requires_human_approval=False,
+                requires_human_approval=True,
                 reason="Inspect homepage and impressum for decision maker and business details",
             )
         )
@@ -142,7 +142,7 @@ def plan_lead_enrichment_steps(lead: dict[str, Any]) -> list[PlannedStep]:
                 name="website_discovery",
                 requires_external_call=True,
                 may_cost_money=False,
-                requires_human_approval=False,
+                requires_human_approval=True,
                 reason="Search for official website using venue name and city",
             )
         )
@@ -165,7 +165,7 @@ def plan_lead_enrichment_steps(lead: dict[str, Any]) -> list[PlannedStep]:
             name="menu_or_product_signal_check",
             requires_external_call=True,
             may_cost_money=False,
-            requires_human_approval=False,
+            requires_human_approval=True,
             reason="Verify matcha and specialty beverage suitability from menu",
         )
     )

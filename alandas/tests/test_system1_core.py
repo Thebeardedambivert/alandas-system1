@@ -1042,15 +1042,35 @@ class System1CoreTests(unittest.TestCase):
             "email": "",
         }
         steps_custom = plan_lead_enrichment_steps(lead_custom)
-        step_names = [s.name for s in steps_custom]
-        self.assertIn("website_review", step_names)
-        self.assertIn("email_lookup", step_names)
-        self.assertIn("phone_validation", step_names)
-        self.assertIn("dolibarr_duplicate_check", step_names)
-        self.assertIn("menu_or_product_signal_check", step_names)
+        steps_by_name = {s.name: s for s in steps_custom}
+        self.assertIn("website_review", steps_by_name)
+        self.assertIn("email_lookup", steps_by_name)
+        self.assertIn("phone_validation", steps_by_name)
+        self.assertIn("system1_duplicate_check", steps_by_name)
+        self.assertIn("menu_or_product_signal_check", steps_by_name)
+        self.assertNotIn("dolibarr_duplicate_check", steps_by_name)
+
+        # REV-02: system1_duplicate_check is strictly local and un-gated
+        dup_step = steps_by_name["system1_duplicate_check"]
+        self.assertFalse(dup_step.requires_external_call)
+        self.assertFalse(dup_step.may_cost_money)
+        self.assertFalse(dup_step.requires_human_approval)
+        self.assertIn("System 1 database", dup_step.reason)
+
+        # REV-01: website_review requires external call and human approval
+        web_step = steps_by_name["website_review"]
+        self.assertTrue(web_step.requires_external_call)
+        self.assertFalse(web_step.may_cost_money)
+        self.assertTrue(web_step.requires_human_approval)
+
+        # REV-01: menu_or_product_signal_check requires external call and human approval
+        menu_step = steps_by_name["menu_or_product_signal_check"]
+        self.assertTrue(menu_step.requires_external_call)
+        self.assertFalse(menu_step.may_cost_money)
+        self.assertTrue(menu_step.requires_human_approval)
 
         # email_lookup requires external call, may cost money, and requires human approval
-        email_step = next(s for s in steps_custom if s.name == "email_lookup")
+        email_step = steps_by_name["email_lookup"]
         self.assertTrue(email_step.requires_external_call)
         self.assertTrue(email_step.may_cost_money)
         self.assertTrue(email_step.requires_human_approval)
@@ -1066,9 +1086,15 @@ class System1CoreTests(unittest.TestCase):
             "email": "",
         }
         steps_social = plan_lead_enrichment_steps(lead_social)
-        social_step_names = [s.name for s in steps_social]
-        self.assertIn("instagram_review", social_step_names)
-        self.assertNotIn("website_review", social_step_names)
+        social_by_name = {s.name: s for s in steps_social}
+        self.assertIn("instagram_review", social_by_name)
+        self.assertNotIn("website_review", social_by_name)
+
+        # REV-01: instagram_review requires external call and human approval
+        insta_step = social_by_name["instagram_review"]
+        self.assertTrue(insta_step.requires_external_call)
+        self.assertFalse(insta_step.may_cost_money)
+        self.assertTrue(insta_step.requires_human_approval)
 
         # 3. Missing website + phone
         lead_no_web = {
@@ -1080,9 +1106,15 @@ class System1CoreTests(unittest.TestCase):
             "email": "",
         }
         steps_no_web = plan_lead_enrichment_steps(lead_no_web)
-        no_web_step_names = [s.name for s in steps_no_web]
-        self.assertIn("phone_validation", no_web_step_names)
-        self.assertIn("website_discovery", no_web_step_names)
+        no_web_by_name = {s.name: s for s in steps_no_web}
+        self.assertIn("phone_validation", no_web_by_name)
+        self.assertIn("website_discovery", no_web_by_name)
+
+        # REV-01: website_discovery requires external call and human approval
+        disc_step = no_web_by_name["website_discovery"]
+        self.assertTrue(disc_step.requires_external_call)
+        self.assertFalse(disc_step.may_cost_money)
+        self.assertTrue(disc_step.requires_human_approval)
 
     def test_plan_enrichment_batch_skips_rejected_and_is_idempotent(self) -> None:
         leads_fixture = [
@@ -1133,7 +1165,10 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(summary1.plans_updated, 0)
         self.assertEqual(summary1.rejected_skipped, 1)
         self.assertEqual(summary1.paid_steps_pending_approval, 1)  # lead-q1 email_lookup
-        self.assertEqual(summary1.external_steps_pending_approval, 1)
+        # lead-q1: website_review, email_lookup, menu_or_product_signal_check (3)
+        # lead-nr1: instagram_review, menu_or_product_signal_check (2)
+        # total external steps pending approval = 5
+        self.assertEqual(summary1.external_steps_pending_approval, 5)
         self.assertEqual(summary1.failed, 0)
         self.assertIn("lead-q1", plans_store)
         self.assertIn("lead-nr1", plans_store)
@@ -1155,6 +1190,7 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Leads Inspected:                 2", summary_text)
         self.assertIn("Plans Created:                   2", summary_text)
         self.assertIn("Rejected Skipped:                1", summary_text)
+        self.assertIn("External Steps Pending Approval: 5", summary_text)
         self.assertIn("Paid Steps Pending Approval:     1", summary_text)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
