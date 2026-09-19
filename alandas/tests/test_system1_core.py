@@ -3,9 +3,10 @@
 from __future__ import annotations
 
 import asyncio
+import json
+import os
 import unittest
 from datetime import date, datetime, timezone
-import json
 from decimal import Decimal
 from pathlib import Path
 import sys
@@ -151,6 +152,35 @@ from system_1.record_manual_enrichment_evidence import (
     ManualEvidenceSummary,
     format_manual_evidence_summary,
     record_manual_enrichment_evidence,
+)
+from system_1.social_enrichment_provider import (
+    ApifyEnrichmentAdapter,
+    ApifyEnrichmentConfig,
+    EnrichmentStatus,
+    FirecrawlAdapter,
+    FirecrawlConfig,
+    PlannedEnrichmentAction,
+    ProviderExecutionResult,
+    ProviderPlanningSummary,
+    check_social_match_ambiguity,
+    evaluate_waterfall_fallbacks,
+    format_provider_planning_summary,
+    normalize_and_validate_actor_id,
+    plan_lead_provider_routing,
+    plan_provider_enrichment,
+    render_provider_planning_report,
+    validate_scrape_target_url,
+)
+from system_1.enrichment_trial import (
+    EnrichmentTrialSummary,
+    LeadTrialResult,
+    StepExecutionOutcome,
+    StepTrialDecision,
+    build_apify_actor_input,
+    evaluate_lead_trial_steps,
+    format_enrichment_trial_summary,
+    render_enrichment_trial_report,
+    run_enrichment_trial,
 )
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
@@ -1717,16 +1747,20 @@ class System1CoreTests(unittest.TestCase):
             value: str,
             source_url: str,
             recorded_by: str,
-        ) -> tuple[dict, bool]:
+        ) -> tuple[dict, str]:
             key = (workflow_id, step_name, field)
             if key in evidence_store:
                 existing = evidence_store[key]
-                if existing["value"] == value and existing["source_url"] == source_url:
-                    return existing, False
+                if (
+                    existing["value"] == value
+                    and existing["source_url"] == source_url
+                    and existing["recorded_by"] == recorded_by
+                ):
+                    return existing, "already_exists"
                 existing["value"] = value
                 existing["source_url"] = source_url
                 existing["recorded_by"] = recorded_by
-                return existing, False
+                return existing, "updated"
             rec = {
                 "workflow_id": workflow_id,
                 "step_name": step_name,
@@ -1736,7 +1770,7 @@ class System1CoreTests(unittest.TestCase):
                 "recorded_by": recorded_by,
             }
             evidence_store[key] = rec
-            return rec, True
+            return rec, "created"
 
         with patch("system_1.record_manual_enrichment_evidence.db.ensure_schema"), \
              patch("system_1.record_manual_enrichment_evidence.db.fetch_enrichment_plan", side_effect=fake_fetch_plan), \
@@ -1828,6 +1862,57 @@ class System1CoreTests(unittest.TestCase):
             )
             self.assertEqual(res2_duplicate.status, "already_exists")
 
+            # 7b. Existing evidence with changed value returns updated
+            res2_val_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/menu",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2_val_updated.status, "updated")
+            self.assertEqual(res2_val_updated.value, "yes, ceremonial grade iced matcha latte from Kyoto")
+
+            # 7c. Existing evidence with changed source_url returns updated
+            res2_url_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2_url_updated.status, "updated")
+            self.assertEqual(res2_url_updated.source_url, "https://kaffee-mitte.de/drinks-menu-2026")
+
+            # 7d. Existing evidence with changed recorded_by returns updated
+            res2_rec_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(res2_rec_updated.status, "updated")
+            self.assertEqual(res2_rec_updated.recorded_by, "Operator2")
+
+            # 7e. Re-submitting identical values returns already_exists again
+            res2_same_again = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/drinks-menu-2026",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(res2_same_again.status, "already_exists")
+
+            # 7f. Verify store maintains exactly one record per workflow_id + step_name + field
+            target_keys = [k for k in evidence_store if k == ("lead-mitte-1", "menu_or_product_signal_check", "matcha_served")]
+            self.assertEqual(len(target_keys), 1)
+
             # 8. Summary formatting check
             summary_text = format_manual_evidence_summary(res1)
             self.assertIn("=== Manual Enrichment Evidence Summary ===", summary_text)
@@ -1851,6 +1936,9 @@ class System1CoreTests(unittest.TestCase):
                 if "INSERT INTO lead_manual_enrichment_evidence" in sql:
                     wid, step, fld, val, src, rec_by = params
                     db_store[(wid, step, fld)] = (wid, step, fld, val, src, rec_by, "2026-09-19T06:00:00Z")
+                elif "UPDATE lead_manual_enrichment_evidence" in sql:
+                    val, src, rec_by, wid, step, fld = params
+                    db_store[(wid, step, fld)] = (wid, step, fld, val, src, rec_by, "2026-09-19T06:01:00Z")
                 return self
 
             def fetchone(self) -> tuple | None:
@@ -1867,7 +1955,8 @@ class System1CoreTests(unittest.TestCase):
                 return False
 
         with patch("system_1.db.connect", return_value=FakeEvidenceDbConn()):
-            rec, is_new = db.record_manual_enrichment_evidence(
+            # 1. New insertion returns created
+            rec, status1 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
                 field="owner_name",
@@ -1875,13 +1964,13 @@ class System1CoreTests(unittest.TestCase):
                 source_url="https://example.com",
                 recorded_by="Cyril",
             )
-            self.assertTrue(is_new)
+            self.assertEqual(status1, "created")
             self.assertEqual(rec["workflow_id"], "lead-1")
             self.assertEqual(rec["field"], "owner_name")
             self.assertEqual(rec["value"], "John Doe")
 
-            # Duplicate call
-            rec2, is_new2 = db.record_manual_enrichment_evidence(
+            # 2. Duplicate call with identical values returns already_exists
+            rec2, status2 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
                 field="owner_name",
@@ -1889,8 +1978,852 @@ class System1CoreTests(unittest.TestCase):
                 source_url="https://example.com",
                 recorded_by="Cyril",
             )
-            self.assertFalse(is_new2)
+            self.assertEqual(status2, "already_exists")
             self.assertEqual(rec2["workflow_id"], "lead-1")
+
+            # 3. Update call with changed value returns updated
+            rec3, status3 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(status3, "updated")
+            self.assertEqual(rec3["value"], "Jane Doe")
+
+            # 4. Update call with changed source_url returns updated
+            rec4, status4 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com/team",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(status4, "updated")
+            self.assertEqual(rec4["source_url"], "https://example.com/team")
+
+            # 5. Update call with changed recorded_by returns updated
+            rec5, status5 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com/team",
+                recorded_by="Operator2",
+            )
+            self.assertEqual(status5, "updated")
+            self.assertEqual(rec5["recorded_by"], "Operator2")
+
+            # 6. Verify single record per workflow_id + step_name + field in DB store
+            self.assertEqual(len(db_store), 1)
+            self.assertIn(("lead-1", "website_review", "owner_name"), db_store)
+
+    def test_social_enrichment_actor_id_normalization_and_validation(self) -> None:
+        # 1. Store-style normalized to REST-safe
+        self.assertEqual(
+            normalize_and_validate_actor_id("apify/instagram-profile-scraper"),
+            "apify~instagram-profile-scraper",
+        )
+        self.assertEqual(
+            normalize_and_validate_actor_id("  zuzka/facebook-page-scraper  "),
+            "zuzka~facebook-page-scraper",
+        )
+
+        # 2. REST-style preserved
+        self.assertEqual(
+            normalize_and_validate_actor_id("apify~instagram-profile-scraper"),
+            "apify~instagram-profile-scraper",
+        )
+
+        # 3. Standalone valid identifier
+        self.assertEqual(
+            normalize_and_validate_actor_id("custom-actor-1"),
+            "custom-actor-1",
+        )
+
+        # 4. Fail closed on empty or invalid IDs
+        invalid_ids = [
+            "",
+            "   ",
+            "actor with spaces",
+            "owner//actor",
+            "owner/actor/extra",
+            "owner~actor~extra",
+            "owner$",
+            "a" * 101,  # excessively long
+        ]
+        for bad_id in invalid_ids:
+            with self.assertRaises(ValueError):
+                normalize_and_validate_actor_id(bad_id)
+
+    def test_social_enrichment_provider_configs_staging_and_production(self) -> None:
+        # 1. Default mode is staging with tiny limits
+        with patch.dict(os.environ, {}, clear=True):
+            fc = FirecrawlConfig.from_env()
+            self.assertFalse(fc.enabled)
+            self.assertEqual(fc.mode, "staging")
+            self.assertEqual(fc.max_credits_per_run, 10)
+            self.assertEqual(fc.max_pages_per_lead, 2)
+
+            ap = ApifyEnrichmentConfig.from_env()
+            self.assertFalse(ap.enabled)
+            self.assertEqual(ap.mode, "staging")
+            self.assertEqual(ap.max_cost_usd, Decimal("0.50"))
+            self.assertEqual(ap.max_results_per_actor, 5)
+            self.assertEqual(ap.instagram_profile_actors, ())
+            self.assertEqual(ap.facebook_page_actors, ())
+            self.assertEqual(ap.people_fallback_actors, ())
+
+        # 2. Staging config normalizes store-style actor IDs from env
+        staging_env = {
+            "SYSTEM1_ENRICHMENT_MODE": "staging",
+            "SYSTEM1_APIFY_INSTAGRAM_PROFILE_ACTORS": "apify/instagram-profile-scraper, user/insta-tool",
+            "SYSTEM1_APIFY_FACEBOOK_PAGE_ACTORS": "apify/facebook-pages-scraper",
+            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "actor/people-finder",
+        }
+        with patch.dict(os.environ, staging_env, clear=True):
+            ap_staging = ApifyEnrichmentConfig.from_env()
+            self.assertEqual(
+                ap_staging.instagram_profile_actors,
+                ("apify~instagram-profile-scraper", "user~insta-tool"),
+            )
+            self.assertEqual(ap_staging.facebook_page_actors, ("apify~facebook-pages-scraper",))
+            self.assertEqual(ap_staging.people_fallback_actors, ("actor~people-finder",))
+
+        # 3. Production config allows distinct actor sets and higher configured limits without code changes
+        prod_env = {
+            "SYSTEM1_ENRICHMENT_MODE": "production",
+            "SYSTEM1_FIRECRAWL_ENABLED": "true",
+            "FIRECRAWL_API_KEY": "fc-prod-key",
+            "SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN": "250",
+            "SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD": "15",
+            "SYSTEM1_APIFY_ENRICHMENT_ENABLED": "true",
+            "APIFY_API_TOKEN": "apify-prod-token",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_COST_USD": "5.00",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_RESULTS_PER_ACTOR": "50",
+            "SYSTEM1_APIFY_INSTAGRAM_PROFILE_ACTORS": "enterprise-vendor/verified-insta-scraper",
+            "SYSTEM1_APIFY_FACEBOOK_PAGE_ACTORS": "enterprise-vendor/verified-fb-scraper",
+            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "enterprise-vendor/b2b-contact-enricher",
+        }
+        with patch.dict(os.environ, prod_env, clear=True):
+            fc_prod = FirecrawlConfig.from_env()
+            self.assertEqual(fc_prod.mode, "production")
+            self.assertTrue(fc_prod.enabled)
+            self.assertEqual(fc_prod.max_credits_per_run, 250)
+            self.assertEqual(fc_prod.max_pages_per_lead, 15)
+
+            ap_prod = ApifyEnrichmentConfig.from_env()
+            self.assertEqual(ap_prod.mode, "production")
+            self.assertTrue(ap_prod.enabled)
+            self.assertEqual(ap_prod.max_cost_usd, Decimal("5.00"))
+            self.assertEqual(ap_prod.max_results_per_actor, 50)
+            self.assertEqual(
+                ap_prod.instagram_profile_actors,
+                ("enterprise-vendor~verified-insta-scraper",),
+            )
+            self.assertEqual(
+                ap_prod.facebook_page_actors,
+                ("enterprise-vendor~verified-fb-scraper",),
+            )
+            self.assertEqual(
+                ap_prod.people_fallback_actors,
+                ("enterprise-vendor~b2b-contact-enricher",),
+            )
+
+    def test_firecrawl_url_validation_and_serialization(self) -> None:
+        # 1. Valid public http/https pass
+        self.assertEqual(
+            validate_scrape_target_url("https://example.com/menu"),
+            "https://example.com/menu",
+        )
+
+        # 2. Reject non-web schemes
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("ftp://example.com")
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("javascript:alert(1)")
+
+        # 3. Reject credentials
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://user:pass@example.com")
+
+        # 4. Reject non-standard ports
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://example.com:8080")
+
+        # 5. Reject localhost, .local, .internal
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("http://localhost:80/admin")
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://service.internal/api")
+
+        # 6. Reject private IP targets via resolver
+        def private_resolver(*_args: object, **_kwargs: object) -> list[tuple]:
+            return [(2, 1, 6, "", ("127.0.0.1", 0))]
+
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("http://internal-host.de", resolver=private_resolver)
+
+        # 7. Safe JSON serialization with special characters in adapter
+        transport = FakeTransport({"success": True})
+        cfg = FirecrawlConfig(api_key="key", enabled=True, max_pages_per_lead=5)
+        adapter = FirecrawlAdapter(cfg, transport=transport)
+        # Target URL containing query params, ampersands, and quotes
+        adapter.scrape_url("https://example.com/path?q=test%20search&lang=de", pages_limit=3)
+        self.assertEqual(len(transport.requests), 1)
+        req = transport.requests[0]
+        body_obj = json.loads(req.body.decode("utf-8"))
+        self.assertEqual(body_obj["url"], "https://example.com/path?q=test%20search&lang=de")
+        self.assertEqual(body_obj["pageOptions"]["limit"], 3)
+
+    def test_firecrawl_adapter_failure_modes(self) -> None:
+        transport = FakeTransport({"success": True})
+
+        # 1. Disabled Firecrawl makes zero network calls and returns provider_disabled
+        disabled_cfg = FirecrawlConfig(api_key="key", enabled=False)
+        adapter_disabled = FirecrawlAdapter(disabled_cfg, transport=transport)
+        res_dis = adapter_disabled.scrape_url("https://example.com")
+        self.assertEqual(res_dis.status, "provider_disabled")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 2. Enabled Firecrawl missing key returns missing_credentials, makes 0 calls
+        missing_key_cfg = FirecrawlConfig(api_key="", enabled=True)
+        adapter_no_key = FirecrawlAdapter(missing_key_cfg, transport=transport)
+        res_no_key = adapter_no_key.scrape_url("https://example.com")
+        self.assertEqual(res_no_key.status, "missing_credentials")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 3. Private target URL rejected before network call
+        enabled_cfg = FirecrawlConfig(api_key="key", enabled=True)
+        adapter_valid = FirecrawlAdapter(enabled_cfg, transport=transport)
+        res_priv = adapter_valid.scrape_url("http://localhost/menu")
+        self.assertEqual(res_priv.status, "private_url_rejected")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 4. Result cap exceeded fails closed before network call
+        res_cap = adapter_valid.scrape_url("https://example.com", pages_limit=100)
+        self.assertEqual(res_cap.status, "result_cap_exceeded")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 4b. Credit cap enforced before network call: max_credits=1 with pages_limit=2 fails
+        low_credit_cfg = FirecrawlConfig(
+            api_key="key",
+            enabled=True,
+            max_credits_per_run=1,
+            max_pages_per_lead=5,
+        )
+        adapter_low_credit = FirecrawlAdapter(low_credit_cfg, transport=transport)
+        res_credit_cap = adapter_low_credit.scrape_url("https://example.com", pages_limit=2)
+        self.assertEqual(res_credit_cap.status, "cost_cap_exceeded")
+        self.assertIn("exceeds configured max credits", res_credit_cap.operator_message)
+        self.assertEqual(len(transport.requests), 0)
+
+        # 4c. Default staging settings allow the intended tiny scrape
+        staging_default_cfg = FirecrawlConfig.from_env()
+        staging_enabled_cfg = FirecrawlConfig(
+            api_key="key",
+            enabled=True,
+            mode=staging_default_cfg.mode,
+            max_credits_per_run=staging_default_cfg.max_credits_per_run,
+            max_pages_per_lead=staging_default_cfg.max_pages_per_lead,
+        )
+        adapter_staging = FirecrawlAdapter(staging_enabled_cfg, transport=transport)
+        res_staging = adapter_staging.scrape_url("https://example.com")
+        self.assertEqual(res_staging.status, "success")
+        self.assertEqual(len(transport.requests), 1)
+
+        # 5. HTTP 401/403 maps to provider_auth_failed
+        t_auth = FakeTransport({"error": "Unauthorized"}, status_code=401)
+        adapter_auth = FirecrawlAdapter(enabled_cfg, transport=t_auth)
+        res_auth = adapter_auth.scrape_url("https://example.com")
+        self.assertEqual(res_auth.status, "provider_auth_failed")
+
+        # 6. HTTP 400/404 maps to provider_rejected
+        t_rej = FakeTransport({"error": "Bad Request"}, status_code=400)
+        adapter_rej = FirecrawlAdapter(enabled_cfg, transport=t_rej)
+        res_rej = adapter_rej.scrape_url("https://example.com")
+        self.assertEqual(res_rej.status, "provider_rejected")
+
+        # 7. HTTP 500/503 maps to provider_unavailable
+        t_500 = FakeTransport({"error": "Internal Error"}, status_code=500)
+        adapter_500 = FirecrawlAdapter(enabled_cfg, transport=t_500)
+        res_500 = adapter_500.scrape_url("https://example.com")
+        self.assertEqual(res_500.status, "provider_unavailable")
+
+        # 8. Empty result is mapped to no_result_found (not a crash)
+        t_empty = FakeTransport({"data": []}, status_code=200)
+        adapter_empty = FirecrawlAdapter(enabled_cfg, transport=t_empty)
+        res_empty = adapter_empty.scrape_url("https://example.com")
+        self.assertEqual(res_empty.status, "no_result_found")
+
+    def test_apify_enrichment_adapter_input_data_and_caps(self) -> None:
+        transport = FakeTransport({"data": {"id": "run-xyz"}}, status_code=201)
+        cfg = ApifyEnrichmentConfig(
+            api_token="test-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.50"),
+            max_results_per_actor=10,
+        )
+        adapter = ApifyEnrichmentAdapter(cfg, transport=transport)
+
+        # 1. Sends provided input_data safely serialized
+        input_payload = {"handles": ["matcha_berlin"], "maxPosts": 5}
+        res = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data=input_payload,
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=5,
+        )
+        self.assertEqual(res.status, "success")
+        self.assertEqual(len(transport.requests), 1)
+        req = transport.requests[0]
+        self.assertIn("apify~instagram-profile-scraper", req.url)
+        self.assertIn("maxItems=5", req.url)
+        parsed_body = json.loads(req.body.decode("utf-8"))
+        self.assertEqual(parsed_body, input_payload)
+
+        # 2. Exceeding max results cap fails closed
+        res_cap = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=20,  # exceeds configured 10
+        )
+        self.assertEqual(res_cap.status, "result_cap_exceeded")
+        self.assertEqual(len(transport.requests), 1)  # no new call made
+
+        # 3. Missing / non-positive max results fails closed
+        res_neg = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=0,
+        )
+        self.assertEqual(res_neg.status, "missing_result_cap")
+
+        # 4. Over cost cap fails closed
+        res_cost = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("2.00"),  # exceeds configured 1.50
+        )
+        self.assertEqual(res_cost.status, "cost_cap_exceeded")
+
+        # 5. People fallback blocked by default without approval
+        res_fallback = adapter.run_actor(
+            actor_id="actor/people-finder",
+            group="people_fallback",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            approved_by=None,
+        )
+        self.assertEqual(res_fallback.status, "blocked_by_default")
+
+        # 6. Schema mismatch detection
+        t_mismatch = FakeTransport({"unexpected_format": 123}, status_code=200)
+        adapter_mismatch = ApifyEnrichmentAdapter(cfg, transport=t_mismatch)
+        # Using map_provider_http_response directly with expected keys
+        from system_1.social_enrichment_provider import map_provider_http_response
+        res_schema = map_provider_http_response(
+            "apify_instagram",
+            HttpResponse(200, {"title": "Test"}),
+            expected_schema_keys=["username", "followerCount"],
+        )
+        self.assertEqual(res_schema.status, "schema_mismatch")
+
+    def test_ambiguity_and_waterfall_fallbacks(self) -> None:
+        # 1. Ambiguous social match detection
+        # Multiple profiles returned
+        ambig, msg = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "matchabar"}, {"username": "matchabar_berlin"}],
+        )
+        self.assertTrue(ambig)
+        self.assertIn("Multiple profiles", msg)
+
+        # Handle mismatch
+        ambig2, msg2 = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "completely_different_cafe"}],
+        )
+        self.assertTrue(ambig2)
+        self.assertIn("does not match target", msg2)
+
+        # Exact match
+        ambig3, _ = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "matchabar"}],
+        )
+        self.assertFalse(ambig3)
+
+        # 2. Waterfall fallback evaluation
+        # Firecrawl failed -> mark website_review_needs_operator_review, do not fail entire lead
+        fc_fail = ProviderExecutionResult(
+            provider="firecrawl",
+            status="provider_rejected",
+            operator_message="Website blocked scrape",
+        )
+        # Instagram succeeded
+        ig_succ = ProviderExecutionResult(
+            provider="apify_instagram",
+            status="success",
+            data={"username": "matchabar"},
+        )
+        # Facebook failed -> mark facebook_review_failed
+        fb_fail = ProviderExecutionResult(
+            provider="apify_facebook",
+            status="provider_unavailable",
+            operator_message="Facebook rate limit",
+        )
+
+        outcomes = evaluate_waterfall_fallbacks(fc_fail, ig_succ, fb_fail)
+        self.assertEqual(outcomes["website_review"].operator_action, "website_review_needs_operator_review")
+        self.assertEqual(outcomes["instagram_review"].status, "completed")
+        self.assertEqual(outcomes["facebook_review"].status, "facebook_review_failed")
+
+    def test_provider_enrichment_dry_run_routing_logic(self) -> None:
+        fc_cfg = FirecrawlConfig(api_key="", enabled=False)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="",
+            enabled=False,
+            instagram_profile_actors=("apify~instagram-profile-scraper",),
+            facebook_page_actors=("apify~facebook-pages-scraper",),
+            people_fallback_actors=("apify~people-finder",),
+        )
+
+        # Lead 1: Custom website -> Firecrawl step
+        lead_web = {
+            "workflow_id": "lead-web-1",
+            "venue_name": "Specialty Coffee",
+            "city": "Berlin",
+            "website": "https://specialtycoffee.de",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=1",
+        }
+        routes_web = plan_lead_provider_routing(lead_web, fc_cfg, ap_cfg)
+        fc_routes = [r for r in routes_web if r.provider == "firecrawl"]
+        self.assertEqual(len(fc_routes), 1)
+        self.assertEqual(fc_routes[0].target_type, "website_pages")
+        self.assertEqual(fc_routes[0].target_value, "https://specialtycoffee.de")
+
+        # Lead 2: Instagram URL -> Instagram actor group
+        lead_insta = {
+            "workflow_id": "lead-insta-2",
+            "venue_name": "Insta Brunch",
+            "city": "Berlin",
+            "website": "",
+            "instagram": "https://instagram.com/instabrunch",
+            "source_url": "https://maps.google.com/?cid=2",
+        }
+        routes_insta = plan_lead_provider_routing(lead_insta, fc_cfg, ap_cfg)
+        ig_routes = [r for r in routes_insta if r.provider == "apify_instagram"]
+        self.assertEqual(len(ig_routes), 1)
+        self.assertEqual(ig_routes[0].actor_id, "apify~instagram-profile-scraper")
+        self.assertEqual(ig_routes[0].target_value, "https://instagram.com/instabrunch")
+
+        # Lead 3: Facebook URL -> Facebook actor group
+        lead_fb = {
+            "workflow_id": "lead-fb-3",
+            "venue_name": "Facebook Cafe",
+            "city": "Berlin",
+            "website": "https://facebook.com/fbcafeberlin",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=3",
+        }
+        routes_fb = plan_lead_provider_routing(lead_fb, fc_cfg, ap_cfg)
+        fb_routes = [r for r in routes_fb if r.provider == "apify_facebook"]
+        self.assertEqual(len(fb_routes), 1)
+        self.assertEqual(fb_routes[0].actor_id, "apify~facebook-pages-scraper")
+        self.assertEqual(fb_routes[0].target_value, "https://facebook.com/fbcafeberlin")
+
+        # Lead 4: No custom website, no social URL -> needs_operator_review
+        lead_none = {
+            "workflow_id": "lead-none-4",
+            "venue_name": "Offline Corner",
+            "city": "Berlin",
+            "website": "",
+            "instagram": "",
+            "source_url": "https://maps.google.com/?cid=4",
+        }
+        routes_none = plan_lead_provider_routing(lead_none, fc_cfg, ap_cfg)
+        review_routes = [r for r in routes_none if r.status == "needs_operator_review"]
+        self.assertEqual(len(review_routes), 1)
+        self.assertIn("requires operator review", review_routes[0].reason)
+
+        # People fallback is always tagged blocked_by_default
+        fallback_routes = [r for r in routes_web if r.provider == "apify_people_fallback"]
+        self.assertEqual(len(fallback_routes), 1)
+        self.assertEqual(fallback_routes[0].status, "blocked_by_default")
+
+        # End-to-end dry-run report rendering
+        report_text, summary = render_provider_planning_report([lead_web, lead_insta, lead_fb, lead_none], fc_cfg, ap_cfg)
+        self.assertEqual(summary.leads_inspected, 4)
+        self.assertEqual(summary.firecrawl_routes, 1)
+        self.assertEqual(summary.instagram_routes, 1)
+        self.assertEqual(summary.facebook_routes, 1)
+        self.assertEqual(summary.people_fallback_blocked, 4)
+        self.assertEqual(summary.needs_operator_review, 1)
+
+        self.assertIn("=== Provider Enrichment Planning Summary ===", report_text)
+        self.assertIn("Firecrawl Website Routes:  1", report_text)
+        self.assertIn("Instagram Actor Routes:    1", report_text)
+        self.assertIn("Facebook Actor Routes:     1", report_text)
+        self.assertIn("People Fallback Blocked:   4", report_text)
+        self.assertIn("Needs Operator Review:     1", report_text)
+
+        self.assertIn("=== Provider Enrichment Planning Summary ===", report_text)
+        self.assertIn("Firecrawl Website Routes:  1", report_text)
+        self.assertIn("Instagram Actor Routes:    1", report_text)
+        self.assertIn("Facebook Actor Routes:     1", report_text)
+        self.assertIn("People Fallback Blocked:   4", report_text)
+        self.assertIn("Needs Operator Review:     1", report_text)
+
+    def test_enrichment_trial_dry_run_zero_network_calls(self) -> None:
+        leads = [
+            {
+                "workflow_id": f"lead-{i}",
+                "venue_name": f"Cafe {i}",
+                "city": "Berlin",
+                "website": f"https://cafe{i}.de",
+                "instagram": f"https://instagram.com/cafe{i}" if i % 2 == 0 else "",
+                "source_url": f"https://maps.google.com/?cid={i}",
+            }
+            for i in range(1, 11)
+        ]
+        transport = FakeTransport({"success": True})
+        # Even with enabled flags and keys, dry_run=True must make 0 network calls
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            instagram_profile_actors=("apify~instagram-profile-scraper",),
+        )
+
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=leads), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary = run_enrichment_trial(
+                statuses=["qualified"],
+                limit=10,
+                dry_run=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport,
+                resolver=dummy_resolver,
+            )
+
+            # Zero network calls in dry-run mode
+            self.assertEqual(len(transport.requests), 0)
+            self.assertEqual(summary.leads_inspected, 10)
+            self.assertGreater(summary.provider_steps_planned, 0)
+            # When dry run is active, would_call_provider reflects steps that passed validation
+            self.assertEqual(summary.steps_skipped_disabled, 0)
+
+    def test_enrichment_trial_failure_modes_and_safety_gates(self) -> None:
+        lead = {
+            "workflow_id": "lead-trial-1",
+            "venue_name": "Test Cafe",
+            "city": "Berlin",
+            "website": "https://testcafe.de",
+            "instagram": "https://instagram.com/testcafe",
+            "source_url": "https://maps.google.com/?cid=1",
+        }
+        # 1. Provider disabled -> steps skipped because disabled
+        fc_dis = FirecrawlConfig(api_key="", enabled=False)
+        ap_dis = ApifyEnrichmentConfig(api_token="", enabled=False)
+        res_dis = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={},
+            firecrawl_config=fc_dis,
+            apify_config=ap_dis,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_dis = {s.provider: s.decision for s in res_dis.step_decisions}
+        self.assertEqual(decisions_dis.get("firecrawl"), "skipped_disabled")
+        self.assertEqual(decisions_dis.get("apify_instagram"), "skipped_disabled")
+
+        # 2. Missing API key -> steps blocked by missing key
+        fc_nokey = FirecrawlConfig(api_key="", enabled=True)
+        ap_nokey = ApifyEnrichmentConfig(api_token="", enabled=True, instagram_profile_actors=("apify~instagram-scraper",))
+        res_nokey = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "website_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_nokey,
+            apify_config=ap_nokey,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_nokey = {s.provider: s.decision for s in res_nokey.step_decisions}
+        self.assertEqual(decisions_nokey.get("firecrawl"), "blocked_missing_key")
+        self.assertEqual(decisions_nokey.get("apify_instagram"), "blocked_missing_key")
+
+        # 3. Cost cap exceeded before network
+        ap_overcost = ApifyEnrichmentConfig(
+            api_token="token",
+            enabled=True,
+            max_cost_usd=Decimal("0.10"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+        res_overcost = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "instagram_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_dis,
+            apify_config=ap_overcost,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+            step_estimated_cost=Decimal("0.50"),
+        )
+        decisions_overcost = {s.provider: s.decision for s in res_overcost.step_decisions}
+        self.assertEqual(decisions_overcost.get("apify_instagram"), "blocked_cost_cap")
+
+        # 4. Total budget cap exceeded across run
+        res_budget_exceeded = evaluate_lead_trial_steps(
+            lead=lead,
+            approvals={("lead-trial-1", "instagram_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_dis,
+            apify_config=ApifyEnrichmentConfig(
+                api_token="token",
+                enabled=True,
+                max_cost_usd=Decimal("1.00"),
+                instagram_profile_actors=("apify~instagram-scraper",),
+            ),
+            max_total_budget=Decimal("2.00"),
+            current_total_estimated=Decimal("2.00"),
+            step_estimated_cost=Decimal("0.50"),
+        )
+        decisions_budget = {s.provider: s.decision for s in res_budget_exceeded.step_decisions}
+        self.assertEqual(decisions_budget.get("apify_instagram"), "blocked_cost_cap")
+
+        # 5. Invalid URL rejected
+        lead_bad_url = dict(lead, website="http://localhost:8080/admin")
+        fc_valid = FirecrawlConfig(api_key="key", enabled=True)
+        res_bad_url = evaluate_lead_trial_steps(
+            lead=lead_bad_url,
+            approvals={("lead-trial-1", "website_review"): {"approved_by": "Cyril"}},
+            firecrawl_config=fc_valid,
+            apify_config=ap_dis,
+            max_total_budget=Decimal("5.00"),
+            current_total_estimated=Decimal("0.00"),
+        )
+        decisions_bad_url = {s.provider: s.decision for s in res_bad_url.step_decisions}
+        self.assertEqual(decisions_bad_url.get("firecrawl"), "blocked_invalid_url")
+
+    def test_enrichment_trial_controlled_mode_and_hard_stop(self) -> None:
+        leads_20 = [
+            {
+                "workflow_id": f"lead-{i}",
+                "venue_name": f"Cafe {i}",
+                "city": "Berlin",
+                "website": f"https://cafe{i}.de",
+                "instagram": "",
+                "source_url": f"https://maps.google.com/?cid={i}",
+            }
+            for i in range(1, 21)
+        ]
+        # Controlled trial mode rejects requests with limit > 10
+        with self.assertRaises(ValueError):
+            run_enrichment_trial(limit=15)
+
+        # Hard stop if estimated cost exceeds configured cap during run
+        transport = FakeTransport({"success": True})
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True, max_credits_per_run=10)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.00"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=leads_20[:10]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary = run_enrichment_trial(
+                limit=10,
+                max_total_budget_usd=Decimal("0.00"),  # budget is 0
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport,
+                resolver=dummy_resolver,
+            )
+            # Zero spend and all paid steps blocked by cost cap
+            self.assertEqual(summary.estimated_max_spend_usd, Decimal("0.00"))
+            self.assertIn("=== Enrichment Trial Summary ===", format_enrichment_trial_summary(summary))
+
+    def test_enrichment_trial_execute_mode_and_apify_input_data(self) -> None:
+        lead = {
+            "workflow_id": "lead-exec-1",
+            "venue_name": "Specialty Matcha",
+            "city": "Berlin",
+            "website": "https://matcha-berlin.de",
+            "instagram": "https://instagram.com/matcha_berlin",
+            "source_url": "https://facebook.com/matchaberlinpage",
+        }
+
+        # 1. build_apify_actor_input provides correct bounded input for each actor group
+        insta_input = build_apify_actor_input(lead, "instagram", "https://instagram.com/matcha_berlin")
+        self.assertEqual(insta_input["directUrls"], ["https://instagram.com/matcha_berlin"])
+        self.assertEqual(insta_input["username"], "matcha_berlin")
+
+        fb_input = build_apify_actor_input(lead, "facebook", "https://facebook.com/matchaberlinpage")
+        self.assertEqual(fb_input["startUrls"], [{"url": "https://facebook.com/matchaberlinpage"}])
+
+        people_input = build_apify_actor_input(lead, "people_fallback", "")
+        self.assertEqual(people_input["company"], "Specialty Matcha")
+        self.assertEqual(people_input["domain"], "matcha-berlin.de")
+
+        # 2. Execute mode with provider success records outcomes and surfaces in summary
+        transport_ok = FakeTransport({"data": [{"id": "item-1"}]}, status_code=200)
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True, max_credits_per_run=10)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.00"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_ok = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_ok,
+                resolver=dummy_resolver,
+            )
+
+            # Firecrawl, Instagram, and Facebook were executed with real input payloads
+            self.assertEqual(len(transport_ok.requests), 3)
+            self.assertEqual(summary_ok.executed_steps_succeeded, 3)
+            self.assertEqual(summary_ok.executed_steps_failed, 0)
+
+            # Verify Apify payload has non-empty target
+            apify_req = [r for r in transport_ok.requests if "api.apify.com" in r.url and "instagram" in r.url][0]
+            apify_payload = json.loads(apify_req.body.decode("utf-8"))
+            self.assertIn("directUrls", apify_payload)
+            self.assertEqual(apify_payload["username"], "matcha_berlin")
+
+        # 3. Execute mode does NOT silently succeed on provider failure
+        transport_err = FakeTransport({"error": "Rate limited"}, status_code=429)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_err = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_err,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_err.executed_steps_failed, 3)
+            self.assertEqual(summary_err.executed_steps_succeeded, 0)
+            self.assertIn("Executed Steps Failed:", format_enrichment_trial_summary(summary_err))
+
+    def test_enrichment_trial_people_fallback_safety_and_execution(self) -> None:
+        lead = {
+            "workflow_id": "lead-fallback-1",
+            "venue_name": "Specialty Coffee Berlin",
+            "city": "Berlin",
+            "website": "https://specialty-coffee.de/contact",
+            "instagram": "",
+            "source_url": "",
+        }
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=False)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            people_fallback_actors=("apify~contact-finder",),
+        )
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        # 1. Unapproved people fallback remains blocked and makes zero provider calls
+        transport_unapproved = FakeTransport({"data": {"id": "item-1"}}, status_code=200)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_unapproved = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_unapproved,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_unapproved.steps_blocked_missing_approval, 1)
+            self.assertEqual(len(transport_unapproved.requests), 0)
+            self.assertEqual(summary_unapproved.executed_steps_succeeded, 0)
+
+        # 2. Approved people fallback executes with approved_by and full lead context (company, domain, city)
+        transport_approved = FakeTransport({"data": {"id": "run-fallback-123"}}, status_code=200)
+        approvals = {("lead-fallback-1", "people_fallback"): {"approved_by": "Cyril"}}
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value=approvals):
+
+            summary_approved = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_approved,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_approved.steps_blocked_missing_approval, 0)
+            self.assertEqual(summary_approved.executed_steps_succeeded, 1)
+            self.assertEqual(len(transport_approved.requests), 1)
+
+            # Check Apify payload has extracted company, domain, and city from real lead
+            req = transport_approved.requests[0]
+            self.assertIn("apify~contact-finder", req.url)
+            payload = json.loads(req.body.decode("utf-8"))
+            self.assertEqual(payload["company"], "Specialty Coffee Berlin")
+            self.assertEqual(payload["domain"], "specialty-coffee.de")
+            self.assertEqual(payload["city"], "Berlin")
+
+        # 3. Dry-run with approved people fallback makes zero network calls
+        transport_dry = FakeTransport({"data": {"id": "run-fallback-123"}}, status_code=200)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value=approvals):
+
+            summary_dry = run_enrichment_trial(
+                limit=1,
+                dry_run=True,
+                execute=False,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_dry,
+                resolver=dummy_resolver,
+            )
+            self.assertEqual(len(transport_dry.requests), 0)
+            self.assertEqual(summary_dry.steps_would_call_provider, 1)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

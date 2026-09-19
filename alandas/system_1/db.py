@@ -771,10 +771,10 @@ def record_manual_enrichment_evidence(
     value: str,
     source_url: str,
     recorded_by: str,
-) -> tuple[dict[str, object], bool]:
+) -> tuple[dict[str, object], str]:
     """Insert or update manual enrichment evidence.
 
-    Returns (evidence_dict, is_new).
+    Returns (evidence_dict, status) where status is 'created', 'already_exists', or 'updated'.
     """
     with connect() as connection:
         existing = connection.execute(
@@ -797,7 +797,7 @@ def record_manual_enrichment_evidence(
                         "recorded_by": existing[5],
                         "recorded_at": existing[6],
                     },
-                    False,
+                    "already_exists",
                 )
             connection.execute(
                 """
@@ -830,7 +830,7 @@ def record_manual_enrichment_evidence(
                     "recorded_by": row[5],
                     "recorded_at": row[6],
                 },
-                False,
+                "updated",
             )
 
         connection.execute(
@@ -861,7 +861,7 @@ def record_manual_enrichment_evidence(
             "recorded_by": row[5],
             "recorded_at": row[6],
         },
-        True,
+        "created",
     )
 
 
