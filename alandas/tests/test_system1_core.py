@@ -55,6 +55,7 @@ if "psycopg" not in sys.modules:
     _psycopg.Connection = object
     sys.modules["psycopg"] = _psycopg
 
+from system_1 import db
 from system_1.core import (
     apply_research_evidence,
     audit_event_key,
@@ -125,6 +126,13 @@ from system_1.plan_discovery_enrichment import (
     format_plan_summary,
     plan_enrichment_batch,
     plan_lead_enrichment_steps,
+)
+from system_1.show_enrichment_plans import (
+    DisplaySummary,
+    format_lead_plan,
+    format_plans_summary,
+    render_enrichment_plans_report,
+    show_enrichment_plans,
 )
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
@@ -1192,6 +1200,149 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("Rejected Skipped:                1", summary_text)
         self.assertIn("External Steps Pending Approval: 5", summary_text)
         self.assertIn("Paid Steps Pending Approval:     1", summary_text)
+
+    def test_show_enrichment_plans_formatting_and_summary(self) -> None:
+        plans = [
+            {
+                "workflow_id": "lead-mitte-1",
+                "venue_name": "Kaffeehaus Mitte",
+                "city": "Berlin",
+                "qualification_status": "qualified",
+                "qualification_score": 82,
+                "steps": [
+                    {
+                        "name": "system1_duplicate_check",
+                        "requires_external_call": False,
+                        "may_cost_money": False,
+                        "requires_human_approval": False,
+                        "reason": "Check System 1 database for existing lead or duplicate venue records",
+                    },
+                    {
+                        "name": "website_review",
+                        "requires_external_call": True,
+                        "may_cost_money": False,
+                        "requires_human_approval": True,
+                        "reason": "Inspect homepage and impressum",
+                    },
+                    {
+                        "name": "email_lookup",
+                        "requires_external_call": True,
+                        "may_cost_money": True,
+                        "requires_human_approval": True,
+                        "reason": "Find business contact email via paid waterfall",
+                    },
+                ],
+            },
+            {
+                "workflow_id": "lead-neukolln-2",
+                "venue_name": "Social Brunch Bar",
+                "city": "Berlin",
+                "qualification_status": "needs_review",
+                "qualification_score": 55,
+                "steps": [
+                    {
+                        "name": "system1_duplicate_check",
+                        "requires_external_call": False,
+                        "may_cost_money": False,
+                        "requires_human_approval": False,
+                        "reason": "Check System 1 database",
+                    },
+                    {
+                        "name": "instagram_review",
+                        "requires_external_call": True,
+                        "may_cost_money": False,
+                        "requires_human_approval": True,
+                        "reason": "Review social profile",
+                    },
+                ],
+            },
+        ]
+
+        report_text, summary = render_enrichment_plans_report(plans)
+
+        # Summary assertions
+        self.assertEqual(summary.leads_shown, 2)
+        self.assertEqual(summary.total_steps, 5)
+        self.assertEqual(summary.external_steps_pending_approval, 3)  # website_review, email_lookup, instagram_review
+        self.assertEqual(summary.paid_steps_pending_approval, 1)      # email_lookup
+
+        # Formatting assertions for lead details
+        self.assertIn("=== Lead: lead-mitte-1 ===", report_text)
+        self.assertIn("Venue:                Kaffeehaus Mitte (Berlin)", report_text)
+        self.assertIn("Qualification Status: qualified (Score: 82)", report_text)
+        self.assertIn("1. system1_duplicate_check", report_text)
+        self.assertIn("External call required:  no", report_text)
+        self.assertIn("May cost money:          no", report_text)
+        self.assertIn("Human approval required: no", report_text)
+        self.assertIn("2. website_review", report_text)
+        self.assertIn("External call required:  yes", report_text)
+        self.assertIn("3. email_lookup", report_text)
+        self.assertIn("May cost money:          yes", report_text)
+        self.assertIn("Human approval required: yes", report_text)
+
+        # Formatting assertions for summary block
+        self.assertIn("=== Enrichment Plans Summary ===", report_text)
+        self.assertIn("Leads Shown:                     2", report_text)
+        self.assertIn("Total Steps:                     5", report_text)
+        self.assertIn("External Steps Pending Approval: 3", report_text)
+        self.assertIn("Paid Steps Pending Approval:     1", report_text)
+
+    def test_fetch_enrichment_plans_db_read_and_cli_execution(self) -> None:
+        db_rows = [
+            (
+                "lead-mitte-1",
+                "Kaffeehaus Mitte",
+                "Berlin",
+                "qualified",
+                82,
+                [
+                    {
+                        "name": "system1_duplicate_check",
+                        "requires_external_call": False,
+                        "may_cost_money": False,
+                        "requires_human_approval": False,
+                    }
+                ],
+            )
+        ]
+
+        class FakePlansDbConn:
+            def __init__(self) -> None:
+                self.queries = []
+
+            def execute(self, sql: str, params: tuple = ()) -> "FakePlansDbConn":
+                self.queries.append((sql, params))
+                return self
+
+            def fetchall(self) -> list:
+                return db_rows
+
+            def __enter__(self) -> "FakePlansDbConn":
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.db.connect", return_value=FakePlansDbConn()):
+            plans = db.fetch_enrichment_plans(statuses=["qualified"], limit=10)
+
+        self.assertEqual(len(plans), 1)
+        self.assertEqual(plans[0]["workflow_id"], "lead-mitte-1")
+        self.assertEqual(plans[0]["venue_name"], "Kaffeehaus Mitte")
+        self.assertEqual(plans[0]["city"], "Berlin")
+        self.assertEqual(plans[0]["qualification_status"], "qualified")
+        self.assertEqual(plans[0]["qualification_score"], 82)
+        self.assertEqual(len(plans[0]["steps"]), 1)
+
+        # Verify show_enrichment_plans calls db.fetch_enrichment_plans without external calls
+        with patch("system_1.show_enrichment_plans.db.ensure_schema"), \
+             patch("system_1.show_enrichment_plans.db.fetch_enrichment_plans", return_value=plans):
+            summary = show_enrichment_plans(statuses=["qualified"], limit=10)
+
+        self.assertEqual(summary.leads_shown, 1)
+        self.assertEqual(summary.total_steps, 1)
+        self.assertEqual(summary.external_steps_pending_approval, 0)
+        self.assertEqual(summary.paid_steps_pending_approval, 0)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

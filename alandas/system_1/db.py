@@ -598,3 +598,33 @@ def upsert_enrichment_plan(
             (qualification_status, json.dumps(steps, ensure_ascii=True), workflow_id),
         )
         return False
+
+
+def fetch_enrichment_plans(
+    statuses: Sequence[str], limit: int = 50
+) -> list[dict[str, object]]:
+    """Fetch lead enrichment plans joined with lead metadata for display."""
+    with connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT p.workflow_id, l.venue_name, l.city,
+                   p.qualification_status, l.qualification_score, p.steps
+            FROM lead_enrichment_plans p
+            JOIN leads l ON p.workflow_id = l.workflow_id
+            WHERE p.qualification_status = ANY(%s)
+            ORDER BY p.created_at ASC
+            LIMIT %s
+            """,
+            (list(statuses), limit),
+        ).fetchall()
+    plans = []
+    for r in rows:
+        plans.append({
+            "workflow_id": r[0],
+            "venue_name": r[1],
+            "city": r[2],
+            "qualification_status": r[3],
+            "qualification_score": r[4],
+            "steps": r[5] if isinstance(r[5], list) else json.loads(r[5] or "[]"),
+        })
+    return plans
