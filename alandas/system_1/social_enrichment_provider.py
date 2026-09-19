@@ -240,7 +240,13 @@ def map_provider_http_response(
 
     run_id = ""
     if isinstance(body, dict):
-        run_id = str((body.get("data") or {}).get("id") or body.get("id") or "")
+        inner_data = body.get("data")
+        if isinstance(inner_data, dict):
+            run_id = str(inner_data.get("id") or "")
+        elif isinstance(inner_data, list) and inner_data and isinstance(inner_data[0], dict):
+            run_id = str(inner_data[0].get("id") or "")
+        if not run_id:
+            run_id = str(body.get("id") or "")
 
     return ProviderExecutionResult(
         provider=provider,

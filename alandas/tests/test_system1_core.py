@@ -174,7 +174,9 @@ from system_1.social_enrichment_provider import (
 from system_1.enrichment_trial import (
     EnrichmentTrialSummary,
     LeadTrialResult,
+    StepExecutionOutcome,
     StepTrialDecision,
+    build_apify_actor_input,
     evaluate_lead_trial_steps,
     format_enrichment_trial_summary,
     render_enrichment_trial_report,
@@ -2660,6 +2662,84 @@ class System1CoreTests(unittest.TestCase):
             # Zero spend and all paid steps blocked by cost cap
             self.assertEqual(summary.estimated_max_spend_usd, Decimal("0.00"))
             self.assertIn("=== Enrichment Trial Summary ===", format_enrichment_trial_summary(summary))
+
+    def test_enrichment_trial_execute_mode_and_apify_input_data(self) -> None:
+        lead = {
+            "workflow_id": "lead-exec-1",
+            "venue_name": "Specialty Matcha",
+            "city": "Berlin",
+            "website": "https://matcha-berlin.de",
+            "instagram": "https://instagram.com/matcha_berlin",
+            "source_url": "https://facebook.com/matchaberlinpage",
+        }
+
+        # 1. build_apify_actor_input provides correct bounded input for each actor group
+        insta_input = build_apify_actor_input(lead, "instagram", "https://instagram.com/matcha_berlin")
+        self.assertEqual(insta_input["directUrls"], ["https://instagram.com/matcha_berlin"])
+        self.assertEqual(insta_input["username"], "matcha_berlin")
+
+        fb_input = build_apify_actor_input(lead, "facebook", "https://facebook.com/matchaberlinpage")
+        self.assertEqual(fb_input["startUrls"], [{"url": "https://facebook.com/matchaberlinpage"}])
+
+        people_input = build_apify_actor_input(lead, "people_fallback", "")
+        self.assertEqual(people_input["company"], "Specialty Matcha")
+        self.assertEqual(people_input["domain"], "matcha-berlin.de")
+
+        # 2. Execute mode with provider success records outcomes and surfaces in summary
+        transport_ok = FakeTransport({"data": [{"id": "item-1"}]}, status_code=200)
+        fc_cfg = FirecrawlConfig(api_key="fc-key", enabled=True, max_credits_per_run=10)
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="ap-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.00"),
+            instagram_profile_actors=("apify~instagram-scraper",),
+        )
+        dummy_resolver = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_ok = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_ok,
+                resolver=dummy_resolver,
+            )
+
+            # Firecrawl, Instagram, and Facebook were executed with real input payloads
+            self.assertEqual(len(transport_ok.requests), 3)
+            self.assertEqual(summary_ok.executed_steps_succeeded, 3)
+            self.assertEqual(summary_ok.executed_steps_failed, 0)
+
+            # Verify Apify payload has non-empty target
+            apify_req = [r for r in transport_ok.requests if "api.apify.com" in r.url and "instagram" in r.url][0]
+            apify_payload = json.loads(apify_req.body.decode("utf-8"))
+            self.assertIn("directUrls", apify_payload)
+            self.assertEqual(apify_payload["username"], "matcha_berlin")
+
+        # 3. Execute mode does NOT silently succeed on provider failure
+        transport_err = FakeTransport({"error": "Rate limited"}, status_code=429)
+        with patch("system_1.enrichment_trial.db.ensure_schema"), \
+             patch("system_1.enrichment_trial.db.fetch_leads_for_enrichment_planning", return_value=[lead]), \
+             patch("system_1.enrichment_trial.db.fetch_enrichment_step_approvals", return_value={}):
+
+            summary_err = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_cfg,
+                apify_config=ap_cfg,
+                transport=transport_err,
+                resolver=dummy_resolver,
+            )
+
+            self.assertEqual(summary_err.executed_steps_failed, 3)
+            self.assertEqual(summary_err.executed_steps_succeeded, 0)
+            self.assertIn("Executed Steps Failed:", format_enrichment_trial_summary(summary_err))
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

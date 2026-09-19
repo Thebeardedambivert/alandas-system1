@@ -16,6 +16,8 @@ import socket
 import sys
 from typing import Any, Callable, Sequence
 
+from urllib.parse import urlparse
+
 from system_1 import db
 from system_1.provider_http import HttpTransport, UrllibHttpTransport
 from system_1.social_enrichment_provider import (
@@ -49,6 +51,17 @@ class StepTrialDecision:
 
 
 @dataclass(frozen=True)
+class StepExecutionOutcome:
+    workflow_id: str
+    provider: str
+    step_name: str
+    status: str
+    operator_message: str
+    next_action: str
+    run_id: str = ""
+
+
+@dataclass(frozen=True)
 class LeadTrialResult:
     workflow_id: str
     venue_name: str
@@ -66,6 +79,44 @@ class EnrichmentTrialSummary:
     steps_blocked_cost_cap: int
     steps_would_call_provider: int
     estimated_max_spend_usd: Decimal
+    executed_steps_succeeded: int = 0
+    executed_steps_failed: int = 0
+    execution_outcomes: list[StepExecutionOutcome] = field(default_factory=list)
+
+
+# ---------------------------------------------------------------------------
+# Apify Input Construction
+# ---------------------------------------------------------------------------
+
+def build_apify_actor_input(lead: dict[str, Any], group: str, target: str) -> dict[str, Any]:
+    """Construct safe, bounded actor input for Apify social and fallback groups."""
+    target_clean = target.strip()
+    if group == "instagram":
+        handle = (
+            target_clean.split("/")[-1].replace("@", "").strip()
+            if "/" in target_clean
+            else target_clean.replace("@", "").strip()
+        )
+        return {
+            "directUrls": [target_clean] if target_clean.startswith("http") else [f"https://instagram.com/{handle}"],
+            "username": handle,
+        }
+    elif group == "facebook":
+        return {
+            "startUrls": [{"url": target_clean}],
+        }
+    elif group == "people_fallback":
+        website = str(lead.get("website") or "").strip()
+        domain = ""
+        if website:
+            parsed = urlparse(website if "://" in website else f"https://{website}")
+            domain = parsed.hostname or ""
+        return {
+            "company": str(lead.get("venue_name") or "").strip(),
+            "domain": domain,
+            "city": str(lead.get("city") or "").strip(),
+        }
+    return {"target": target_clean}
 
 
 # ---------------------------------------------------------------------------
@@ -357,6 +408,17 @@ def format_enrichment_trial_summary(summary: EnrichmentTrialSummary) -> str:
         f"Steps That Would Call Providers: {summary.steps_would_call_provider}",
         f"Estimated Maximum Spend:         ${summary.estimated_max_spend_usd:.2f}",
     ]
+    if summary.executed_steps_succeeded > 0 or summary.executed_steps_failed > 0 or summary.execution_outcomes:
+        lines.extend([
+            f"Executed Steps Succeeded:        {summary.executed_steps_succeeded}",
+            f"Executed Steps Failed:           {summary.executed_steps_failed}",
+        ])
+        if summary.execution_outcomes:
+            lines.append("Execution Outcomes:")
+            for idx, out in enumerate(summary.execution_outcomes, start=1):
+                lines.append(f"  {idx}. [{out.status.upper()}] {out.workflow_id} -> {out.provider} ({out.step_name}): {out.operator_message}")
+                if out.next_action:
+                    lines.append(f"     Next Action: {out.next_action}")
     return "\n".join(lines)
 
 
@@ -453,6 +515,10 @@ def run_enrichment_trial(
     report_text, summary = render_enrichment_trial_report(results)
     print(report_text)
 
+    executed_succeeded = 0
+    executed_failed = 0
+    execution_outcomes: list[StepExecutionOutcome] = []
+
     # If execute mode requested and dry_run explicitly False
     if execute and not dry_run:
         fc_adapter = FirecrawlAdapter(fc_config, transport=active_transport)
@@ -460,18 +526,57 @@ def run_enrichment_trial(
         for res in results:
             for step in res.step_decisions:
                 if step.decision == "would_call_provider":
+                    call_res: ProviderExecutionResult
                     if step.provider == "firecrawl":
-                        fc_adapter.scrape_url(step.target_value)
+                        call_res = fc_adapter.scrape_url(step.target_value, resolver=resolver)
                     elif step.provider.startswith("apify_"):
                         group = step.provider.replace("apify_", "")
-                        ap_adapter.run_actor(
+                        actor_input = build_apify_actor_input(
+                            lead={"workflow_id": step.workflow_id, "venue_name": res.venue_name, "city": res.city},
+                            group=group,
+                            target=step.target_value,
+                        )
+                        call_res = ap_adapter.run_actor(
                             actor_id=step.actor_id,
                             group=group,
-                            input_data={},
+                            input_data=actor_input,
                             estimated_cost_usd=step.estimated_cost_usd,
                         )
+                    else:
+                        continue
 
-    return summary
+                    outcome = StepExecutionOutcome(
+                        workflow_id=step.workflow_id,
+                        provider=step.provider,
+                        step_name=step.step_name,
+                        status=call_res.status,
+                        operator_message=call_res.operator_message,
+                        next_action=call_res.next_action,
+                        run_id=call_res.run_id,
+                    )
+                    execution_outcomes.append(outcome)
+                    if call_res.status in (EnrichmentStatus.SUCCESS.value, EnrichmentStatus.NO_RESULT_FOUND.value):
+                        executed_succeeded += 1
+                    else:
+                        executed_failed += 1
+
+    final_summary = EnrichmentTrialSummary(
+        leads_inspected=summary.leads_inspected,
+        provider_steps_planned=summary.provider_steps_planned,
+        steps_skipped_disabled=summary.steps_skipped_disabled,
+        steps_blocked_missing_approval=summary.steps_blocked_missing_approval,
+        steps_blocked_cost_cap=summary.steps_blocked_cost_cap,
+        steps_would_call_provider=summary.steps_would_call_provider,
+        estimated_max_spend_usd=summary.estimated_max_spend_usd,
+        executed_steps_succeeded=executed_succeeded,
+        executed_steps_failed=executed_failed,
+        execution_outcomes=execution_outcomes,
+    )
+
+    if execute and not dry_run:
+        print("\n" + format_enrichment_trial_summary(final_summary))
+
+    return final_summary
 
 
 def main() -> int:
