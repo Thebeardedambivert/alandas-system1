@@ -21,6 +21,7 @@ from urllib.error import HTTPError
 from urllib.parse import urlparse
 
 from system_1 import db
+from system_1.models import ResearchEvidence
 from system_1.provider_http import HttpResponse, HttpTransport, UrllibHttpTransport
 
 
@@ -799,6 +800,248 @@ class ApifyEnrichmentAdapter:
             )
 
         return map_provider_http_response(provider_name, resp)
+
+
+# ---------------------------------------------------------------------------
+# Post-Firecrawl Evidence Extraction & Routing
+# ---------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class DiscoveredEvidence:
+    field: str
+    value: str
+    source_url: str
+    source_provider: str = "firecrawl"
+    requires_approval: bool = False
+    operator_note: str = ""
+
+
+_EMAIL_REGEX = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
+_INSTAGRAM_REGEX = re.compile(r"(?i)https?://(?:www\.)?instagram\.com/([A-Za-z0-9_.-]+)/?")
+_FACEBOOK_REGEX = re.compile(r"(?i)https?://(?:www\.)?facebook\.com/([A-Za-z0-9_.-]+)/?")
+_WHATSAPP_LINK_REGEX = re.compile(r"(?i)https?://(?:wa\.me|api\.whatsapp\.com/send\?(?:[^)\s]*phone=))([0-9+]+)")
+_WHATSAPP_PLAIN_REGEX = re.compile(r"(?i)\bwa\.me/([0-9+]+)")
+_TEL_REGEX = re.compile(r"(?i)tel:([+0-9\s()./-]+)")
+_PHONE_REGEX = re.compile(r"(?:\+49|0049|\+[1-9]\d{0,2})[\s./-]?(?:\(?\d{2,4}\)?[\s./-]?)?\d{3,4}[\s./-]?\d{3,6}")
+_MD_LINK_REGEX = re.compile(r"\[([^\]]+)\]\((https?://[^\s)]+|/[^\s)]+)\)")
+
+
+def extract_firecrawl_evidence(
+    firecrawl_data: Any,
+    source_url: str = "",
+) -> list[DiscoveredEvidence]:
+    """Extract contact, social, and legal evidence from Firecrawl scrape output."""
+    if not firecrawl_data or not isinstance(firecrawl_data, (dict, list)):
+        return []
+
+    inner: Any = firecrawl_data
+    if isinstance(firecrawl_data, dict):
+        if isinstance(firecrawl_data.get("data"), dict):
+            inner = firecrawl_data["data"]
+        elif isinstance(firecrawl_data.get("data"), list) and firecrawl_data["data"] and isinstance(firecrawl_data["data"][0], dict):
+            inner = firecrawl_data["data"][0]
+
+    if not isinstance(inner, dict):
+        return []
+
+    src_url = source_url
+    metadata = inner.get("metadata")
+    if isinstance(metadata, dict) and metadata.get("sourceURL"):
+        src_url = str(metadata["sourceURL"])
+
+    text_chunks: list[str] = []
+    for key in ("markdown", "html", "text", "content"):
+        val = inner.get(key)
+        if isinstance(val, str) and val.strip():
+            text_chunks.append(val)
+
+    if not text_chunks:
+        return []
+
+    full_text = "\n".join(text_chunks)
+    findings: list[DiscoveredEvidence] = []
+    seen: set[tuple[str, str]] = set()
+
+    def add_evidence(field: str, val: str, req_appr: bool = False, note: str = "") -> None:
+        clean_val = val.strip()
+        if not clean_val or (field, clean_val) in seen:
+            return
+        seen.add((field, clean_val))
+        findings.append(
+            DiscoveredEvidence(
+                field=field,
+                value=clean_val,
+                source_url=src_url,
+                source_provider="firecrawl",
+                requires_approval=req_appr,
+                operator_note=note,
+            )
+        )
+
+    # 1. Instagram links/handles
+    for match in _INSTAGRAM_REGEX.finditer(full_text):
+        handle = match.group(1).lower().strip("/.")
+        if handle in {"p", "reel", "reels", "stories", "explore", "direct", "about", "legal", "terms", "privacy"}:
+            continue
+        add_evidence("instagram", f"https://instagram.com/{handle}")
+
+    # 2. Facebook links/pages
+    for match in _FACEBOOK_REGEX.finditer(full_text):
+        page = match.group(1).lower().strip("/.")
+        if page in {"sharer", "share", "tr", "privacy", "policies", "terms", "dialog", "plugins", "login"}:
+            continue
+        add_evidence("facebook", f"https://facebook.com/{page}")
+
+    # 3. WhatsApp links
+    for match in _WHATSAPP_LINK_REGEX.finditer(full_text):
+        num = match.group(1).lstrip("+").strip()
+        if len(num) >= 6:
+            add_evidence(
+                "whatsapp",
+                f"https://wa.me/{num}",
+                req_appr=True,
+                note="WhatsApp contact discovered; requires operator approval before any outreach",
+            )
+    for match in _WHATSAPP_PLAIN_REGEX.finditer(full_text):
+        num = match.group(1).lstrip("+").strip()
+        if len(num) >= 6:
+            add_evidence(
+                "whatsapp",
+                f"https://wa.me/{num}",
+                req_appr=True,
+                note="WhatsApp contact discovered; requires operator approval before any outreach",
+            )
+
+    # 4. Phone numbers (require human approval before outreach)
+    for match in _TEL_REGEX.finditer(full_text):
+        raw_num = match.group(1).strip()
+        digits = re.sub(r"[^\d]", "", raw_num)
+        if len(digits) >= 6:
+            add_evidence(
+                "phone",
+                raw_num,
+                req_appr=True,
+                note="Phone number discovered; requires operator approval before any voice/SMS outreach",
+            )
+    for match in _PHONE_REGEX.finditer(full_text):
+        raw_num = match.group(0).strip()
+        digits = re.sub(r"[^\d]", "", raw_num)
+        if len(digits) >= 7:
+            add_evidence(
+                "phone",
+                raw_num,
+                req_appr=True,
+                note="Phone number discovered; requires operator approval before any voice/SMS outreach",
+            )
+
+    # 5. Emails
+    for match in _EMAIL_REGEX.finditer(full_text):
+        email = match.group(0).lower().strip()
+        if not any(email.endswith(ext) for ext in (".png", ".jpg", ".jpeg", ".gif", ".webp", ".svg")):
+            add_evidence("email", email)
+
+    # 6. Impressum / Contact links
+    for match in _MD_LINK_REGEX.finditer(full_text):
+        link_text = match.group(1).lower()
+        href = match.group(2).strip()
+        if any(k in href.lower() or k in link_text for k in ("impressum", "kontakt", "contact", "legal")):
+            full_href = href
+            if href.startswith("/") and src_url:
+                parsed_base = urlparse(src_url)
+                full_href = f"{parsed_base.scheme}://{parsed_base.netloc}{href}"
+            add_evidence("impressum_url", full_href)
+
+    return findings
+
+
+def route_post_firecrawl_discoveries(
+    lead: dict[str, Any],
+    firecrawl_result: ProviderExecutionResult,
+    apify_config: ApifyEnrichmentConfig,
+    source_url: str = "",
+) -> tuple[list[DiscoveredEvidence], list[PlannedEnrichmentAction], str]:
+    """Extract evidence from Firecrawl scrape and feed discovered social targets into Apify routing."""
+    if firecrawl_result.status != EnrichmentStatus.SUCCESS.value:
+        return (
+            [],
+            [],
+            f"Firecrawl scrape did not succeed ({firecrawl_result.status}): {firecrawl_result.operator_message}",
+        )
+
+    evidence = extract_firecrawl_evidence(
+        firecrawl_result.data,
+        source_url=source_url or str(lead.get("website") or ""),
+    )
+
+    follow_up_actions: list[PlannedEnrichmentAction] = []
+
+    # 1. Instagram discovery -> Apify Instagram
+    ig_items = [e for e in evidence if e.field == "instagram"]
+    if ig_items and apify_config.instagram_profile_actors:
+        actor = apify_config.instagram_profile_actors[0]
+        follow_up_actions.append(
+            PlannedEnrichmentAction(
+                provider="apify_instagram",
+                target_type="instagram_profile",
+                target_value=ig_items[0].value,
+                actor_id=actor,
+                reason="Discovered on website via Firecrawl; queued for Instagram profile enrichment",
+            )
+        )
+
+    # 2. Facebook discovery -> Apify Facebook
+    fb_items = [e for e in evidence if e.field == "facebook"]
+    if fb_items and apify_config.facebook_page_actors:
+        actor = apify_config.facebook_page_actors[0]
+        follow_up_actions.append(
+            PlannedEnrichmentAction(
+                provider="apify_facebook",
+                target_type="facebook_page",
+                target_value=fb_items[0].value,
+                actor_id=actor,
+                reason="Discovered on website via Firecrawl; queued for Facebook page enrichment",
+            )
+        )
+
+    # BINDING SAFETY RULE: People fallback is NEVER planned or run automatically
+    # Zero WhatsApp/email/phone outreach is performed.
+
+    stop_reason = ""
+    if not follow_up_actions:
+        stop_reason = "No social profiles (Instagram or Facebook) discovered in Firecrawl content; stopping waterfall gracefully."
+
+    return evidence, follow_up_actions, stop_reason
+
+
+def store_discovered_evidence(
+    workflow_id: str,
+    evidence: Sequence[DiscoveredEvidence],
+    store_fn: Callable[[str, ResearchEvidence], bool] | None = None,
+) -> int:
+    """Store extracted evidence records with source provider = firecrawl and source URL."""
+    if not workflow_id or not evidence:
+        return 0
+
+    if store_fn is None:
+        try:
+            store_fn = db.insert_research_evidence
+        except Exception:
+            return 0
+
+    stored = 0
+    for item in evidence:
+        rec = ResearchEvidence(
+            field=item.field,
+            value=item.value,
+            source_url=item.source_url,
+            method=item.source_provider,
+        )
+        try:
+            if store_fn(workflow_id, rec):
+                stored += 1
+        except Exception:
+            pass
+    return stored
 
 
 # ---------------------------------------------------------------------------

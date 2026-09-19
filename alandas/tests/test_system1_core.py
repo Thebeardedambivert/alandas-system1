@@ -157,6 +157,7 @@ from system_1.record_manual_enrichment_evidence import (
 from system_1.social_enrichment_provider import (
     ApifyEnrichmentAdapter,
     ApifyEnrichmentConfig,
+    DiscoveredEvidence,
     EnrichmentStatus,
     FirecrawlAdapter,
     FirecrawlConfig,
@@ -165,11 +166,14 @@ from system_1.social_enrichment_provider import (
     ProviderPlanningSummary,
     check_social_match_ambiguity,
     evaluate_waterfall_fallbacks,
+    extract_firecrawl_evidence,
     format_provider_planning_summary,
     normalize_and_validate_actor_id,
     plan_lead_provider_routing,
     plan_provider_enrichment,
     render_provider_planning_report,
+    route_post_firecrawl_discoveries,
+    store_discovered_evidence,
     validate_scrape_target_url,
 )
 from system_1.enrichment_trial import (
@@ -2506,6 +2510,188 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(outcomes["website_review"].operator_action, "website_review_needs_operator_review")
         self.assertEqual(outcomes["instagram_review"].status, "completed")
         self.assertEqual(outcomes["facebook_review"].status, "facebook_review_failed")
+
+    def test_extract_firecrawl_evidence_and_social_routing(self) -> None:
+        raw_markdown = """
+# Welcome to Matcha Mitte Berlin
+Visit our cafe or connect with us on social media:
+* Follow our daily specials on [Instagram](https://instagram.com/matcha_mitte_berlin)
+* Check our community page on [Facebook](https://facebook.com/matchamitte)
+* Reach out directly via WhatsApp: https://wa.me/4915123456789
+* Call us at +49 30 87654321 or tel:+493087654321
+* Email: info@matchamitte.de
+* Legal details: [Impressum](https://matchamitte.de/impressum)
+"""
+        fc_data = {
+            "markdown": raw_markdown,
+            "metadata": {"sourceURL": "https://matchamitte.de"},
+        }
+
+        # 1. Extract all candidate evidence channels
+        evidence = extract_firecrawl_evidence(fc_data, source_url="https://matchamitte.de")
+        fields = {e.field: e for e in evidence}
+
+        self.assertIn("instagram", fields)
+        self.assertEqual(fields["instagram"].value, "https://instagram.com/matcha_mitte_berlin")
+        self.assertFalse(fields["instagram"].requires_approval)
+        self.assertEqual(fields["instagram"].source_provider, "firecrawl")
+
+        self.assertIn("facebook", fields)
+        self.assertEqual(fields["facebook"].value, "https://facebook.com/matchamitte")
+        self.assertFalse(fields["facebook"].requires_approval)
+
+        self.assertIn("whatsapp", fields)
+        self.assertEqual(fields["whatsapp"].value, "https://wa.me/4915123456789")
+        self.assertTrue(fields["whatsapp"].requires_approval)
+        self.assertIn("approval", fields["whatsapp"].operator_note.lower())
+
+        self.assertIn("phone", fields)
+        self.assertTrue(fields["phone"].requires_approval)
+        self.assertIn("approval", fields["phone"].operator_note.lower())
+
+        self.assertIn("email", fields)
+        self.assertEqual(fields["email"].value, "info@matchamitte.de")
+
+        self.assertIn("impressum_url", fields)
+        self.assertEqual(fields["impressum_url"].value, "https://matchamitte.de/impressum")
+
+        # 2. Malformed and empty Firecrawl data handling
+        self.assertEqual(extract_firecrawl_evidence(None), [])
+        self.assertEqual(extract_firecrawl_evidence({}), [])
+        self.assertEqual(extract_firecrawl_evidence({"markdown": None}), [])
+        self.assertEqual(extract_firecrawl_evidence(12345), [])
+        self.assertEqual(extract_firecrawl_evidence({"markdown": "Just menu text without links"}), [])
+
+        # 3. Feeding discovered social URLs to Apify routing
+        ap_cfg = ApifyEnrichmentConfig(
+            api_token="token",
+            enabled=True,
+            instagram_profile_actors=("apify~instagram-scraper",),
+            facebook_page_actors=("apify~facebook-scraper",),
+            people_fallback_actors=("apify~people-finder",),
+        )
+        lead = {"workflow_id": "lead-fc-1", "venue_name": "Matcha Mitte", "city": "Berlin", "website": "https://matchamitte.de"}
+        fc_res_ok = ProviderExecutionResult(
+            provider="firecrawl",
+            status="success",
+            data=fc_data,
+            run_id="fc-run-1",
+        )
+
+        ev_list, follow_up_actions, note = route_post_firecrawl_discoveries(
+            lead=lead,
+            firecrawl_result=fc_res_ok,
+            apify_config=ap_cfg,
+            source_url="https://matchamitte.de",
+        )
+        self.assertGreater(len(ev_list), 0)
+        action_providers = [a.provider for a in follow_up_actions]
+        self.assertIn("apify_instagram", action_providers)
+        self.assertIn("apify_facebook", action_providers)
+        # People fallback MUST NOT run automatically
+        self.assertNotIn("apify_people_fallback", action_providers)
+
+        # 4. Graceful stop when no social channels found
+        fc_no_social = {
+            "markdown": "Call us at +49 30 111111 or email info@cafe.de. We have no social media.",
+        }
+        fc_res_no_soc = ProviderExecutionResult(
+            provider="firecrawl",
+            status="success",
+            data=fc_no_social,
+        )
+        ev_no_soc, follow_ups_none, stop_reason = route_post_firecrawl_discoveries(
+            lead=lead,
+            firecrawl_result=fc_res_no_soc,
+            apify_config=ap_cfg,
+            source_url="https://matchamitte.de",
+        )
+        self.assertEqual(len(follow_ups_none), 0)
+        self.assertIn("No social profiles", stop_reason)
+
+        # 5. Evidence storage with source provider and source URL
+        stored_records: list[tuple[str, Any]] = []
+        def mock_store(wf_id: str, rec: Any) -> bool:
+            stored_records.append((wf_id, rec))
+            return True
+
+        stored_count = store_discovered_evidence("lead-fc-1", evidence, store_fn=mock_store)
+        self.assertEqual(stored_count, len(evidence))
+        self.assertTrue(all(r[1].method == "firecrawl" for r in stored_records))
+        self.assertTrue(all(r[1].source_url == "https://matchamitte.de" for r in stored_records))
+
+        # 6. Full execution trial integration with mocked Firecrawl & Apify
+        class MockEnrichmentTransport:
+            def __init__(self) -> None:
+                self.calls: list[str] = []
+            def request(self, method: str, url: str, headers: dict[str, str], body: bytes | None, timeout_seconds: int) -> HttpResponse:
+                self.calls.append(url)
+                if "firecrawl" in url:
+                    return HttpResponse(200, fc_data)
+                elif "instagram" in url:
+                    return HttpResponse(201, {"data": {"id": "run-ig-123"}})
+                return HttpResponse(200, {})
+
+        m_transport = MockEnrichmentTransport()
+        test_leads = [{
+            "workflow_id": "lead-trial-1",
+            "venue_name": "Matcha Mitte",
+            "city": "Berlin",
+            "status": "qualified",
+            "website": "https://matchamitte.de",
+        }]
+
+        with patch("system_1.db.fetch_leads_for_enrichment_planning", return_value=test_leads), \
+             patch("system_1.db.fetch_enrichment_step_approvals", return_value={}), \
+             patch("system_1.db.ensure_schema"):
+            fc_live_cfg = FirecrawlConfig(api_key="fc-key", enabled=True)
+            ap_live_cfg = ApifyEnrichmentConfig(
+                api_token="ap-token",
+                enabled=True,
+                instagram_profile_actors=("apify/instagram-scraper",),
+                facebook_page_actors=("apify/facebook-scraper",),
+            )
+            trial_storage: list[tuple[str, Any]] = []
+
+            dummy_dns = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+            summary = run_enrichment_trial(
+                limit=1,
+                dry_run=False,
+                execute=True,
+                firecrawl_config=fc_live_cfg,
+                apify_config=ap_live_cfg,
+                transport=m_transport,
+                resolver=dummy_dns,
+                evidence_store_fn=lambda wf_id, rec: (trial_storage.append((wf_id, rec)) or True),
+            )
+
+            # Firecrawl called -> extracted evidence stored
+            self.assertGreater(len(trial_storage), 0)
+            self.assertEqual(trial_storage[0][0], "lead-trial-1")
+            self.assertEqual(trial_storage[0][1].method, "firecrawl")
+
+            # Apify Instagram and Facebook automatically called because they were discovered on website
+            ig_calls = [c for c in m_transport.calls if "instagram" in c]
+            self.assertEqual(len(ig_calls), 1)
+            fb_calls = [c for c in m_transport.calls if "facebook" in c]
+            self.assertEqual(len(fb_calls), 1)
+
+            # Discovered evidence visible in summary
+            summary_fields = {e.field for e in summary.discovered_evidence}
+            self.assertIn("instagram", summary_fields)
+            self.assertIn("facebook", summary_fields)
+            self.assertIn("whatsapp", summary_fields)
+
+            # WhatsApp/phone marked requires_approval, zero outreach sent
+            wa_ev = [e for e in summary.discovered_evidence if e.field == "whatsapp"][0]
+            self.assertTrue(wa_ev.requires_approval)
+            self.assertIn("approval", wa_ev.operator_note.lower())
+
+            # Formatted report contains discovered evidence lines
+            report_str = format_enrichment_trial_summary(summary)
+            self.assertIn("Discovered Evidence:", report_str)
+            self.assertIn("[whatsapp]", report_str)
+            self.assertIn("requires approval: yes", report_str)
 
     def test_provider_enrichment_dry_run_routing_logic(self) -> None:
         fc_cfg = FirecrawlConfig(api_key="", enabled=False)

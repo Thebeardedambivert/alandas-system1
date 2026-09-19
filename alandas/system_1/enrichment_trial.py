@@ -19,17 +19,22 @@ from typing import Any, Callable, Sequence
 from urllib.parse import urlparse
 
 from system_1 import db
+from system_1.models import ResearchEvidence
 from system_1.provider_http import HttpTransport, UrllibHttpTransport
 from system_1.social_enrichment_provider import (
     ApifyEnrichmentAdapter,
     ApifyEnrichmentConfig,
+    DiscoveredEvidence,
     EnrichmentStatus,
     FirecrawlAdapter,
     FirecrawlConfig,
     PlannedEnrichmentAction,
     ProviderExecutionResult,
+    extract_firecrawl_evidence,
     normalize_and_validate_actor_id,
     plan_lead_provider_routing,
+    route_post_firecrawl_discoveries,
+    store_discovered_evidence,
     validate_scrape_target_url,
 )
 
@@ -83,6 +88,7 @@ class EnrichmentTrialSummary:
     executed_steps_succeeded: int = 0
     executed_steps_failed: int = 0
     execution_outcomes: list[StepExecutionOutcome] = field(default_factory=list)
+    discovered_evidence: list[DiscoveredEvidence] = field(default_factory=list)
 
 
 # ---------------------------------------------------------------------------
@@ -422,6 +428,13 @@ def format_enrichment_trial_summary(summary: EnrichmentTrialSummary) -> str:
                 lines.append(f"  {idx}. [{out.status.upper()}] {out.workflow_id} -> {out.provider} ({out.step_name}): {out.operator_message}")
                 if out.next_action:
                     lines.append(f"     Next Action: {out.next_action}")
+    if summary.discovered_evidence:
+        lines.append("Discovered Evidence:")
+        for idx, ev in enumerate(summary.discovered_evidence, start=1):
+            appr = " (requires approval: yes)" if ev.requires_approval else ""
+            lines.append(f"  {idx}. [{ev.field}] {ev.value} (source: {ev.source_provider}){appr}")
+            if ev.operator_note:
+                lines.append(f"     Note: {ev.operator_note}")
     return "\n".join(lines)
 
 
@@ -482,6 +495,7 @@ def run_enrichment_trial(
     apify_config: ApifyEnrichmentConfig | None = None,
     transport: HttpTransport | None = None,
     resolver: Callable[..., list[tuple]] = socket.getaddrinfo,
+    evidence_store_fn: Callable[[str, ResearchEvidence], bool] | None = None,
 ) -> EnrichmentTrialSummary:
     """Execute local-only enrichment trial for up to 10 leads."""
     if limit > 10:
@@ -522,6 +536,7 @@ def run_enrichment_trial(
     executed_succeeded = 0
     executed_failed = 0
     execution_outcomes: list[StepExecutionOutcome] = []
+    all_discovered_evidence: list[DiscoveredEvidence] = []
 
     # If execute mode requested and dry_run explicitly False
     if execute and not dry_run:
@@ -533,6 +548,85 @@ def run_enrichment_trial(
                     call_res: ProviderExecutionResult
                     if step.provider == "firecrawl":
                         call_res = fc_adapter.scrape_url(step.target_value, resolver=resolver)
+                        outcome = StepExecutionOutcome(
+                            workflow_id=step.workflow_id,
+                            provider=step.provider,
+                            step_name=step.step_name,
+                            status=call_res.status,
+                            operator_message=call_res.operator_message,
+                            next_action=call_res.next_action,
+                            run_id=call_res.run_id,
+                        )
+                        execution_outcomes.append(outcome)
+                        if call_res.status in (EnrichmentStatus.SUCCESS.value, EnrichmentStatus.NO_RESULT_FOUND.value):
+                            executed_succeeded += 1
+                        else:
+                            executed_failed += 1
+
+                        # Post-Firecrawl extraction and routing
+                        if call_res.status == EnrichmentStatus.SUCCESS.value:
+                            lead_data = leads_by_id.get(step.workflow_id) or {
+                                "workflow_id": step.workflow_id,
+                                "venue_name": res.venue_name,
+                                "city": res.city,
+                                "website": step.target_value,
+                            }
+                            discovered_ev, follow_ups, routing_note = route_post_firecrawl_discoveries(
+                                lead=lead_data,
+                                firecrawl_result=call_res,
+                                apify_config=ap_config,
+                                source_url=step.target_value,
+                            )
+                            if step.workflow_id and discovered_ev:
+                                store_discovered_evidence(
+                                    workflow_id=step.workflow_id,
+                                    evidence=discovered_ev,
+                                    store_fn=evidence_store_fn,
+                                )
+                            all_discovered_evidence.extend(discovered_ev)
+
+                            for fu_action in follow_ups:
+                                fu_group = fu_action.provider.replace("apify_", "")
+                                if not ap_config.enabled:
+                                    execution_outcomes.append(
+                                        StepExecutionOutcome(
+                                            workflow_id=step.workflow_id,
+                                            provider=fu_action.provider,
+                                            step_name=f"{fu_group}_review",
+                                            status="skipped_disabled",
+                                            operator_message=f"Apify provider disabled; skipped {fu_group} enrichment for discovered {fu_action.target_value}",
+                                            next_action="enable_apify_when_ready",
+                                        )
+                                    )
+                                    continue
+
+                                fu_input = build_apify_actor_input(
+                                    lead=lead_data,
+                                    group=fu_group,
+                                    target=fu_action.target_value,
+                                )
+                                fu_res = ap_adapter.run_actor(
+                                    actor_id=fu_action.actor_id,
+                                    group=fu_group,
+                                    input_data=fu_input,
+                                    estimated_cost_usd=Decimal("0.50"),
+                                )
+                                execution_outcomes.append(
+                                    StepExecutionOutcome(
+                                        workflow_id=step.workflow_id,
+                                        provider=fu_action.provider,
+                                        step_name=f"{fu_group}_review",
+                                        status=fu_res.status,
+                                        operator_message=fu_res.operator_message,
+                                        next_action=fu_res.next_action,
+                                        run_id=fu_res.run_id,
+                                    )
+                                )
+                                if fu_res.status in (EnrichmentStatus.SUCCESS.value, EnrichmentStatus.NO_RESULT_FOUND.value):
+                                    executed_succeeded += 1
+                                else:
+                                    executed_failed += 1
+                        continue
                     elif step.provider.startswith("apify_"):
                         group = step.provider.replace("apify_", "")
                         lead_data = leads_by_id.get(step.workflow_id) or {
@@ -581,6 +675,7 @@ def run_enrichment_trial(
         executed_steps_succeeded=executed_succeeded,
         executed_steps_failed=executed_failed,
         execution_outcomes=execution_outcomes,
+        discovered_evidence=all_discovered_evidence,
     )
 
     if execute and not dry_run:
