@@ -156,14 +156,20 @@ from system_1.record_manual_enrichment_evidence import (
 from system_1.social_enrichment_provider import (
     ApifyEnrichmentAdapter,
     ApifyEnrichmentConfig,
+    EnrichmentStatus,
     FirecrawlAdapter,
     FirecrawlConfig,
     PlannedEnrichmentAction,
+    ProviderExecutionResult,
     ProviderPlanningSummary,
+    check_social_match_ambiguity,
+    evaluate_waterfall_fallbacks,
     format_provider_planning_summary,
+    normalize_and_validate_actor_id,
     plan_lead_provider_routing,
     plan_provider_enrichment,
     render_provider_planning_report,
+    validate_scrape_target_url,
 )
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
@@ -2004,128 +2010,354 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(len(db_store), 1)
             self.assertIn(("lead-1", "website_review", "owner_name"), db_store)
 
-    def test_social_enrichment_provider_configs_and_actor_registry(self) -> None:
-        # 1. Defaults are disabled
+    def test_social_enrichment_actor_id_normalization_and_validation(self) -> None:
+        # 1. Store-style normalized to REST-safe
+        self.assertEqual(
+            normalize_and_validate_actor_id("apify/instagram-profile-scraper"),
+            "apify~instagram-profile-scraper",
+        )
+        self.assertEqual(
+            normalize_and_validate_actor_id("  zuzka/facebook-page-scraper  "),
+            "zuzka~facebook-page-scraper",
+        )
+
+        # 2. REST-style preserved
+        self.assertEqual(
+            normalize_and_validate_actor_id("apify~instagram-profile-scraper"),
+            "apify~instagram-profile-scraper",
+        )
+
+        # 3. Standalone valid identifier
+        self.assertEqual(
+            normalize_and_validate_actor_id("custom-actor-1"),
+            "custom-actor-1",
+        )
+
+        # 4. Fail closed on empty or invalid IDs
+        invalid_ids = [
+            "",
+            "   ",
+            "actor with spaces",
+            "owner//actor",
+            "owner/actor/extra",
+            "owner~actor~extra",
+            "owner$",
+            "a" * 101,  # excessively long
+        ]
+        for bad_id in invalid_ids:
+            with self.assertRaises(ValueError):
+                normalize_and_validate_actor_id(bad_id)
+
+    def test_social_enrichment_provider_configs_staging_and_production(self) -> None:
+        # 1. Default mode is staging with tiny limits
         with patch.dict(os.environ, {}, clear=True):
             fc = FirecrawlConfig.from_env()
             self.assertFalse(fc.enabled)
-            self.assertEqual(fc.api_key, "")
-            self.assertEqual(fc.max_credits_per_run, 50)
-            self.assertEqual(fc.max_pages_per_lead, 5)
+            self.assertEqual(fc.mode, "staging")
+            self.assertEqual(fc.max_credits_per_run, 10)
+            self.assertEqual(fc.max_pages_per_lead, 2)
 
             ap = ApifyEnrichmentConfig.from_env()
             self.assertFalse(ap.enabled)
-            self.assertEqual(ap.api_token, "")
-            self.assertEqual(ap.max_cost_usd, Decimal("1.00"))
-            self.assertEqual(ap.max_results_per_actor, 10)
+            self.assertEqual(ap.mode, "staging")
+            self.assertEqual(ap.max_cost_usd, Decimal("0.50"))
+            self.assertEqual(ap.max_results_per_actor, 5)
             self.assertEqual(ap.instagram_profile_actors, ())
             self.assertEqual(ap.facebook_page_actors, ())
             self.assertEqual(ap.people_fallback_actors, ())
 
-        # 2. Actor registry parsing and grouping
-        custom_env = {
-            "SYSTEM1_FIRECRAWL_ENABLED": "true",
-            "FIRECRAWL_API_KEY": "fc-test-key",
-            "SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN": "100",
-            "SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD": "10",
-            "SYSTEM1_APIFY_ENRICHMENT_ENABLED": "1",
-            "APIFY_API_TOKEN": "apify-test-token",
-            "SYSTEM1_APIFY_ENRICHMENT_MAX_COST_USD": "2.50",
-            "SYSTEM1_APIFY_ENRICHMENT_MAX_RESULTS_PER_ACTOR": "20",
+        # 2. Staging config normalizes store-style actor IDs from env
+        staging_env = {
+            "SYSTEM1_ENRICHMENT_MODE": "staging",
             "SYSTEM1_APIFY_INSTAGRAM_PROFILE_ACTORS": "apify/instagram-profile-scraper, user/insta-tool",
             "SYSTEM1_APIFY_FACEBOOK_PAGE_ACTORS": "apify/facebook-pages-scraper",
-            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "actor/people-finder, actor/phone-finder",
+            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "actor/people-finder",
         }
-        with patch.dict(os.environ, custom_env, clear=True):
-            fc2 = FirecrawlConfig.from_env()
-            self.assertTrue(fc2.enabled)
-            self.assertEqual(fc2.api_key, "fc-test-key")
-            self.assertEqual(fc2.max_credits_per_run, 100)
-            self.assertEqual(fc2.max_pages_per_lead, 10)
-
-            ap2 = ApifyEnrichmentConfig.from_env()
-            self.assertTrue(ap2.enabled)
-            self.assertEqual(ap2.api_token, "apify-test-token")
-            self.assertEqual(ap2.max_cost_usd, Decimal("2.50"))
-            self.assertEqual(ap2.max_results_per_actor, 20)
+        with patch.dict(os.environ, staging_env, clear=True):
+            ap_staging = ApifyEnrichmentConfig.from_env()
             self.assertEqual(
-                ap2.instagram_profile_actors,
-                ("apify/instagram-profile-scraper", "user/insta-tool"),
+                ap_staging.instagram_profile_actors,
+                ("apify~instagram-profile-scraper", "user~insta-tool"),
             )
-            self.assertEqual(ap2.facebook_page_actors, ("apify/facebook-pages-scraper",))
+            self.assertEqual(ap_staging.facebook_page_actors, ("apify~facebook-pages-scraper",))
+            self.assertEqual(ap_staging.people_fallback_actors, ("actor~people-finder",))
+
+        # 3. Production config allows distinct actor sets and higher configured limits without code changes
+        prod_env = {
+            "SYSTEM1_ENRICHMENT_MODE": "production",
+            "SYSTEM1_FIRECRAWL_ENABLED": "true",
+            "FIRECRAWL_API_KEY": "fc-prod-key",
+            "SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN": "250",
+            "SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD": "15",
+            "SYSTEM1_APIFY_ENRICHMENT_ENABLED": "true",
+            "APIFY_API_TOKEN": "apify-prod-token",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_COST_USD": "5.00",
+            "SYSTEM1_APIFY_ENRICHMENT_MAX_RESULTS_PER_ACTOR": "50",
+            "SYSTEM1_APIFY_INSTAGRAM_PROFILE_ACTORS": "enterprise-vendor/verified-insta-scraper",
+            "SYSTEM1_APIFY_FACEBOOK_PAGE_ACTORS": "enterprise-vendor/verified-fb-scraper",
+            "SYSTEM1_APIFY_PEOPLE_FALLBACK_ACTORS": "enterprise-vendor/b2b-contact-enricher",
+        }
+        with patch.dict(os.environ, prod_env, clear=True):
+            fc_prod = FirecrawlConfig.from_env()
+            self.assertEqual(fc_prod.mode, "production")
+            self.assertTrue(fc_prod.enabled)
+            self.assertEqual(fc_prod.max_credits_per_run, 250)
+            self.assertEqual(fc_prod.max_pages_per_lead, 15)
+
+            ap_prod = ApifyEnrichmentConfig.from_env()
+            self.assertEqual(ap_prod.mode, "production")
+            self.assertTrue(ap_prod.enabled)
+            self.assertEqual(ap_prod.max_cost_usd, Decimal("5.00"))
+            self.assertEqual(ap_prod.max_results_per_actor, 50)
             self.assertEqual(
-                ap2.people_fallback_actors,
-                ("actor/people-finder", "actor/phone-finder"),
+                ap_prod.instagram_profile_actors,
+                ("enterprise-vendor~verified-insta-scraper",),
+            )
+            self.assertEqual(
+                ap_prod.facebook_page_actors,
+                ("enterprise-vendor~verified-fb-scraper",),
+            )
+            self.assertEqual(
+                ap_prod.people_fallback_actors,
+                ("enterprise-vendor~b2b-contact-enricher",),
             )
 
-    def test_social_enrichment_adapters_fail_closed_and_enforce_caps(self) -> None:
+    def test_firecrawl_url_validation_and_serialization(self) -> None:
+        # 1. Valid public http/https pass
+        self.assertEqual(
+            validate_scrape_target_url("https://example.com/menu"),
+            "https://example.com/menu",
+        )
+
+        # 2. Reject non-web schemes
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("ftp://example.com")
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("javascript:alert(1)")
+
+        # 3. Reject credentials
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://user:pass@example.com")
+
+        # 4. Reject non-standard ports
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://example.com:8080")
+
+        # 5. Reject localhost, .local, .internal
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("http://localhost:80/admin")
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("https://service.internal/api")
+
+        # 6. Reject private IP targets via resolver
+        def private_resolver(*_args: object, **_kwargs: object) -> list[tuple]:
+            return [(2, 1, 6, "", ("127.0.0.1", 0))]
+
+        with self.assertRaises(ValueError):
+            validate_scrape_target_url("http://internal-host.de", resolver=private_resolver)
+
+        # 7. Safe JSON serialization with special characters in adapter
+        transport = FakeTransport({"success": True})
+        cfg = FirecrawlConfig(api_key="key", enabled=True, max_pages_per_lead=5)
+        adapter = FirecrawlAdapter(cfg, transport=transport)
+        # Target URL containing query params, ampersands, and quotes
+        adapter.scrape_url("https://example.com/path?q=test%20search&lang=de", pages_limit=3)
+        self.assertEqual(len(transport.requests), 1)
+        req = transport.requests[0]
+        body_obj = json.loads(req.body.decode("utf-8"))
+        self.assertEqual(body_obj["url"], "https://example.com/path?q=test%20search&lang=de")
+        self.assertEqual(body_obj["pageOptions"]["limit"], 3)
+
+    def test_firecrawl_adapter_failure_modes(self) -> None:
         transport = FakeTransport({"success": True})
 
-        # 1. Disabled Firecrawl makes zero network calls and raises
-        disabled_fc = FirecrawlConfig(api_key="key", enabled=False)
-        fc_adapter = FirecrawlAdapter(disabled_fc, transport=transport)
-        with self.assertRaisesRegex(RuntimeError, "Firecrawl enrichment is disabled"):
-            fc_adapter.scrape_url("https://example.com")
+        # 1. Disabled Firecrawl makes zero network calls and returns provider_disabled
+        disabled_cfg = FirecrawlConfig(api_key="key", enabled=False)
+        adapter_disabled = FirecrawlAdapter(disabled_cfg, transport=transport)
+        res_dis = adapter_disabled.scrape_url("https://example.com")
+        self.assertEqual(res_dis.status, "provider_disabled")
         self.assertEqual(len(transport.requests), 0)
 
-        # 2. Enabled Firecrawl missing key fails closed
-        missing_key_fc = FirecrawlConfig(api_key="", enabled=True)
-        fc_adapter_no_key = FirecrawlAdapter(missing_key_fc, transport=transport)
-        with self.assertRaisesRegex(ValueError, "FIRECRAWL_API_KEY is missing"):
-            fc_adapter_no_key.scrape_url("https://example.com")
+        # 2. Enabled Firecrawl missing key returns missing_credentials, makes 0 calls
+        missing_key_cfg = FirecrawlConfig(api_key="", enabled=True)
+        adapter_no_key = FirecrawlAdapter(missing_key_cfg, transport=transport)
+        res_no_key = adapter_no_key.scrape_url("https://example.com")
+        self.assertEqual(res_no_key.status, "missing_credentials")
         self.assertEqual(len(transport.requests), 0)
 
-        # 3. Firecrawl caps enforced before network call
-        enabled_fc = FirecrawlConfig(api_key="key", enabled=True, max_pages_per_lead=3)
-        fc_adapter_valid = FirecrawlAdapter(enabled_fc, transport=transport)
-        with self.assertRaisesRegex(ValueError, "exceeds configured max pages"):
-            fc_adapter_valid.scrape_url("https://example.com", pages_limit=5)
+        # 3. Private target URL rejected before network call
+        enabled_cfg = FirecrawlConfig(api_key="key", enabled=True)
+        adapter_valid = FirecrawlAdapter(enabled_cfg, transport=transport)
+        res_priv = adapter_valid.scrape_url("http://localhost/menu")
+        self.assertEqual(res_priv.status, "private_url_rejected")
         self.assertEqual(len(transport.requests), 0)
 
-        # Valid call executes with auth header
-        res_fc = fc_adapter_valid.scrape_url("https://example.com", pages_limit=2)
-        self.assertEqual(res_fc.status_code, 201)
+        # 4. Result cap exceeded fails closed before network call
+        res_cap = adapter_valid.scrape_url("https://example.com", pages_limit=100)
+        self.assertEqual(res_cap.status, "result_cap_exceeded")
+        self.assertEqual(len(transport.requests), 0)
+
+        # 5. HTTP 401/403 maps to provider_auth_failed
+        t_auth = FakeTransport({"error": "Unauthorized"}, status_code=401)
+        adapter_auth = FirecrawlAdapter(enabled_cfg, transport=t_auth)
+        res_auth = adapter_auth.scrape_url("https://example.com")
+        self.assertEqual(res_auth.status, "provider_auth_failed")
+
+        # 6. HTTP 400/404 maps to provider_rejected
+        t_rej = FakeTransport({"error": "Bad Request"}, status_code=400)
+        adapter_rej = FirecrawlAdapter(enabled_cfg, transport=t_rej)
+        res_rej = adapter_rej.scrape_url("https://example.com")
+        self.assertEqual(res_rej.status, "provider_rejected")
+
+        # 7. HTTP 500/503 maps to provider_unavailable
+        t_500 = FakeTransport({"error": "Internal Error"}, status_code=500)
+        adapter_500 = FirecrawlAdapter(enabled_cfg, transport=t_500)
+        res_500 = adapter_500.scrape_url("https://example.com")
+        self.assertEqual(res_500.status, "provider_unavailable")
+
+        # 8. Empty result is mapped to no_result_found (not a crash)
+        t_empty = FakeTransport({"data": []}, status_code=200)
+        adapter_empty = FirecrawlAdapter(enabled_cfg, transport=t_empty)
+        res_empty = adapter_empty.scrape_url("https://example.com")
+        self.assertEqual(res_empty.status, "no_result_found")
+
+    def test_apify_enrichment_adapter_input_data_and_caps(self) -> None:
+        transport = FakeTransport({"data": {"id": "run-xyz"}}, status_code=201)
+        cfg = ApifyEnrichmentConfig(
+            api_token="test-token",
+            enabled=True,
+            max_cost_usd=Decimal("1.50"),
+            max_results_per_actor=10,
+        )
+        adapter = ApifyEnrichmentAdapter(cfg, transport=transport)
+
+        # 1. Sends provided input_data safely serialized
+        input_payload = {"handles": ["matcha_berlin"], "maxPosts": 5}
+        res = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data=input_payload,
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=5,
+        )
+        self.assertEqual(res.status, "success")
         self.assertEqual(len(transport.requests), 1)
+        req = transport.requests[0]
+        self.assertIn("apify~instagram-profile-scraper", req.url)
+        self.assertIn("maxItems=5", req.url)
+        parsed_body = json.loads(req.body.decode("utf-8"))
+        self.assertEqual(parsed_body, input_payload)
 
-        # 4. Disabled Apify makes zero network calls and raises
-        disabled_ap = ApifyEnrichmentConfig(api_token="token", enabled=False)
-        ap_adapter = ApifyEnrichmentAdapter(disabled_ap, transport=transport)
-        with self.assertRaisesRegex(RuntimeError, "Apify enrichment is disabled"):
-            ap_adapter.run_actor("actor-1", "instagram", {}, Decimal("0.50"))
-        self.assertEqual(len(transport.requests), 1)  # unchanged from previous call
+        # 2. Exceeding max results cap fails closed
+        res_cap = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=20,  # exceeds configured 10
+        )
+        self.assertEqual(res_cap.status, "result_cap_exceeded")
+        self.assertEqual(len(transport.requests), 1)  # no new call made
 
-        # 5. Enabled Apify missing key fails closed
-        no_key_ap = ApifyEnrichmentConfig(api_token="", enabled=True)
-        ap_adapter_no_key = ApifyEnrichmentAdapter(no_key_ap, transport=transport)
-        with self.assertRaisesRegex(ValueError, "APIFY_API_TOKEN is missing"):
-            ap_adapter_no_key.run_actor("actor-1", "instagram", {}, Decimal("0.50"))
-        self.assertEqual(len(transport.requests), 1)
+        # 3. Missing / non-positive max results fails closed
+        res_neg = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            max_results=0,
+        )
+        self.assertEqual(res_neg.status, "missing_result_cap")
 
-        # 6. Apify cost cap enforced before network call
-        enabled_ap = ApifyEnrichmentConfig(api_token="token", enabled=True, max_cost_usd=Decimal("0.80"))
-        ap_adapter_valid = ApifyEnrichmentAdapter(enabled_ap, transport=transport)
-        with self.assertRaisesRegex(ValueError, "exceeds configured max cost"):
-            ap_adapter_valid.run_actor("actor-1", "instagram", {}, Decimal("1.20"))
-        self.assertEqual(len(transport.requests), 1)
+        # 4. Over cost cap fails closed
+        res_cost = adapter.run_actor(
+            actor_id="apify/instagram-profile-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("2.00"),  # exceeds configured 1.50
+        )
+        self.assertEqual(res_cost.status, "cost_cap_exceeded")
 
-        # 7. People fallback actors blocked by default unless explicitly approved
-        with self.assertRaisesRegex(ValueError, "People fallback actors are blocked by default"):
-            ap_adapter_valid.run_actor("actor-people", "people_fallback", {}, Decimal("0.50"))
-        self.assertEqual(len(transport.requests), 1)
+        # 5. People fallback blocked by default without approval
+        res_fallback = adapter.run_actor(
+            actor_id="actor/people-finder",
+            group="people_fallback",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+            approved_by=None,
+        )
+        self.assertEqual(res_fallback.status, "blocked_by_default")
 
-        # Approved people fallback executes
-        res_ap = ap_adapter_valid.run_actor("actor-people", "people_fallback", {}, Decimal("0.50"), approved_by="Cyril")
-        self.assertEqual(res_ap.status_code, 201)
-        self.assertEqual(len(transport.requests), 2)
+        # 6. Schema mismatch detection
+        t_mismatch = FakeTransport({"unexpected_format": 123}, status_code=200)
+        adapter_mismatch = ApifyEnrichmentAdapter(cfg, transport=t_mismatch)
+        # Using map_provider_http_response directly with expected keys
+        from system_1.social_enrichment_provider import map_provider_http_response
+        res_schema = map_provider_http_response(
+            "apify_instagram",
+            HttpResponse(200, {"title": "Test"}),
+            expected_schema_keys=["username", "followerCount"],
+        )
+        self.assertEqual(res_schema.status, "schema_mismatch")
+
+    def test_ambiguity_and_waterfall_fallbacks(self) -> None:
+        # 1. Ambiguous social match detection
+        # Multiple profiles returned
+        ambig, msg = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "matchabar"}, {"username": "matchabar_berlin"}],
+        )
+        self.assertTrue(ambig)
+        self.assertIn("Multiple profiles", msg)
+
+        # Handle mismatch
+        ambig2, msg2 = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "completely_different_cafe"}],
+        )
+        self.assertTrue(ambig2)
+        self.assertIn("does not match target", msg2)
+
+        # Exact match
+        ambig3, _ = check_social_match_ambiguity(
+            "https://instagram.com/matchabar",
+            [{"username": "matchabar"}],
+        )
+        self.assertFalse(ambig3)
+
+        # 2. Waterfall fallback evaluation
+        # Firecrawl failed -> mark website_review_needs_operator_review, do not fail entire lead
+        fc_fail = ProviderExecutionResult(
+            provider="firecrawl",
+            status="provider_rejected",
+            operator_message="Website blocked scrape",
+        )
+        # Instagram succeeded
+        ig_succ = ProviderExecutionResult(
+            provider="apify_instagram",
+            status="success",
+            data={"username": "matchabar"},
+        )
+        # Facebook failed -> mark facebook_review_failed
+        fb_fail = ProviderExecutionResult(
+            provider="apify_facebook",
+            status="provider_unavailable",
+            operator_message="Facebook rate limit",
+        )
+
+        outcomes = evaluate_waterfall_fallbacks(fc_fail, ig_succ, fb_fail)
+        self.assertEqual(outcomes["website_review"].operator_action, "website_review_needs_operator_review")
+        self.assertEqual(outcomes["instagram_review"].status, "completed")
+        self.assertEqual(outcomes["facebook_review"].status, "facebook_review_failed")
 
     def test_provider_enrichment_dry_run_routing_logic(self) -> None:
         fc_cfg = FirecrawlConfig(api_key="", enabled=False)
         ap_cfg = ApifyEnrichmentConfig(
             api_token="",
             enabled=False,
-            instagram_profile_actors=("apify/instagram-profile-scraper",),
-            facebook_page_actors=("apify/facebook-pages-scraper",),
-            people_fallback_actors=("apify/people-finder",),
+            instagram_profile_actors=("apify~instagram-profile-scraper",),
+            facebook_page_actors=("apify~facebook-pages-scraper",),
+            people_fallback_actors=("apify~people-finder",),
         )
 
         # Lead 1: Custom website -> Firecrawl step
@@ -2155,7 +2387,7 @@ class System1CoreTests(unittest.TestCase):
         routes_insta = plan_lead_provider_routing(lead_insta, fc_cfg, ap_cfg)
         ig_routes = [r for r in routes_insta if r.provider == "apify_instagram"]
         self.assertEqual(len(ig_routes), 1)
-        self.assertEqual(ig_routes[0].actor_id, "apify/instagram-profile-scraper")
+        self.assertEqual(ig_routes[0].actor_id, "apify~instagram-profile-scraper")
         self.assertEqual(ig_routes[0].target_value, "https://instagram.com/instabrunch")
 
         # Lead 3: Facebook URL -> Facebook actor group
@@ -2170,7 +2402,7 @@ class System1CoreTests(unittest.TestCase):
         routes_fb = plan_lead_provider_routing(lead_fb, fc_cfg, ap_cfg)
         fb_routes = [r for r in routes_fb if r.provider == "apify_facebook"]
         self.assertEqual(len(fb_routes), 1)
-        self.assertEqual(fb_routes[0].actor_id, "apify/facebook-pages-scraper")
+        self.assertEqual(fb_routes[0].actor_id, "apify~facebook-pages-scraper")
         self.assertEqual(fb_routes[0].target_value, "https://facebook.com/fbcafeberlin")
 
         # Lead 4: No custom website, no social URL -> needs_operator_review
@@ -2200,6 +2432,13 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(summary.facebook_routes, 1)
         self.assertEqual(summary.people_fallback_blocked, 4)
         self.assertEqual(summary.needs_operator_review, 1)
+
+        self.assertIn("=== Provider Enrichment Planning Summary ===", report_text)
+        self.assertIn("Firecrawl Website Routes:  1", report_text)
+        self.assertIn("Instagram Actor Routes:    1", report_text)
+        self.assertIn("Facebook Actor Routes:     1", report_text)
+        self.assertIn("People Fallback Blocked:   4", report_text)
+        self.assertIn("Needs Operator Review:     1", report_text)
 
         self.assertIn("=== Provider Enrichment Planning Summary ===", report_text)
         self.assertIn("Firecrawl Website Routes:  1", report_text)
