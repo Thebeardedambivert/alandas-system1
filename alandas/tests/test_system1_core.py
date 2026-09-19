@@ -139,6 +139,14 @@ from system_1.approve_enrichment_step import (
     approve_enrichment_step,
     format_step_approval_summary,
 )
+from system_1.dry_run_enrichment import (
+    DryRunSummary,
+    dry_run_enrichment,
+    evaluate_step_decision,
+    format_dry_run_summary,
+    format_lead_dry_run,
+    render_dry_run_report,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -1490,6 +1498,152 @@ class System1CoreTests(unittest.TestCase):
             rec2, is_new2 = db.record_enrichment_step_approval("lead-1", "website_review", "Cyril", Decimal("0.00"))
             self.assertFalse(is_new2)
             self.assertEqual(rec2["workflow_id"], "lead-1")
+
+    def test_dry_run_enrichment_decisions(self) -> None:
+        # 1. Approved website_review becomes would_run
+        step_web = {
+            "name": "website_review",
+            "requires_external_call": True,
+            "may_cost_money": False,
+            "requires_human_approval": True,
+        }
+        approval_web = {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")}
+        dec_web_app, _ = evaluate_step_decision(step_web, approval_web)
+        self.assertEqual(dec_web_app, "would_run")
+
+        # 2. Unapproved website_review becomes blocked_missing_approval
+        dec_web_unapp, _ = evaluate_step_decision(step_web, None)
+        self.assertEqual(dec_web_unapp, "blocked_missing_approval")
+
+        # 3. email_lookup becomes blocked_provider_not_connected
+        step_email = {
+            "name": "email_lookup",
+            "requires_external_call": True,
+            "may_cost_money": True,
+            "requires_human_approval": True,
+        }
+        dec_email_no_app, _ = evaluate_step_decision(step_email, None)
+        self.assertEqual(dec_email_no_app, "blocked_provider_not_connected")
+
+        # 4. email_lookup remains blocked_provider_not_connected even if an approval exists
+        approval_email = {"approved_by": "Cyril", "max_cost_usd": Decimal("0.10")}
+        dec_email_app, _ = evaluate_step_decision(step_email, approval_email)
+        self.assertEqual(dec_email_app, "blocked_provider_not_connected")
+
+        # 5. system1_duplicate_check becomes skipped_local_only
+        step_dup = {
+            "name": "system1_duplicate_check",
+            "requires_external_call": False,
+            "may_cost_money": False,
+            "requires_human_approval": False,
+        }
+        dec_dup, _ = evaluate_step_decision(step_dup, None)
+        self.assertEqual(dec_dup, "skipped_local_only")
+
+        # 6. phone_validation becomes skipped_local_only
+        step_phone = {
+            "name": "phone_validation",
+            "requires_external_call": False,
+            "may_cost_money": False,
+            "requires_human_approval": False,
+        }
+        dec_phone, _ = evaluate_step_decision(step_phone, None)
+        self.assertEqual(dec_phone, "skipped_local_only")
+
+    def test_dry_run_enrichment_report_and_db_flow(self) -> None:
+        plans = [
+            {
+                "workflow_id": "lead-101",
+                "venue_name": "Matcha Bar Mitte",
+                "city": "Berlin",
+                "qualification_status": "qualified",
+                "qualification_score": 85,
+                "steps": [
+                    {
+                        "name": "system1_duplicate_check",
+                        "requires_external_call": False,
+                        "may_cost_money": False,
+                        "requires_human_approval": False,
+                    },
+                    {
+                        "name": "website_review",
+                        "requires_external_call": True,
+                        "may_cost_money": False,
+                        "requires_human_approval": True,
+                    },
+                    {
+                        "name": "email_lookup",
+                        "requires_external_call": True,
+                        "may_cost_money": True,
+                        "requires_human_approval": True,
+                    },
+                ],
+            },
+            {
+                "workflow_id": "lead-102",
+                "venue_name": "Cafe Neukolln",
+                "city": "Berlin",
+                "qualification_status": "needs_review",
+                "qualification_score": 60,
+                "steps": [
+                    {
+                        "name": "phone_validation",
+                        "requires_external_call": False,
+                        "may_cost_money": False,
+                        "requires_human_approval": False,
+                    },
+                    {
+                        "name": "instagram_review",
+                        "requires_external_call": True,
+                        "may_cost_money": False,
+                        "requires_human_approval": True,
+                    },
+                ],
+            },
+        ]
+
+        # Approvals: lead-101 website_review approved, lead-101 email_lookup approved
+        approvals = {
+            ("lead-101", "website_review"): {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")},
+            ("lead-101", "email_lookup"): {"approved_by": "Cyril", "max_cost_usd": Decimal("0.20")},
+        }
+
+        report_text, summary = render_dry_run_report(plans, approvals)
+
+        self.assertEqual(summary.leads_inspected, 2)
+        self.assertEqual(summary.total_steps, 5)
+        self.assertEqual(summary.would_run, 1)  # lead-101 website_review
+        self.assertEqual(summary.blocked_missing_approval, 1)  # lead-102 instagram_review
+        self.assertEqual(summary.blocked_provider_not_connected, 1)  # lead-101 email_lookup
+        self.assertEqual(summary.blocked_paid_step, 0)
+        self.assertEqual(summary.skipped_local_only, 2)  # system1_duplicate_check, phone_validation
+
+        # Output formatting assertions
+        self.assertIn("=== Lead: lead-101 ===", report_text)
+        self.assertIn("1. system1_duplicate_check: skipped_local_only", report_text)
+        self.assertIn("2. website_review: would_run", report_text)
+        self.assertIn("3. email_lookup: blocked_provider_not_connected", report_text)
+        self.assertIn("=== Lead: lead-102 ===", report_text)
+        self.assertIn("1. phone_validation: skipped_local_only", report_text)
+        self.assertIn("2. instagram_review: blocked_missing_approval", report_text)
+
+        self.assertIn("=== Dry-Run Enrichment Summary ===", report_text)
+        self.assertIn("Leads Inspected:                 2", report_text)
+        self.assertIn("Total Steps:                     5", report_text)
+        self.assertIn("Would Run:                       1", report_text)
+        self.assertIn("Blocked Missing Approval:        1", report_text)
+        self.assertIn("Blocked Provider Not Connected:  1", report_text)
+        self.assertIn("Blocked Paid Step:               0", report_text)
+        self.assertIn("Skipped Local Only:              2", report_text)
+
+        # Verify command execution through DB mocks without external/network calls
+        with patch("system_1.dry_run_enrichment.db.ensure_schema"), \
+             patch("system_1.dry_run_enrichment.db.fetch_enrichment_plans", return_value=plans), \
+             patch("system_1.dry_run_enrichment.db.fetch_enrichment_step_approvals", return_value=approvals):
+            run_summary = dry_run_enrichment(statuses=["qualified", "needs_review"], limit=50)
+
+        self.assertEqual(run_summary.leads_inspected, 2)
+        self.assertEqual(run_summary.would_run, 1)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

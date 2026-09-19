@@ -663,6 +663,33 @@ def fetch_enrichment_plan(workflow_id: str) -> dict[str, object] | None:
     }
 
 
+def fetch_enrichment_step_approvals(
+    workflow_ids: Sequence[str],
+) -> dict[tuple[str, str], dict[str, object]]:
+    """Fetch approval records for the given workflow_ids, keyed by (workflow_id, step_name)."""
+    if not workflow_ids:
+        return {}
+    with connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT workflow_id, step_name, approved_by, max_cost_usd, approved_at
+            FROM lead_enrichment_step_approvals
+            WHERE workflow_id = ANY(%s)
+            """,
+            (list(workflow_ids),),
+        ).fetchall()
+    approvals = {}
+    for r in rows:
+        approvals[(r[0], r[1])] = {
+            "workflow_id": r[0],
+            "step_name": r[1],
+            "approved_by": r[2],
+            "max_cost_usd": Decimal(str(r[3])),
+            "approved_at": r[4],
+        }
+    return approvals
+
+
 def record_enrichment_step_approval(
     workflow_id: str,
     step_name: str,
