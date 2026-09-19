@@ -147,6 +147,11 @@ from system_1.dry_run_enrichment import (
     format_lead_dry_run,
     render_dry_run_report,
 )
+from system_1.record_manual_enrichment_evidence import (
+    ManualEvidenceSummary,
+    format_manual_evidence_summary,
+    record_manual_enrichment_evidence,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -1655,6 +1660,237 @@ class System1CoreTests(unittest.TestCase):
 
         self.assertEqual(run_summary.leads_inspected, 2)
         self.assertEqual(run_summary.operator_review_needed, 1)
+
+    def test_record_manual_enrichment_evidence_validation_and_lifecycle(self) -> None:
+        mock_plan = {
+            "workflow_id": "lead-mitte-1",
+            "qualification_status": "qualified",
+            "steps": [
+                {
+                    "name": "system1_duplicate_check",
+                    "requires_external_call": False,
+                    "may_cost_money": False,
+                    "requires_human_approval": False,
+                },
+                {
+                    "name": "website_review",
+                    "requires_external_call": True,
+                    "may_cost_money": False,
+                    "requires_human_approval": True,
+                },
+                {
+                    "name": "menu_or_product_signal_check",
+                    "requires_external_call": True,
+                    "may_cost_money": False,
+                    "requires_human_approval": True,
+                },
+                {
+                    "name": "email_lookup",
+                    "requires_external_call": True,
+                    "may_cost_money": True,
+                    "requires_human_approval": True,
+                },
+            ],
+        }
+
+        # Approvals: website_review and menu_or_product_signal_check are approved
+        approvals = {
+            ("lead-mitte-1", "website_review"): {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")},
+            ("lead-mitte-1", "menu_or_product_signal_check"): {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")},
+            ("lead-mitte-1", "email_lookup"): {"approved_by": "Cyril", "max_cost_usd": Decimal("0.10")},
+        }
+
+        evidence_store: dict[tuple[str, str, str], dict] = {}
+
+        def fake_fetch_plan(wid: str) -> dict | None:
+            if wid == "lead-mitte-1":
+                return mock_plan
+            return None
+
+        def fake_fetch_approvals(wids: list[str]) -> dict:
+            return {k: v for k, v in approvals.items() if k[0] in wids}
+
+        def fake_record_evidence(
+            workflow_id: str,
+            step_name: str,
+            field: str,
+            value: str,
+            source_url: str,
+            recorded_by: str,
+        ) -> tuple[dict, bool]:
+            key = (workflow_id, step_name, field)
+            if key in evidence_store:
+                existing = evidence_store[key]
+                if existing["value"] == value and existing["source_url"] == source_url:
+                    return existing, False
+                existing["value"] = value
+                existing["source_url"] = source_url
+                existing["recorded_by"] = recorded_by
+                return existing, False
+            rec = {
+                "workflow_id": workflow_id,
+                "step_name": step_name,
+                "field": field,
+                "value": value,
+                "source_url": source_url,
+                "recorded_by": recorded_by,
+            }
+            evidence_store[key] = rec
+            return rec, True
+
+        with patch("system_1.record_manual_enrichment_evidence.db.ensure_schema"), \
+             patch("system_1.record_manual_enrichment_evidence.db.fetch_enrichment_plan", side_effect=fake_fetch_plan), \
+             patch("system_1.record_manual_enrichment_evidence.db.fetch_enrichment_step_approvals", side_effect=fake_fetch_approvals), \
+             patch("system_1.record_manual_enrichment_evidence.db.record_manual_enrichment_evidence", side_effect=fake_record_evidence):
+
+            # 1. Approved website_review accepts evidence
+            res1 = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="website_review",
+                field="decision_maker_name",
+                value="Anna Becker",
+                source_url="https://kaffee-mitte.de/impressum",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res1.workflow_id, "lead-mitte-1")
+            self.assertEqual(res1.step_name, "website_review")
+            self.assertEqual(res1.field, "decision_maker_name")
+            self.assertEqual(res1.value, "Anna Becker")
+            self.assertEqual(res1.source_url, "https://kaffee-mitte.de/impressum")
+            self.assertEqual(res1.recorded_by, "Cyril")
+            self.assertEqual(res1.status, "created")
+
+            # 2. Approved menu_or_product_signal_check accepts evidence
+            res2 = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte on drink menu",
+                source_url="https://kaffee-mitte.de/menu",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2.step_name, "menu_or_product_signal_check")
+            self.assertEqual(res2.status, "created")
+
+            # 3. Unapproved step is rejected
+            del approvals[("lead-mitte-1", "website_review")]
+            with self.assertRaisesRegex(ValueError, "step 'website_review' has not been approved"):
+                record_manual_enrichment_evidence(
+                    workflow_id="lead-mitte-1",
+                    step_name="website_review",
+                    field="instagram",
+                    value="@kaffeemitte",
+                    source_url="https://kaffee-mitte.de",
+                    recorded_by="Cyril",
+                )
+
+            # 4. Unknown workflow is rejected
+            with self.assertRaisesRegex(ValueError, "no enrichment plan found"):
+                record_manual_enrichment_evidence(
+                    workflow_id="unknown-lead",
+                    step_name="website_review",
+                    field="instagram",
+                    value="@unknown",
+                    source_url="https://unknown.de",
+                    recorded_by="Cyril",
+                )
+
+            # 5. Unknown step is rejected
+            with self.assertRaisesRegex(ValueError, "step 'unplanned_step' not found"):
+                record_manual_enrichment_evidence(
+                    workflow_id="lead-mitte-1",
+                    step_name="unplanned_step",
+                    field="instagram",
+                    value="@test",
+                    source_url="https://test.de",
+                    recorded_by="Cyril",
+                )
+
+            # 6. email_lookup is rejected because provider is not connected
+            with self.assertRaisesRegex(ValueError, "paid/provider-only step; provider is not connected"):
+                record_manual_enrichment_evidence(
+                    workflow_id="lead-mitte-1",
+                    step_name="email_lookup",
+                    field="contact_email",
+                    value="owner@kaffee-mitte.de",
+                    source_url="https://apollo.io",
+                    recorded_by="Cyril",
+                )
+
+            # 7. Duplicate evidence does not create messy duplicates (is idempotent)
+            res2_duplicate = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte on drink menu",
+                source_url="https://kaffee-mitte.de/menu",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2_duplicate.status, "already_exists")
+
+            # 8. Summary formatting check
+            summary_text = format_manual_evidence_summary(res1)
+            self.assertIn("=== Manual Enrichment Evidence Summary ===", summary_text)
+            self.assertIn("Workflow ID:  lead-mitte-1", summary_text)
+            self.assertIn("Step Name:    website_review", summary_text)
+            self.assertIn("Field:        decision_maker_name", summary_text)
+            self.assertIn("Value:        Anna Becker", summary_text)
+            self.assertIn("Source URL:   https://kaffee-mitte.de/impressum", summary_text)
+            self.assertIn("Recorded By:  Cyril", summary_text)
+            self.assertIn("Status:       created", summary_text)
+
+    def test_record_manual_enrichment_evidence_db_sql(self) -> None:
+        db_store: dict[tuple[str, str, str], tuple] = {}
+
+        class FakeEvidenceDbConn:
+            def __init__(self) -> None:
+                self.queries = []
+
+            def execute(self, sql: str, params: tuple = ()) -> "FakeEvidenceDbConn":
+                self.queries.append((sql, params))
+                if "INSERT INTO lead_manual_enrichment_evidence" in sql:
+                    wid, step, fld, val, src, rec_by = params
+                    db_store[(wid, step, fld)] = (wid, step, fld, val, src, rec_by, "2026-09-19T06:00:00Z")
+                return self
+
+            def fetchone(self) -> tuple | None:
+                last_sql, last_params = self.queries[-1]
+                if "SELECT workflow_id, step_name, field" in last_sql:
+                    wid, step, fld = last_params
+                    return db_store.get((wid, step, fld))
+                return None
+
+            def __enter__(self) -> "FakeEvidenceDbConn":
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.db.connect", return_value=FakeEvidenceDbConn()):
+            rec, is_new = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="John Doe",
+                source_url="https://example.com",
+                recorded_by="Cyril",
+            )
+            self.assertTrue(is_new)
+            self.assertEqual(rec["workflow_id"], "lead-1")
+            self.assertEqual(rec["field"], "owner_name")
+            self.assertEqual(rec["value"], "John Doe")
+
+            # Duplicate call
+            rec2, is_new2 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="John Doe",
+                source_url="https://example.com",
+                recorded_by="Cyril",
+            )
+            self.assertFalse(is_new2)
+            self.assertEqual(rec2["workflow_id"], "lead-1")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
