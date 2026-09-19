@@ -84,7 +84,7 @@ def record_manual_enrichment_evidence(
         )
 
     # 5. Store evidence in dedicated table
-    evidence, is_new = db.record_manual_enrichment_evidence(
+    evidence, status = db.record_manual_enrichment_evidence(
         workflow_id=clean_wid,
         step_name=clean_step,
         field=clean_field,
@@ -100,7 +100,7 @@ def record_manual_enrichment_evidence(
         value=clean_val,
         source_url=clean_url,
         recorded_by=clean_rec,
-        status="created" if is_new else "already_exists",
+        status=status,
     )
 
 

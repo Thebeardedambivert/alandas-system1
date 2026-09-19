@@ -1717,16 +1717,20 @@ class System1CoreTests(unittest.TestCase):
             value: str,
             source_url: str,
             recorded_by: str,
-        ) -> tuple[dict, bool]:
+        ) -> tuple[dict, str]:
             key = (workflow_id, step_name, field)
             if key in evidence_store:
                 existing = evidence_store[key]
-                if existing["value"] == value and existing["source_url"] == source_url:
-                    return existing, False
+                if (
+                    existing["value"] == value
+                    and existing["source_url"] == source_url
+                    and existing["recorded_by"] == recorded_by
+                ):
+                    return existing, "already_exists"
                 existing["value"] = value
                 existing["source_url"] = source_url
                 existing["recorded_by"] = recorded_by
-                return existing, False
+                return existing, "updated"
             rec = {
                 "workflow_id": workflow_id,
                 "step_name": step_name,
@@ -1736,7 +1740,7 @@ class System1CoreTests(unittest.TestCase):
                 "recorded_by": recorded_by,
             }
             evidence_store[key] = rec
-            return rec, True
+            return rec, "created"
 
         with patch("system_1.record_manual_enrichment_evidence.db.ensure_schema"), \
              patch("system_1.record_manual_enrichment_evidence.db.fetch_enrichment_plan", side_effect=fake_fetch_plan), \
@@ -1828,6 +1832,18 @@ class System1CoreTests(unittest.TestCase):
             )
             self.assertEqual(res2_duplicate.status, "already_exists")
 
+            # 7b. Existing evidence with changed value returns updated
+            res2_updated = record_manual_enrichment_evidence(
+                workflow_id="lead-mitte-1",
+                step_name="menu_or_product_signal_check",
+                field="matcha_served",
+                value="yes, ceremonial grade iced matcha latte from Kyoto",
+                source_url="https://kaffee-mitte.de/menu",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(res2_updated.status, "updated")
+            self.assertEqual(res2_updated.value, "yes, ceremonial grade iced matcha latte from Kyoto")
+
             # 8. Summary formatting check
             summary_text = format_manual_evidence_summary(res1)
             self.assertIn("=== Manual Enrichment Evidence Summary ===", summary_text)
@@ -1851,6 +1867,9 @@ class System1CoreTests(unittest.TestCase):
                 if "INSERT INTO lead_manual_enrichment_evidence" in sql:
                     wid, step, fld, val, src, rec_by = params
                     db_store[(wid, step, fld)] = (wid, step, fld, val, src, rec_by, "2026-09-19T06:00:00Z")
+                elif "UPDATE lead_manual_enrichment_evidence" in sql:
+                    val, src, rec_by, wid, step, fld = params
+                    db_store[(wid, step, fld)] = (wid, step, fld, val, src, rec_by, "2026-09-19T06:01:00Z")
                 return self
 
             def fetchone(self) -> tuple | None:
@@ -1867,7 +1886,7 @@ class System1CoreTests(unittest.TestCase):
                 return False
 
         with patch("system_1.db.connect", return_value=FakeEvidenceDbConn()):
-            rec, is_new = db.record_manual_enrichment_evidence(
+            rec, status1 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
                 field="owner_name",
@@ -1875,13 +1894,13 @@ class System1CoreTests(unittest.TestCase):
                 source_url="https://example.com",
                 recorded_by="Cyril",
             )
-            self.assertTrue(is_new)
+            self.assertEqual(status1, "created")
             self.assertEqual(rec["workflow_id"], "lead-1")
             self.assertEqual(rec["field"], "owner_name")
             self.assertEqual(rec["value"], "John Doe")
 
-            # Duplicate call
-            rec2, is_new2 = db.record_manual_enrichment_evidence(
+            # Duplicate call with identical values
+            rec2, status2 = db.record_manual_enrichment_evidence(
                 workflow_id="lead-1",
                 step_name="website_review",
                 field="owner_name",
@@ -1889,8 +1908,20 @@ class System1CoreTests(unittest.TestCase):
                 source_url="https://example.com",
                 recorded_by="Cyril",
             )
-            self.assertFalse(is_new2)
+            self.assertEqual(status2, "already_exists")
             self.assertEqual(rec2["workflow_id"], "lead-1")
+
+            # Update call with changed value
+            rec3, status3 = db.record_manual_enrichment_evidence(
+                workflow_id="lead-1",
+                step_name="website_review",
+                field="owner_name",
+                value="Jane Doe",
+                source_url="https://example.com",
+                recorded_by="Cyril",
+            )
+            self.assertEqual(status3, "updated")
+            self.assertEqual(rec3["value"], "Jane Doe")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
