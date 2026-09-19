@@ -134,6 +134,11 @@ from system_1.show_enrichment_plans import (
     render_enrichment_plans_report,
     show_enrichment_plans,
 )
+from system_1.approve_enrichment_step import (
+    StepApprovalSummary,
+    approve_enrichment_step,
+    format_step_approval_summary,
+)
 from system_1.discovery_activities import submit_daily_discovery_providers_activity
 
 
@@ -1343,6 +1348,148 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(summary.total_steps, 1)
         self.assertEqual(summary.external_steps_pending_approval, 0)
         self.assertEqual(summary.paid_steps_pending_approval, 0)
+
+    def test_approve_enrichment_step_lifecycle_and_validation(self) -> None:
+        mock_plan = {
+            "workflow_id": "lead-mitte-1",
+            "qualification_status": "qualified",
+            "steps": [
+                {
+                    "name": "system1_duplicate_check",
+                    "requires_external_call": False,
+                    "may_cost_money": False,
+                    "requires_human_approval": False,
+                },
+                {
+                    "name": "website_review",
+                    "requires_external_call": True,
+                    "may_cost_money": False,
+                    "requires_human_approval": True,
+                },
+                {
+                    "name": "email_lookup",
+                    "requires_external_call": True,
+                    "may_cost_money": True,
+                    "requires_human_approval": True,
+                },
+            ],
+        }
+
+        approvals_store: dict[tuple[str, str], dict] = {}
+
+        def fake_fetch_plan(wid: str) -> dict | None:
+            if wid == "lead-mitte-1":
+                return mock_plan
+            return None
+
+        def fake_record_approval(
+            workflow_id: str,
+            step_name: str,
+            approved_by: str,
+            max_cost_usd: Decimal,
+        ) -> tuple[dict, bool]:
+            key = (workflow_id, step_name)
+            if key in approvals_store:
+                return approvals_store[key], False
+            rec = {
+                "workflow_id": workflow_id,
+                "step_name": step_name,
+                "approved_by": approved_by,
+                "max_cost_usd": max_cost_usd,
+            }
+            approvals_store[key] = rec
+            return rec, True
+
+        with patch("system_1.approve_enrichment_step.db.ensure_schema"), \
+             patch("system_1.approve_enrichment_step.db.fetch_enrichment_plan", side_effect=fake_fetch_plan), \
+             patch("system_1.approve_enrichment_step.db.record_enrichment_step_approval", side_effect=fake_record_approval):
+
+            # 1. Approving an existing free/local step works
+            res1 = approve_enrichment_step("lead-mitte-1", "system1_duplicate_check", "Cyril")
+            self.assertEqual(res1.workflow_id, "lead-mitte-1")
+            self.assertEqual(res1.step_name, "system1_duplicate_check")
+            self.assertEqual(res1.approved_by, "Cyril")
+            self.assertEqual(res1.max_cost_usd, "0.00")
+            self.assertEqual(res1.status, "created")
+
+            # 2. Approving an existing external/free step works with max_cost_usd 0.00
+            res2 = approve_enrichment_step("lead-mitte-1", "website_review", "Cyril", Decimal("0.00"))
+            self.assertEqual(res2.step_name, "website_review")
+            self.assertEqual(res2.max_cost_usd, "0.00")
+            self.assertEqual(res2.status, "created")
+
+            # 3. Approving a paid step requires max_cost_usd >= 0.00
+            with self.assertRaisesRegex(ValueError, "paid step 'email_lookup' requires --max-cost-usd"):
+                approve_enrichment_step("lead-mitte-1", "email_lookup", "Cyril", None)
+
+            with self.assertRaisesRegex(ValueError, "paid step 'email_lookup' requires --max-cost-usd"):
+                approve_enrichment_step("lead-mitte-1", "email_lookup", "Cyril", Decimal("-0.50"))
+
+            res3 = approve_enrichment_step("lead-mitte-1", "email_lookup", "Cyril", Decimal("0.10"))
+            self.assertEqual(res3.step_name, "email_lookup")
+            self.assertEqual(res3.max_cost_usd, "0.10")
+            self.assertEqual(res3.status, "created")
+
+            # 4. Re-approving the same step is idempotent
+            res3_rerun = approve_enrichment_step("lead-mitte-1", "email_lookup", "Cyril", Decimal("0.10"))
+            self.assertEqual(res3_rerun.status, "already_exists")
+            self.assertEqual(res3_rerun.max_cost_usd, "0.10")
+
+            # 5. Unknown workflow_id fails
+            with self.assertRaisesRegex(ValueError, "no enrichment plan found"):
+                approve_enrichment_step("unknown-lead", "website_review", "Cyril")
+
+            # 6. Unknown step_name fails
+            with self.assertRaisesRegex(ValueError, "step 'unknown_step' not found"):
+                approve_enrichment_step("lead-mitte-1", "unknown_step", "Cyril")
+
+            # 7. Summary formatting check
+            text = format_step_approval_summary(res3)
+            self.assertIn("Workflow ID:  lead-mitte-1", text)
+            self.assertIn("Step Name:    email_lookup", text)
+            self.assertIn("Approved By:  Cyril", text)
+            self.assertIn("Max Cost USD: 0.10", text)
+            self.assertIn("Status:       created", text)
+
+    def test_record_enrichment_step_approval_db_sql(self) -> None:
+        db_store: dict[tuple[str, str], tuple] = {}
+
+        class FakeApprovalDbConn:
+            def __init__(self) -> None:
+                self.queries = []
+
+            def execute(self, sql: str, params: tuple = ()) -> "FakeApprovalDbConn":
+                self.queries.append((sql, params))
+                if "INSERT INTO lead_enrichment_step_approvals" in sql:
+                    wid, step, approver, max_cost = params
+                    db_store[(wid, step)] = (wid, step, approver, Decimal(str(max_cost)), "2026-09-19T05:00:00Z")
+                return self
+
+            def fetchone(self) -> tuple | None:
+                last_sql, last_params = self.queries[-1]
+                if "SELECT workflow_id, step_name" in last_sql:
+                    wid, step = last_params
+                    return db_store.get((wid, step))
+                return None
+
+            def __enter__(self) -> "FakeApprovalDbConn":
+                return self
+
+            def __exit__(self, exc_type, exc_val, exc_tb) -> bool:
+                return False
+
+        with patch("system_1.db.connect", return_value=FakeApprovalDbConn()):
+            rec, is_new = db.record_enrichment_step_approval("lead-1", "website_review", "Cyril", Decimal("0.00"))
+            self.assertTrue(is_new)
+            self.assertEqual(rec["workflow_id"], "lead-1")
+            self.assertEqual(rec["step_name"], "website_review")
+            self.assertEqual(rec["approved_by"], "Cyril")
+            self.assertEqual(rec["max_cost_usd"], Decimal("0.00"))
+
+            # Second call retrieves existing
+            rec2, is_new2 = db.record_enrichment_step_approval("lead-1", "website_review", "Cyril", Decimal("0.00"))
+            self.assertFalse(is_new2)
+            self.assertEqual(rec2["workflow_id"], "lead-1")
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from decimal import Decimal
 import json
 import os
 from contextlib import contextmanager
@@ -118,6 +119,18 @@ def ensure_schema() -> None:
                 steps JSONB NOT NULL DEFAULT '[]'::JSONB,
                 created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
                 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+            )
+            """
+        )
+        connection.execute(
+            """
+            CREATE TABLE IF NOT EXISTS lead_enrichment_step_approvals (
+                workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
+                step_name TEXT NOT NULL,
+                approved_by TEXT NOT NULL,
+                max_cost_usd NUMERIC(10, 4) NOT NULL DEFAULT 0.00,
+                approved_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                PRIMARY KEY (workflow_id, step_name)
             )
             """
         )
@@ -628,3 +641,83 @@ def fetch_enrichment_plans(
             "steps": r[5] if isinstance(r[5], list) else json.loads(r[5] or "[]"),
         })
     return plans
+
+
+def fetch_enrichment_plan(workflow_id: str) -> dict[str, object] | None:
+    """Fetch the enrichment plan for a single workflow_id."""
+    with connect() as connection:
+        row = connection.execute(
+            """
+            SELECT workflow_id, qualification_status, steps
+            FROM lead_enrichment_plans
+            WHERE workflow_id = %s
+            """,
+            (workflow_id,),
+        ).fetchone()
+    if row is None:
+        return None
+    return {
+        "workflow_id": row[0],
+        "qualification_status": row[1],
+        "steps": row[2] if isinstance(row[2], list) else json.loads(row[2] or "[]"),
+    }
+
+
+def record_enrichment_step_approval(
+    workflow_id: str,
+    step_name: str,
+    approved_by: str,
+    max_cost_usd: Decimal,
+) -> tuple[dict[str, object], bool]:
+    """Insert or retrieve approval record for a planned enrichment step.
+
+    Returns (approval_dict, is_new).
+    """
+    with connect() as connection:
+        existing = connection.execute(
+            """
+            SELECT workflow_id, step_name, approved_by, max_cost_usd, approved_at
+            FROM lead_enrichment_step_approvals
+            WHERE workflow_id = %s AND step_name = %s
+            """,
+            (workflow_id, step_name),
+        ).fetchone()
+        if existing is not None:
+            return (
+                {
+                    "workflow_id": existing[0],
+                    "step_name": existing[1],
+                    "approved_by": existing[2],
+                    "max_cost_usd": Decimal(str(existing[3])),
+                    "approved_at": existing[4],
+                },
+                False,
+            )
+        connection.execute(
+            """
+            INSERT INTO lead_enrichment_step_approvals
+                (workflow_id, step_name, approved_by, max_cost_usd)
+            VALUES (%s, %s, %s, %s::numeric)
+            """,
+            (workflow_id, step_name, approved_by, str(max_cost_usd)),
+        )
+        row = connection.execute(
+            """
+            SELECT workflow_id, step_name, approved_by, max_cost_usd, approved_at
+            FROM lead_enrichment_step_approvals
+            WHERE workflow_id = %s AND step_name = %s
+            """,
+            (workflow_id, step_name),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("approval record was not persisted")
+    return (
+        {
+            "workflow_id": row[0],
+            "step_name": row[1],
+            "approved_by": row[2],
+            "max_cost_usd": Decimal(str(row[3])),
+            "approved_at": row[4],
+        },
+        True,
+    )
