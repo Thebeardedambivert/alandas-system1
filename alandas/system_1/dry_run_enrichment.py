@@ -20,7 +20,7 @@ LOCAL_STEPS = {"system1_duplicate_check", "phone_validation"}
 class DryRunSummary:
     leads_inspected: int
     total_steps: int
-    would_run: int
+    operator_review_needed: int
     blocked_missing_approval: int
     blocked_provider_not_connected: int
     blocked_paid_step: int
@@ -50,9 +50,12 @@ def evaluate_step_decision(
 
     # 3. External free steps
     if approval is None:
-        return "blocked_missing_approval", "Requires human approval before external execution"
+        return "blocked_missing_approval", "Requires human approval before entering operator review queue"
 
-    return "would_run", f"Approved by {approval.get('approved_by')}"
+    return (
+        "operator_review_needed",
+        f"Approved by {approval.get('approved_by')}; queued for operator review or manual evidence entry",
+    )
 
 
 def format_lead_dry_run(
@@ -96,7 +99,7 @@ def format_dry_run_summary(summary: DryRunSummary) -> str:
         "=== Dry-Run Enrichment Summary ===",
         f"Leads Inspected:                 {summary.leads_inspected}",
         f"Total Steps:                     {summary.total_steps}",
-        f"Would Run:                       {summary.would_run}",
+        f"Operator Review Needed:          {summary.operator_review_needed}",
         f"Blocked Missing Approval:        {summary.blocked_missing_approval}",
         f"Blocked Provider Not Connected:  {summary.blocked_provider_not_connected}",
         f"Blocked Paid Step:               {summary.blocked_paid_step}",
@@ -112,7 +115,7 @@ def render_dry_run_report(
     """Render full dry-run report and aggregate summary counts."""
     leads_inspected = len(plans)
     total_steps = 0
-    would_run = 0
+    operator_review_needed = 0
     blocked_missing_approval = 0
     blocked_provider_not_connected = 0
     blocked_paid_step = 0
@@ -125,8 +128,8 @@ def render_dry_run_report(
         lead_blocks.append(block_text)
         for d in decisions:
             total_steps += 1
-            if d == "would_run":
-                would_run += 1
+            if d == "operator_review_needed":
+                operator_review_needed += 1
             elif d == "blocked_missing_approval":
                 blocked_missing_approval += 1
             elif d == "blocked_provider_not_connected":
@@ -139,7 +142,7 @@ def render_dry_run_report(
     summary = DryRunSummary(
         leads_inspected=leads_inspected,
         total_steps=total_steps,
-        would_run=would_run,
+        operator_review_needed=operator_review_needed,
         blocked_missing_approval=blocked_missing_approval,
         blocked_provider_not_connected=blocked_provider_not_connected,
         blocked_paid_step=blocked_paid_step,
