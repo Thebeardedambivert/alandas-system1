@@ -1500,7 +1500,7 @@ class System1CoreTests(unittest.TestCase):
             self.assertEqual(rec2["workflow_id"], "lead-1")
 
     def test_dry_run_enrichment_decisions(self) -> None:
-        # 1. Approved website_review becomes would_run
+        # 1. Approved website_review becomes operator_review_needed
         step_web = {
             "name": "website_review",
             "requires_external_call": True,
@@ -1509,13 +1509,24 @@ class System1CoreTests(unittest.TestCase):
         }
         approval_web = {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")}
         dec_web_app, _ = evaluate_step_decision(step_web, approval_web)
-        self.assertEqual(dec_web_app, "would_run")
+        self.assertEqual(dec_web_app, "operator_review_needed")
 
-        # 2. Unapproved website_review becomes blocked_missing_approval
+        # 2. Approved menu_or_product_signal_check becomes operator_review_needed
+        step_menu = {
+            "name": "menu_or_product_signal_check",
+            "requires_external_call": True,
+            "may_cost_money": False,
+            "requires_human_approval": True,
+        }
+        approval_menu = {"approved_by": "Cyril", "max_cost_usd": Decimal("0.00")}
+        dec_menu_app, _ = evaluate_step_decision(step_menu, approval_menu)
+        self.assertEqual(dec_menu_app, "operator_review_needed")
+
+        # 3. Unapproved website_review becomes blocked_missing_approval
         dec_web_unapp, _ = evaluate_step_decision(step_web, None)
         self.assertEqual(dec_web_unapp, "blocked_missing_approval")
 
-        # 3. email_lookup becomes blocked_provider_not_connected
+        # 4. email_lookup becomes blocked_provider_not_connected
         step_email = {
             "name": "email_lookup",
             "requires_external_call": True,
@@ -1525,12 +1536,12 @@ class System1CoreTests(unittest.TestCase):
         dec_email_no_app, _ = evaluate_step_decision(step_email, None)
         self.assertEqual(dec_email_no_app, "blocked_provider_not_connected")
 
-        # 4. email_lookup remains blocked_provider_not_connected even if an approval exists
+        # 5. email_lookup remains blocked_provider_not_connected even if an approval exists
         approval_email = {"approved_by": "Cyril", "max_cost_usd": Decimal("0.10")}
         dec_email_app, _ = evaluate_step_decision(step_email, approval_email)
         self.assertEqual(dec_email_app, "blocked_provider_not_connected")
 
-        # 5. system1_duplicate_check becomes skipped_local_only
+        # 6. system1_duplicate_check becomes skipped_local_only
         step_dup = {
             "name": "system1_duplicate_check",
             "requires_external_call": False,
@@ -1540,7 +1551,7 @@ class System1CoreTests(unittest.TestCase):
         dec_dup, _ = evaluate_step_decision(step_dup, None)
         self.assertEqual(dec_dup, "skipped_local_only")
 
-        # 6. phone_validation becomes skipped_local_only
+        # 7. phone_validation becomes skipped_local_only
         step_phone = {
             "name": "phone_validation",
             "requires_external_call": False,
@@ -1612,7 +1623,7 @@ class System1CoreTests(unittest.TestCase):
 
         self.assertEqual(summary.leads_inspected, 2)
         self.assertEqual(summary.total_steps, 5)
-        self.assertEqual(summary.would_run, 1)  # lead-101 website_review
+        self.assertEqual(summary.operator_review_needed, 1)  # lead-101 website_review
         self.assertEqual(summary.blocked_missing_approval, 1)  # lead-102 instagram_review
         self.assertEqual(summary.blocked_provider_not_connected, 1)  # lead-101 email_lookup
         self.assertEqual(summary.blocked_paid_step, 0)
@@ -1621,7 +1632,7 @@ class System1CoreTests(unittest.TestCase):
         # Output formatting assertions
         self.assertIn("=== Lead: lead-101 ===", report_text)
         self.assertIn("1. system1_duplicate_check: skipped_local_only", report_text)
-        self.assertIn("2. website_review: would_run", report_text)
+        self.assertIn("2. website_review: operator_review_needed", report_text)
         self.assertIn("3. email_lookup: blocked_provider_not_connected", report_text)
         self.assertIn("=== Lead: lead-102 ===", report_text)
         self.assertIn("1. phone_validation: skipped_local_only", report_text)
@@ -1630,7 +1641,7 @@ class System1CoreTests(unittest.TestCase):
         self.assertIn("=== Dry-Run Enrichment Summary ===", report_text)
         self.assertIn("Leads Inspected:                 2", report_text)
         self.assertIn("Total Steps:                     5", report_text)
-        self.assertIn("Would Run:                       1", report_text)
+        self.assertIn("Operator Review Needed:          1", report_text)
         self.assertIn("Blocked Missing Approval:        1", report_text)
         self.assertIn("Blocked Provider Not Connected:  1", report_text)
         self.assertIn("Blocked Paid Step:               0", report_text)
@@ -1643,7 +1654,7 @@ class System1CoreTests(unittest.TestCase):
             run_summary = dry_run_enrichment(statuses=["qualified", "needs_review"], limit=50)
 
         self.assertEqual(run_summary.leads_inspected, 2)
-        self.assertEqual(run_summary.would_run, 1)
+        self.assertEqual(run_summary.operator_review_needed, 1)
 
     def test_apify_refuses_cost_above_policy_cap(self) -> None:
         provider = ApifyProvider(token="secret", transport=FakeTransport({}))
