@@ -2272,7 +2272,7 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(res_ok.status, "success")
         self.assertEqual(len(t_ok.requests), 1)
         req = t_ok.requests[0]
-        self.assertEqual(req.url, "https://api.firecrawl.dev/v1/scrape")
+        self.assertEqual(req.url, "https://api.firecrawl.dev/v2/scrape")
         payload = json.loads(req.body.decode("utf-8"))
         self.assertEqual(payload["url"], "https://cafe-mitte.de")
         self.assertEqual(payload["formats"], ["markdown"])

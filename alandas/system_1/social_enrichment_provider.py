@@ -446,7 +446,7 @@ class FirecrawlConfig:
     mode: str = "staging"
     max_credits_per_run: int = 10
     max_pages_per_lead: int = 2
-    api_url: str = "https://api.firecrawl.dev/v1/scrape"
+    api_url: str = "https://api.firecrawl.dev/v2/scrape"
     formats: tuple[str, ...] = ("markdown",)
     only_main_content: bool = True
 
@@ -464,8 +464,8 @@ class FirecrawlConfig:
         raw_credits = os.environ.get("SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN", default_credits)
         raw_pages = os.environ.get("SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD", default_pages)
         api_url = (
-            os.environ.get("SYSTEM1_FIRECRAWL_API_URL", "https://api.firecrawl.dev/v1/scrape").strip()
-            or "https://api.firecrawl.dev/v1/scrape"
+            os.environ.get("SYSTEM1_FIRECRAWL_API_URL", "https://api.firecrawl.dev/v2/scrape").strip()
+            or "https://api.firecrawl.dev/v2/scrape"
         )
 
         max_credits = int(raw_credits)
