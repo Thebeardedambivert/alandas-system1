@@ -531,6 +531,19 @@ class FirecrawlAdapter:
                 next_action="operator_review_config",
             )
 
+        # Enforce Firecrawl credit cap before any network call (1 credit per page)
+        estimated_credits = limit
+        if self.config.max_credits_per_run <= 0 or estimated_credits > self.config.max_credits_per_run:
+            return ProviderExecutionResult(
+                provider="firecrawl",
+                status=EnrichmentStatus.COST_CAP_EXCEEDED.value,
+                operator_message=(
+                    f"Estimated scrape credits ({estimated_credits}) exceeds configured max credits "
+                    f"({self.config.max_credits_per_run})."
+                ),
+                next_action="operator_review_config",
+            )
+
         payload = json.dumps(
             {"url": validated_url, "pageOptions": {"limit": limit}},
             ensure_ascii=True,

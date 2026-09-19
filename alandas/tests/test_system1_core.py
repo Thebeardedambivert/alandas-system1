@@ -2197,6 +2197,33 @@ class System1CoreTests(unittest.TestCase):
         self.assertEqual(res_cap.status, "result_cap_exceeded")
         self.assertEqual(len(transport.requests), 0)
 
+        # 4b. Credit cap enforced before network call: max_credits=1 with pages_limit=2 fails
+        low_credit_cfg = FirecrawlConfig(
+            api_key="key",
+            enabled=True,
+            max_credits_per_run=1,
+            max_pages_per_lead=5,
+        )
+        adapter_low_credit = FirecrawlAdapter(low_credit_cfg, transport=transport)
+        res_credit_cap = adapter_low_credit.scrape_url("https://example.com", pages_limit=2)
+        self.assertEqual(res_credit_cap.status, "cost_cap_exceeded")
+        self.assertIn("exceeds configured max credits", res_credit_cap.operator_message)
+        self.assertEqual(len(transport.requests), 0)
+
+        # 4c. Default staging settings allow the intended tiny scrape
+        staging_default_cfg = FirecrawlConfig.from_env()
+        staging_enabled_cfg = FirecrawlConfig(
+            api_key="key",
+            enabled=True,
+            mode=staging_default_cfg.mode,
+            max_credits_per_run=staging_default_cfg.max_credits_per_run,
+            max_pages_per_lead=staging_default_cfg.max_pages_per_lead,
+        )
+        adapter_staging = FirecrawlAdapter(staging_enabled_cfg, transport=transport)
+        res_staging = adapter_staging.scrape_url("https://example.com")
+        self.assertEqual(res_staging.status, "success")
+        self.assertEqual(len(transport.requests), 1)
+
         # 5. HTTP 401/403 maps to provider_auth_failed
         t_auth = FakeTransport({"error": "Unauthorized"}, status_code=401)
         adapter_auth = FirecrawlAdapter(enabled_cfg, transport=t_auth)
