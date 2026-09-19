@@ -2177,7 +2177,9 @@ class System1CoreTests(unittest.TestCase):
         req = transport.requests[0]
         body_obj = json.loads(req.body.decode("utf-8"))
         self.assertEqual(body_obj["url"], "https://example.com/path?q=test%20search&lang=de")
-        self.assertEqual(body_obj["pageOptions"]["limit"], 3)
+        self.assertEqual(body_obj["formats"], ["markdown"])
+        self.assertTrue(body_obj["onlyMainContent"])
+        self.assertNotIn("pageOptions", body_obj)
 
     def test_firecrawl_adapter_failure_modes(self) -> None:
         transport = FakeTransport({"success": True})
@@ -2258,6 +2260,45 @@ class System1CoreTests(unittest.TestCase):
         adapter_empty = FirecrawlAdapter(enabled_cfg, transport=t_empty)
         res_empty = adapter_empty.scrape_url("https://example.com")
         self.assertEqual(res_empty.status, "no_result_found")
+
+    def test_firecrawl_payload_shape_and_safe_http_400_surfacing(self) -> None:
+        cfg = FirecrawlConfig(api_key="fc-test-key", enabled=True)
+
+        # 1. Valid payload shape: formats=["markdown"], onlyMainContent=True, url=target
+        t_ok = FakeTransport({"success": True, "data": {"markdown": "# Cafe Mitte"}}, status_code=200)
+        adapter_ok = FirecrawlAdapter(cfg, transport=t_ok)
+        res_ok = adapter_ok.scrape_url("https://cafe-mitte.de")
+        self.assertEqual(res_ok.status, "success")
+        self.assertEqual(len(t_ok.requests), 1)
+        req = t_ok.requests[0]
+        self.assertEqual(req.url, "https://api.firecrawl.dev/v1/scrape")
+        payload = json.loads(req.body.decode("utf-8"))
+        self.assertEqual(payload["url"], "https://cafe-mitte.de")
+        self.assertEqual(payload["formats"], ["markdown"])
+        self.assertTrue(payload["onlyMainContent"])
+        self.assertNotIn("pageOptions", payload)
+
+        # 2. HTTP 400 response body is surfaced safely in operator message
+        t_bad = FakeTransport(
+            {"success": False, "error": "Unrecognized key(s) in object: 'pageOptions'"},
+            status_code=400,
+        )
+        adapter_bad = FirecrawlAdapter(cfg, transport=t_bad)
+        res_bad = adapter_bad.scrape_url("https://cafe-mitte.de")
+        self.assertEqual(res_bad.status, "provider_rejected")
+        self.assertIn("rejected request (HTTP 400)", res_bad.operator_message)
+        self.assertIn("Unrecognized key(s) in object: 'pageOptions'", res_bad.operator_message)
+
+        # 3. Secrets in HTTP 400 response body are redacted
+        t_secret = FakeTransport(
+            {"error": "Invalid token api_key='fc-secret12345' provided"},
+            status_code=400,
+        )
+        adapter_secret = FirecrawlAdapter(cfg, transport=t_secret)
+        res_secret = adapter_secret.scrape_url("https://cafe-mitte.de")
+        self.assertEqual(res_secret.status, "provider_rejected")
+        self.assertNotIn("fc-secret12345", res_secret.operator_message)
+        self.assertIn("[REDACTED", res_secret.operator_message)
 
     def test_apify_enrichment_adapter_input_data_and_caps(self) -> None:
         transport = FakeTransport({"data": {"id": "run-xyz"}}, status_code=201)
@@ -2920,6 +2961,26 @@ class System1CoreTests(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json_body, [{"title": "Cafe One"}])
+
+    def test_http_transport_handles_http_error_safely(self) -> None:
+        import io
+        from urllib.error import HTTPError
+        from system_1.provider_http import UrllibHttpTransport
+
+        def fake_open_err(request: object, timeout: int) -> FakeUrlResponse:
+            fp = io.BytesIO(b'{"success":false,"error":"Bad Request"}')
+            raise HTTPError("https://api.example/scrape", 400, "Bad Request", {}, fp)
+
+        response = UrllibHttpTransport(open_request=fake_open_err).request(
+            "POST",
+            "https://api.example/scrape",
+            {"Authorization": "Bearer secret"},
+            b"{}",
+            30,
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json_body, {"success": False, "error": "Bad Request"})
 
     def test_provider_submission_is_idempotent(self) -> None:
         store = InMemoryDiscoveryStore()

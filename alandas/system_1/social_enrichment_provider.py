@@ -17,6 +17,7 @@ import re
 import socket
 import sys
 from typing import Any, Callable, Mapping, Sequence
+from urllib.error import HTTPError
 from urllib.parse import urlparse
 
 from system_1 import db
@@ -160,6 +161,35 @@ class ProviderExecutionResult:
     run_id: str = ""
 
 
+def extract_provider_error_message(body: Any) -> str:
+    """Safely extract error message from response body, redacting potential secrets."""
+    if not body:
+        return ""
+    if isinstance(body, str):
+        msg = body
+    elif isinstance(body, dict):
+        err = body.get("error")
+        msg = ""
+        if isinstance(err, str):
+            msg = err
+        elif isinstance(err, dict):
+            msg = str(err.get("message") or err.get("description") or err.get("detail") or "")
+        if not msg:
+            msg = str(body.get("message") or body.get("description") or body.get("detail") or "")
+    else:
+        msg = str(body)
+
+    # Redact any tokens, credentials, or secrets that might appear in error strings
+    sanitized = re.sub(
+        r"(?i)(api[_-]?key|token|bearer|secret|password)\s*[:=]\s*['\"]?[A-Za-z0-9_\-\.]+['\"]?",
+        r"\1=[REDACTED]",
+        msg,
+    )
+    sanitized = re.sub(r"fc-[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
+    sanitized = re.sub(r"apify_api_[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
+    return sanitized.strip()
+
+
 def map_provider_http_response(
     provider: str,
     response: HttpResponse,
@@ -170,24 +200,33 @@ def map_provider_http_response(
     body = response.json_body
 
     if status_code in (401, 403):
+        detail = extract_provider_error_message(body)
+        detail_suffix = f": {detail}" if detail else ""
         return ProviderExecutionResult(
             provider=provider,
             status=EnrichmentStatus.PROVIDER_AUTH_FAILED.value,
-            operator_message=f"{provider} authentication failed (HTTP {status_code}). Verify API token/key.",
+            data=body if isinstance(body, (dict, list)) else {},
+            operator_message=f"{provider} authentication failed (HTTP {status_code}){detail_suffix}. Verify API token/key.",
             next_action="operator_check_credentials",
         )
     if 400 <= status_code < 500:
+        detail = extract_provider_error_message(body)
+        detail_suffix = f": {detail}" if detail else ". Inspect payload and parameters."
         return ProviderExecutionResult(
             provider=provider,
             status=EnrichmentStatus.PROVIDER_REJECTED.value,
-            operator_message=f"{provider} rejected request (HTTP {status_code}). Inspect payload and parameters.",
+            data=body if isinstance(body, (dict, list)) else {},
+            operator_message=f"{provider} rejected request (HTTP {status_code}){detail_suffix}",
             next_action="operator_review_payload",
         )
     if status_code >= 500:
+        detail = extract_provider_error_message(body)
+        detail_suffix = f": {detail}" if detail else ""
         return ProviderExecutionResult(
             provider=provider,
             status=EnrichmentStatus.PROVIDER_UNAVAILABLE.value,
-            operator_message=f"{provider} service unavailable (HTTP {status_code}). Defer run until service recovery.",
+            data=body if isinstance(body, (dict, list)) else {},
+            operator_message=f"{provider} service unavailable (HTTP {status_code}){detail_suffix}. Defer run until service recovery.",
             next_action="defer_and_retry_later",
         )
     if status_code not in (200, 201):
@@ -384,6 +423,9 @@ class FirecrawlConfig:
     mode: str = "staging"
     max_credits_per_run: int = 10
     max_pages_per_lead: int = 2
+    api_url: str = "https://api.firecrawl.dev/v1/scrape"
+    formats: tuple[str, ...] = ("markdown",)
+    only_main_content: bool = True
 
     @classmethod
     def from_env(cls) -> "FirecrawlConfig":
@@ -398,6 +440,10 @@ class FirecrawlConfig:
         default_pages = "2" if mode == "staging" else "5"
         raw_credits = os.environ.get("SYSTEM1_FIRECRAWL_MAX_CREDITS_PER_RUN", default_credits)
         raw_pages = os.environ.get("SYSTEM1_FIRECRAWL_MAX_PAGES_PER_LEAD", default_pages)
+        api_url = (
+            os.environ.get("SYSTEM1_FIRECRAWL_API_URL", "https://api.firecrawl.dev/v1/scrape").strip()
+            or "https://api.firecrawl.dev/v1/scrape"
+        )
 
         max_credits = int(raw_credits)
         max_pages = int(raw_pages)
@@ -412,6 +458,7 @@ class FirecrawlConfig:
             mode=mode,
             max_credits_per_run=max_credits,
             max_pages_per_lead=max_pages,
+            api_url=api_url,
         )
 
 
@@ -551,14 +598,18 @@ class FirecrawlAdapter:
             )
 
         payload = json.dumps(
-            {"url": validated_url, "pageOptions": {"limit": limit}},
+            {
+                "url": validated_url,
+                "formats": list(self.config.formats),
+                "onlyMainContent": self.config.only_main_content,
+            },
             ensure_ascii=True,
         ).encode("utf-8")
 
         try:
             resp = self._transport.request(
                 method="POST",
-                url="https://api.firecrawl.dev/v1/scrape",
+                url=self.config.api_url,
                 headers={
                     "Authorization": f"Bearer {self.config.api_key}",
                     "Content-Type": "application/json",
@@ -573,6 +624,19 @@ class FirecrawlAdapter:
                 operator_message="Firecrawl request timed out after 30s. Do not retry blindly.",
                 next_action="inspect_firecrawl_status",
             )
+        except HTTPError as error:
+            try:
+                err_payload = error.read()
+            finally:
+                error.close()
+            decoded = None
+            if err_payload:
+                try:
+                    decoded = json.loads(err_payload.decode("utf-8"))
+                except Exception:
+                    decoded = {"error": err_payload.decode("utf-8", errors="replace")}
+            resp = HttpResponse(error.code, decoded if decoded is not None else {})
+            return map_provider_http_response("firecrawl", resp)
         except Exception as error:
             return ProviderExecutionResult(
                 provider="firecrawl",
@@ -690,6 +754,19 @@ class ApifyEnrichmentAdapter:
                 operator_message=f"Apify request to actor '{normalized_actor}' timed out. Do not retry blindly.",
                 next_action="reconcile_apify_run",
             )
+        except HTTPError as error:
+            try:
+                err_payload = error.read()
+            finally:
+                error.close()
+            decoded = None
+            if err_payload:
+                try:
+                    decoded = json.loads(err_payload.decode("utf-8"))
+                except Exception:
+                    decoded = {"error": err_payload.decode("utf-8", errors="replace")}
+            resp = HttpResponse(error.code, decoded if decoded is not None else {})
+            return map_provider_http_response(provider_name, resp)
         except Exception as error:
             return ProviderExecutionResult(
                 provider=provider_name,
