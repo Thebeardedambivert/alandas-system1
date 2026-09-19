@@ -165,28 +165,51 @@ def extract_provider_error_message(body: Any) -> str:
     """Safely extract error message from response body, redacting potential secrets."""
     if not body:
         return ""
+    msg = ""
     if isinstance(body, str):
         msg = body
     elif isinstance(body, dict):
         err = body.get("error")
-        msg = ""
         if isinstance(err, str):
             msg = err
         elif isinstance(err, dict):
-            msg = str(err.get("message") or err.get("description") or err.get("detail") or "")
+            err_type = str(err.get("type") or "").strip()
+            err_desc = str(err.get("message") or err.get("description") or err.get("detail") or "").strip()
+            if err_type and err_desc:
+                msg = f"{err_type}: {err_desc}"
+            else:
+                msg = err_desc or err_type
+        elif isinstance(body.get("errors"), list) and body["errors"]:
+            first_err = body["errors"][0]
+            if isinstance(first_err, str):
+                msg = first_err
+            elif isinstance(first_err, dict):
+                msg = str(first_err.get("message") or first_err.get("detail") or "")
+
         if not msg:
-            msg = str(body.get("message") or body.get("description") or body.get("detail") or "")
+            msg = str(
+                body.get("message")
+                or body.get("description")
+                or body.get("detail")
+                or body.get("details")
+                or ""
+            )
+        if not msg and "error" in body and isinstance(body["error"], dict):
+            msg = str(body["error"])
     else:
         msg = str(body)
 
     # Redact any tokens, credentials, or secrets that might appear in error strings
     sanitized = re.sub(
-        r"(?i)(api[_-]?key|token|bearer|secret|password)\s*[:=]\s*['\"]?[A-Za-z0-9_\-\.]+['\"]?",
+        r"(?i)(api[_-]?key|token|bearer|secret|password|auth|authorization)\s*[:=]\s*['\"]?[A-Za-z0-9_\-\.]+['\"]?",
         r"\1=[REDACTED]",
         msg,
     )
     sanitized = re.sub(r"fc-[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
     sanitized = re.sub(r"apify_api_[A-Za-z0-9_\-]+", "[REDACTED_KEY]", sanitized)
+    sanitized = re.sub(r"(?i)bearer\s+[A-Za-z0-9_\-\.]+", "Bearer [REDACTED]", sanitized)
+    if len(sanitized) > 300:
+        sanitized = sanitized[:297] + "..."
     return sanitized.strip()
 
 

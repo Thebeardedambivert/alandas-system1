@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import json
 import os
+import socket
 import unittest
 from datetime import date, datetime, timezone
 from decimal import Decimal
@@ -2378,6 +2379,83 @@ class System1CoreTests(unittest.TestCase):
             expected_schema_keys=["username", "followerCount"],
         )
         self.assertEqual(res_schema.status, "schema_mismatch")
+
+    def test_provider_http_diagnostics_and_failure_surfacing(self) -> None:
+        fc_cfg = FirecrawlConfig(api_key="fc-test-key", enabled=True, max_credits_per_run=10, max_pages_per_lead=2)
+        ap_cfg = ApifyEnrichmentConfig(api_token="ap-token-123", enabled=True, max_cost_usd=Decimal("1.00"))
+        dummy_res = lambda *_a, **_k: [(2, 1, 6, "", ("93.184.216.34", 0))]
+
+        # 1. Firecrawl HTTP 400 JSON body appears safely in operator output
+        t_fc_400 = FakeTransport(
+            {"success": False, "error": "Unrecognized key: 'pageOptions'"},
+            status_code=400,
+        )
+        fc_adapter = FirecrawlAdapter(fc_cfg, transport=t_fc_400)
+        res_fc_400 = fc_adapter.scrape_url("https://example.com", resolver=dummy_res)
+        self.assertEqual(res_fc_400.status, "provider_rejected")
+        self.assertIn("rejected request (HTTP 400): Unrecognized key: 'pageOptions'", res_fc_400.operator_message)
+
+        # 2. Apify HTTP 400 JSON body appears safely in operator output (including nested structure)
+        t_ap_400 = FakeTransport(
+            {"error": {"type": "INVALID_INPUT", "message": "Field directUrls must be an array"}},
+            status_code=400,
+        )
+        ap_adapter = ApifyEnrichmentAdapter(ap_cfg, transport=t_ap_400)
+        res_ap_400 = ap_adapter.run_actor(
+            actor_id="apify/instagram-scraper",
+            group="instagram",
+            input_data={"directUrls": "not_an_array"},
+            estimated_cost_usd=Decimal("0.50"),
+        )
+        self.assertEqual(res_ap_400.status, "provider_rejected")
+        self.assertIn("INVALID_INPUT: Field directUrls must be an array", res_ap_400.operator_message)
+
+        # 3. HTTP 401 does not leak token
+        t_fc_401 = FakeTransport(
+            {"error": "Invalid token fc-supersecretkey999 or Bearer apify_api_tok123"},
+            status_code=401,
+        )
+        fc_auth_adapter = FirecrawlAdapter(fc_cfg, transport=t_fc_401)
+        res_fc_401 = fc_auth_adapter.scrape_url("https://example.com", resolver=dummy_res)
+        self.assertEqual(res_fc_401.status, "provider_auth_failed")
+        self.assertNotIn("fc-supersecretkey999", res_fc_401.operator_message)
+        self.assertNotIn("apify_api_tok123", res_fc_401.operator_message)
+        self.assertIn("[REDACTED", res_fc_401.operator_message)
+
+        # 4. Timeout remains typed provider_timeout for both adapters
+        class TimeoutTransport:
+            def request(self, method: str, url: str, headers: dict[str, str], body: bytes | None, timeout_seconds: int) -> HttpResponse:
+                raise socket.timeout("timed out")
+
+        t_timeout = TimeoutTransport()
+        fc_timeout_adapter = FirecrawlAdapter(fc_cfg, transport=t_timeout)
+        self.assertEqual(fc_timeout_adapter.scrape_url("https://example.com", resolver=dummy_res).status, "provider_timeout")
+
+        ap_timeout_adapter = ApifyEnrichmentAdapter(ap_cfg, transport=t_timeout)
+        res_ap_to = ap_timeout_adapter.run_actor(
+            actor_id="apify/instagram-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+        )
+        self.assertEqual(res_ap_to.status, "provider_timeout")
+
+        # 5. Cost/credit caps still block before network
+        t_blocked = FakeTransport({"success": True})
+        fc_low_credit = FirecrawlConfig(api_key="key", enabled=True, max_credits_per_run=1, max_pages_per_lead=5)
+        res_fc_cost = FirecrawlAdapter(fc_low_credit, transport=t_blocked).scrape_url("https://example.com", pages_limit=2, resolver=dummy_res)
+        self.assertEqual(res_fc_cost.status, "cost_cap_exceeded")
+        self.assertEqual(len(t_blocked.requests), 0)
+
+        ap_low_cost = ApifyEnrichmentConfig(api_token="token", enabled=True, max_cost_usd=Decimal("0.10"))
+        res_ap_cost = ApifyEnrichmentAdapter(ap_low_cost, transport=t_blocked).run_actor(
+            actor_id="apify/instagram-scraper",
+            group="instagram",
+            input_data={},
+            estimated_cost_usd=Decimal("0.50"),
+        )
+        self.assertEqual(res_ap_cost.status, "cost_cap_exceeded")
+        self.assertEqual(len(t_blocked.requests), 0)
 
     def test_ambiguity_and_waterfall_fallbacks(self) -> None:
         # 1. Ambiguous social match detection
