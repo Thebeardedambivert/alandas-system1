@@ -136,6 +136,20 @@ def ensure_schema() -> None:
         )
         connection.execute(
             """
+            CREATE TABLE IF NOT EXISTS lead_manual_enrichment_evidence (
+                workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
+                step_name TEXT NOT NULL,
+                field TEXT NOT NULL,
+                value TEXT NOT NULL,
+                source_url TEXT NOT NULL,
+                recorded_by TEXT NOT NULL,
+                recorded_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+                PRIMARY KEY (workflow_id, step_name, field)
+            )
+            """
+        )
+        connection.execute(
+            """
             CREATE TABLE IF NOT EXISTS lead_research_evidence (
                 evidence_key TEXT PRIMARY KEY,
                 workflow_id TEXT NOT NULL REFERENCES leads(workflow_id),
@@ -748,3 +762,130 @@ def record_enrichment_step_approval(
         },
         True,
     )
+
+
+def record_manual_enrichment_evidence(
+    workflow_id: str,
+    step_name: str,
+    field: str,
+    value: str,
+    source_url: str,
+    recorded_by: str,
+) -> tuple[dict[str, object], bool]:
+    """Insert or update manual enrichment evidence.
+
+    Returns (evidence_dict, is_new).
+    """
+    with connect() as connection:
+        existing = connection.execute(
+            """
+            SELECT workflow_id, step_name, field, value, source_url, recorded_by, recorded_at
+            FROM lead_manual_enrichment_evidence
+            WHERE workflow_id = %s AND step_name = %s AND field = %s
+            """,
+            (workflow_id, step_name, field),
+        ).fetchone()
+        if existing is not None:
+            if existing[3] == value and existing[4] == source_url and existing[5] == recorded_by:
+                return (
+                    {
+                        "workflow_id": existing[0],
+                        "step_name": existing[1],
+                        "field": existing[2],
+                        "value": existing[3],
+                        "source_url": existing[4],
+                        "recorded_by": existing[5],
+                        "recorded_at": existing[6],
+                    },
+                    False,
+                )
+            connection.execute(
+                """
+                UPDATE lead_manual_enrichment_evidence
+                SET value = %s,
+                    source_url = %s,
+                    recorded_by = %s,
+                    recorded_at = NOW()
+                WHERE workflow_id = %s AND step_name = %s AND field = %s
+                """,
+                (value, source_url, recorded_by, workflow_id, step_name, field),
+            )
+            row = connection.execute(
+                """
+                SELECT workflow_id, step_name, field, value, source_url, recorded_by, recorded_at
+                FROM lead_manual_enrichment_evidence
+                WHERE workflow_id = %s AND step_name = %s AND field = %s
+                """,
+                (workflow_id, step_name, field),
+            ).fetchone()
+            if row is None:
+                raise RuntimeError("manual enrichment evidence update failed")
+            return (
+                {
+                    "workflow_id": row[0],
+                    "step_name": row[1],
+                    "field": row[2],
+                    "value": row[3],
+                    "source_url": row[4],
+                    "recorded_by": row[5],
+                    "recorded_at": row[6],
+                },
+                False,
+            )
+
+        connection.execute(
+            """
+            INSERT INTO lead_manual_enrichment_evidence
+                (workflow_id, step_name, field, value, source_url, recorded_by)
+            VALUES (%s, %s, %s, %s, %s, %s)
+            """,
+            (workflow_id, step_name, field, value, source_url, recorded_by),
+        )
+        row = connection.execute(
+            """
+            SELECT workflow_id, step_name, field, value, source_url, recorded_by, recorded_at
+            FROM lead_manual_enrichment_evidence
+            WHERE workflow_id = %s AND step_name = %s AND field = %s
+            """,
+            (workflow_id, step_name, field),
+        ).fetchone()
+    if row is None:
+        raise RuntimeError("manual enrichment evidence insertion failed")
+    return (
+        {
+            "workflow_id": row[0],
+            "step_name": row[1],
+            "field": row[2],
+            "value": row[3],
+            "source_url": row[4],
+            "recorded_by": row[5],
+            "recorded_at": row[6],
+        },
+        True,
+    )
+
+
+def fetch_manual_enrichment_evidence(workflow_id: str) -> list[dict[str, object]]:
+    """Fetch manual enrichment evidence records for a workflow_id."""
+    with connect() as connection:
+        rows = connection.execute(
+            """
+            SELECT workflow_id, step_name, field, value, source_url, recorded_by, recorded_at
+            FROM lead_manual_enrichment_evidence
+            WHERE workflow_id = %s
+            ORDER BY recorded_at ASC
+            """,
+            (workflow_id,),
+        ).fetchall()
+    evidence_list = []
+    for r in rows:
+        evidence_list.append({
+            "workflow_id": r[0],
+            "step_name": r[1],
+            "field": r[2],
+            "value": r[3],
+            "source_url": r[4],
+            "recorded_by": r[5],
+            "recorded_at": r[6],
+        })
+    return evidence_list
